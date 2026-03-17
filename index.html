@@ -167,7 +167,7 @@
                             </tr>
                         </thead>
                         <tbody id="admin-users-list">
-                            <tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Clica em "Atualizar Lista" para ver os alunos.</td></tr>
+                            <tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Clique em "Atualizar Lista" para ver os alunos.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -176,9 +176,9 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCcHcryUJhFfKlh22-opI4cmgxazrU_Lkw",
@@ -210,8 +210,10 @@
         };
 
         window.handleAuth = async () => {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
+            const emailInput = document.getElementById('auth-email');
+            const passwordInput = document.getElementById('auth-password');
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
             const errorDiv = document.getElementById('auth-error');
             const successDiv = document.getElementById('auth-success');
             const btn = document.getElementById('auth-submit-btn');
@@ -224,12 +226,19 @@
 
             try {
                 if(isRegistering) {
-                    await createUserWithEmailAndPassword(auth, email.trim(), password);
+                    await createUserWithEmailAndPassword(auth, email, password);
                 } else {
-                    await signInWithEmailAndPassword(auth, email.trim(), password);
+                    await signInWithEmailAndPassword(auth, email, password);
                 }
             } catch (err) {
-                errorDiv.innerText = "Erro: Dados inválidos ou e-mail já em uso";
+                console.error("Erro Auth:", err.code);
+                if(err.code === 'auth/email-already-in-use') {
+                    errorDiv.innerText = "Este e-mail já está em uso. Faça login.";
+                } else if(err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                    errorDiv.innerText = "E-mail ou senha incorretos.";
+                } else {
+                    errorDiv.innerText = "Erro ao acessar plataforma. Tente novamente.";
+                }
                 errorDiv.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
@@ -238,26 +247,24 @@
         };
 
         window.handleForgotPassword = async () => {
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             const errorDiv = document.getElementById('auth-error');
             const successDiv = document.getElementById('auth-success');
 
             if(!email) {
                 errorDiv.innerText = "Introduza o e-mail primeiro!";
                 errorDiv.classList.remove('hidden');
-                successDiv.classList.add('hidden');
                 return;
             }
 
             try {
-                await sendPasswordResetEmail(auth, email.trim());
+                await sendPasswordResetEmail(auth, email);
                 successDiv.innerText = "E-mail de redefinição enviado!";
                 successDiv.classList.remove('hidden');
                 errorDiv.classList.add('hidden');
             } catch (err) {
-                errorDiv.innerText = "Erro ao enviar e-mail. Verifique o endereço.";
+                errorDiv.innerText = "Erro ao enviar. Verifique o e-mail.";
                 errorDiv.classList.remove('hidden');
-                successDiv.classList.add('hidden');
             }
         };
 
@@ -265,58 +272,68 @@
 
         const initUserSession = async (currentUser) => {
             user = currentUser;
+            
+            // UI Switch IMEDIATO
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             document.getElementById('welcome-user').innerText = `Bem-vindo, ${user.email}`;
 
+            // Verificação de Admin
             const normalizedEmail = user.email.toLowerCase().trim();
-            const normalizedAdmin = ADMIN_EMAIL.toLowerCase().trim();
-            
-            if(normalizedEmail === normalizedAdmin) {
+            if(normalizedEmail === ADMIN_EMAIL.toLowerCase().trim()) {
                 document.getElementById('btn-admin').classList.remove('hidden');
             }
 
-            const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
-            await setDoc(profileRef, {
-                uid: user.uid,
-                email: user.email,
-                lastSeen: new Date().toISOString()
-            }, { merge: true });
+            // Registo de Perfil (Opcional, não trava se falhar)
+            try {
+                const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
+                await setDoc(profileRef, {
+                    uid: user.uid,
+                    email: user.email,
+                    lastSeen: new Date().toISOString()
+                }, { merge: true });
+            } catch(e) { console.warn("Erro ao registrar perfil público (provavelmente regras de escrita)."); }
 
+            // Documento de Edital do Usuário
             const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-            const docSnap = await getDoc(userDocRef);
+            
+            try {
+                const docSnap = await getDoc(userDocRef);
+                if (!docSnap.exists()) {
+                    const initialSubjects = [
+                        { name: "Português", color: "blue", topics: ["Ortografia", "Crase", "Interpretação", "Pontuação", "Concordância"] },
+                        { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Crimes contra Pessoa", "Crimes contra Patrimônio", "Penas"] },
+                        { name: "Direito Administrativo", color: "emerald", topics: ["Atos Administrativos", "Poderes", "Licitações", "Agentes Públicos"] },
+                        { name: "Informática", color: "indigo", topics: ["Windows", "Hardware/Software", "Segurança", "Office/LibreOffice"] },
+                        { name: "História e Geo AP", color: "amber", topics: ["Colonização AP", "Criação do Território", "Clima e Relevo AP", "Economia AP"] }
+                    ];
 
-            if (!docSnap.exists()) {
-                const initialSubjects = [
-                    { name: "Português", color: "blue", topics: ["Ortografia", "Crase", "Interpretação", "Pontuação", "Concordância"] },
-                    { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Crimes contra Pessoa", "Crimes contra Patrimônio", "Penas"] },
-                    { name: "Direito Administrativo", color: "emerald", topics: ["Atos Administrativos", "Poderes", "Licitações", "Agentes Públicos"] },
-                    { name: "Informática", color: "indigo", topics: ["Windows", "Hardware/Software", "Segurança", "Office/LibreOffice"] },
-                    { name: "História e Geo AP", color: "amber", topics: ["Colonização AP", "Criação do Território", "Clima e Relevo AP", "Economia AP"] }
-                ];
-
-                userData = {
-                    userEmail: user.email,
-                    lastSeen: new Date().toISOString(),
-                    subjects: initialSubjects.map(s => ({
-                        name: s.name,
-                        color: s.color,
-                        topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] }))
-                    }))
-                };
-                await setDoc(userDocRef, userData);
-            } else {
-                await updateDoc(userDocRef, { 
-                    userEmail: user.email, 
-                    lastSeen: new Date().toISOString() 
-                });
+                    userData = {
+                        userEmail: user.email,
+                        lastSeen: new Date().toISOString(),
+                        subjects: initialSubjects.map(s => ({
+                            name: s.name,
+                            color: s.color,
+                            topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] }))
+                        }))
+                    };
+                    await setDoc(userDocRef, userData);
+                } else {
+                    await updateDoc(userDocRef, { lastSeen: new Date().toISOString() });
+                }
+            } catch(e) {
+                console.error("Erro ao carregar dados do usuário. Verifique as regras do Firestore.");
+                document.getElementById('edital-container').innerHTML = `<div class="p-8 text-center bg-rose-50 text-rose-600 rounded-3xl font-bold">Erro de conexão com o Banco de Dados. Verifique se as regras do Firestore estão no "Modo de Teste".</div>`;
             }
 
+            // Ouvinte em tempo real com callback de erro obrigatório
             onSnapshot(userDocRef, (doc) => {
                 if (doc.exists()) {
                     userData = doc.data();
                     renderApp();
                 }
+            }, (error) => {
+                console.error("Erro no Snapshot:", error);
             });
         };
 
@@ -325,22 +342,21 @@
         window.toggleStatus = async (subIdx, topIdx, colIdx) => {
             userData.subjects[subIdx].topics[topIdx].status[colIdx] = !userData.subjects[subIdx].topics[topIdx].status[colIdx];
             const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-            await updateDoc(userDocRef, userData);
+            try {
+                await updateDoc(userDocRef, userData);
+            } catch(e) { console.error("Falha ao salvar progresso."); }
         };
 
         window.showTab = (id) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-btn', 'text-white'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('text-slate-500'));
-            
             document.getElementById(id).classList.add('active');
             document.getElementById('btn-' + id).classList.add('active-btn');
-            
             if(id === 'evolucao') renderCharts();
             if(id === 'admin') window.loadAdminData();
         };
 
-        // --- ADMIN MONITORING ---
         window.loadAdminData = async () => {
             if(!user || user.email.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) return;
             const listEl = document.getElementById('admin-users-list');
@@ -349,44 +365,22 @@
             try {
                 const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
                 listEl.innerHTML = '';
-                
                 if(querySnapshot.empty) {
-                    listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400">Nenhum aluno registado ainda.</td></tr>';
+                    listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400">Nenhum aluno registrado.</td></tr>';
                     return;
                 }
-
                 for (const profileDoc of querySnapshot.docs) {
                     const profileData = profileDoc.data();
-                    const progRef = doc(db, 'artifacts', appId, 'users', profileData.uid, 'settings', 'edital');
-                    const progSnap = await getDoc(progRef);
-                    
-                    let pct = 0;
-                    if(progSnap.exists()) {
-                        const data = progSnap.data();
-                        let total = 0, done = 0;
-                        data.subjects.forEach(s => s.topics.forEach(t => t.status.forEach(st => { total++; if(st) done++; })));
-                        pct = total > 0 ? Math.round((done/total)*100) : 0;
-                    }
-
                     const lastDate = profileData.lastSeen ? new Date(profileData.lastSeen).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '---';
-
                     listEl.innerHTML += `
                         <tr class="border-b border-slate-50 hover:bg-slate-50/50">
-                            <td class="p-4 font-bold text-slate-700">${profileData.email || 'Usuário Sem E-mail'}</td>
-                            <td class="p-4 text-center">
-                                <div class="flex items-center gap-2 justify-center">
-                                    <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-500" style="width: ${pct}%"></div>
-                                    </div>
-                                    <span class="text-xs font-black text-indigo-600">${pct}%</span>
-                                </div>
-                            </td>
+                            <td class="p-4 font-bold text-slate-700">${profileData.email}</td>
+                            <td class="p-4 text-center"><span class="text-xs font-black text-indigo-600">Ativo</span></td>
                             <td class="p-4 text-center text-slate-400 text-[10px] font-bold">${lastDate}</td>
-                        </tr>
-                    `;
+                        </tr>`;
                 }
             } catch (err) {
-                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro ao carregar: ${err.message}</td></tr>`;
+                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro de permissão no Admin.</td></tr>`;
             }
         };
 
@@ -394,7 +388,6 @@
             const container = document.getElementById('edital-container');
             container.innerHTML = '';
             let total = 0, done = 0;
-
             userData.subjects.forEach((sub, sIdx) => {
                 let subTotal = sub.topics.length * 4, subDone = 0;
                 const rows = sub.topics.map((top, tIdx) => {
@@ -405,7 +398,6 @@
                     }).join('');
                     return `<tr class="border-b border-slate-50 hover:bg-slate-50/50"><td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>${checks}</tr>`;
                 }).join('');
-
                 const pct = Math.round((subDone/subTotal)*100);
                 container.innerHTML += `
                     <div class="subject-card">
@@ -421,8 +413,7 @@
                         </table>
                     </div>`;
             });
-
-            const globalPct = Math.round((done/total)*100);
+            const globalPct = total > 0 ? Math.round((done/total)*100) : 0;
             document.getElementById('global-pct').innerText = globalPct + '%';
             document.getElementById('global-bar').style.width = globalPct + '%';
         };
@@ -439,7 +430,7 @@
                         label: 'Desempenho %',
                         data: userData.subjects.map(s => {
                             let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
-                            return Math.round((d/(s.topics.length*4))*100);
+                            return total > 0 ? Math.round((d/(s.topics.length*4))*100) : 0;
                         }),
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.1)',
