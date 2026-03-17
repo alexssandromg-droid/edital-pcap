@@ -64,10 +64,20 @@
             background-color: #4f46e5 !important;
             color: white !important;
         }
+
+        .checkbox-custom {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: #4f46e5;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body>
 
+    <!-- Tela de Login -->
     <div id="auth-screen">
         <div class="auth-card">
             <div class="text-center mb-8">
@@ -82,11 +92,15 @@
                     <input type="email" id="auth-email" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500/20">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1.5 ml-1">Senha</label>
+                    <div class="flex justify-between items-center mb-1.5 ml-1">
+                        <label class="block text-[10px] font-black uppercase text-slate-400 tracking-widest">Senha</label>
+                        <button onclick="window.handleForgotPassword()" class="text-[9px] font-black uppercase text-indigo-500 hover:text-indigo-700 tracking-tighter">Esqueceu a senha?</button>
+                    </div>
                     <input type="password" id="auth-password" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500/20">
                 </div>
                 
                 <div id="auth-error" class="hidden text-rose-500 text-[10px] font-bold uppercase text-center bg-rose-50 py-2 rounded-xl border border-rose-100"></div>
+                <div id="auth-success" class="hidden text-emerald-600 text-[10px] font-bold uppercase text-center bg-emerald-50 py-2 rounded-xl border border-emerald-100"></div>
 
                 <button onclick="window.handleAuth()" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-black py-4.5 rounded-2xl shadow-xl hover:bg-indigo-700 transition-all uppercase text-xs tracking-widest mt-4">
                     Acessar Plataforma
@@ -99,7 +113,8 @@
         </div>
     </div>
 
-    <div id="app-content" class="max-w-6xl mx-auto hidden">
+    <!-- Conteúdo Principal -->
+    <div id="app-content" class="max-w-6xl mx-auto hidden py-8">
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
                 <div class="flex items-center gap-4 mb-4">
@@ -109,31 +124,61 @@
                     <button onclick="window.userLogout()" class="text-rose-400 hover:text-rose-600 text-[10px] font-black uppercase tracking-widest">Sair</button>
                 </div>
                 <h1 class="text-5xl font-black text-slate-900 tracking-tight" id="main-title">PC-AP ELITE</h1>
-                <p class="text-slate-500 font-semibold text-lg italic">Gestão Avançada de Estudos</p>
+                <p class="text-slate-500 font-semibold text-lg italic" id="welcome-user">Sistema de Gestão de Estudos</p>
             </div>
             
             <div class="bg-white p-7 rounded-[2.5rem] shadow-xl border border-slate-100 min-w-[260px] text-center">
                 <div class="text-5xl font-black text-indigo-600 mb-1" id="global-pct">0%</div>
                 <div class="text-[10px] uppercase font-extrabold text-slate-400 tracking-widest">Conclusão Total</div>
-                <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 overflow-hidden"><div id="global-bar" class="h-full bg-indigo-500 transition-all duration-1000"></div></div>
+                <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 border border-slate-100 overflow-hidden">
+                    <div id="global-bar" class="h-full bg-indigo-500 transition-all duration-1000"></div>
+                </div>
             </div>
         </header>
 
-        <nav class="flex gap-2 p-2 bg-white rounded-3xl mb-10 shadow-sm border border-slate-100 overflow-x-auto">
+        <nav class="flex gap-2 p-2 bg-white rounded-3xl mb-10 shadow-sm border border-slate-100 overflow-x-auto no-scrollbar">
             <button onclick="window.showTab('planner')" id="btn-planner" class="tab-btn active-btn flex-none py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase tracking-widest">📅 Planner</button>
             <button onclick="window.showTab('evolucao')" id="btn-evolucao" class="tab-btn flex-none text-slate-500 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase">📈 Evolução</button>
+            <button onclick="window.showTab('admin')" id="btn-admin" class="tab-btn hidden flex-none text-rose-500 bg-rose-50 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase border border-rose-100">👑 Admin</button>
         </nav>
 
-        <div id="planner" class="tab-content active"><div id="edital-container" class="space-y-8"></div></div>
+        <div id="planner" class="tab-content active">
+            <div id="edital-container" class="space-y-8"></div>
+        </div>
+
         <div id="evolucao" class="tab-content">
             <div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm h-[500px]"><canvas id="radarChart"></canvas></div>
+        </div>
+
+        <!-- Painel Admin -->
+        <div id="admin" class="tab-content">
+            <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight">Monitoramento de Alunos</h3>
+                    <button onclick="window.loadAdminData()" class="text-[10px] font-black text-indigo-600 uppercase bg-indigo-50 px-4 py-2 rounded-xl">Atualizar Lista</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 tracking-widest">
+                            <tr>
+                                <th class="p-4">Aluno (E-mail)</th>
+                                <th class="p-4 text-center">Progresso Total</th>
+                                <th class="p-4 text-center">Último Acesso</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-list">
+                            <tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Clica em "Atualizar Lista" para ver os alunos.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCcHcryUJhFfKlh22-opI4cmgxazrU_Lkw",
@@ -147,34 +192,41 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const appId = "pcap-v1";
+        const ADMIN_EMAIL = "alexssandro.m.g@gmail.com";
 
         let user = null;
         let isRegistering = false;
         let userData = null;
 
+        // --- AUTH LOGIC ---
         window.toggleAuthMode = () => {
             isRegistering = !isRegistering;
             document.getElementById('auth-title').innerText = isRegistering ? "Criar Nova Conta" : "Bem-vindo à Elite";
             document.getElementById('auth-submit-btn').innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma";
             document.getElementById('auth-toggle-btn').innerText = isRegistering ? "Já tem conta? Faça login" : "Ainda não tem conta? Cadastre-se";
+            document.getElementById('auth-error').classList.add('hidden');
+            document.getElementById('auth-success').classList.add('hidden');
         };
 
         window.handleAuth = async () => {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
+            const successDiv = document.getElementById('auth-success');
             const btn = document.getElementById('auth-submit-btn');
 
             if(!email || !password) return;
             btn.disabled = true;
             btn.innerText = "Aguarde...";
             errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
 
             try {
                 if(isRegistering) {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    await createUserWithEmailAndPassword(auth, email.trim(), password);
                 } else {
-                    await signInWithEmailAndPassword(auth, email, password);
+                    await signInWithEmailAndPassword(auth, email.trim(), password);
                 }
             } catch (err) {
                 errorDiv.innerText = "Erro: Dados inválidos ou e-mail já em uso";
@@ -185,43 +237,157 @@
             }
         };
 
+        window.handleForgotPassword = async () => {
+            const email = document.getElementById('auth-email').value;
+            const errorDiv = document.getElementById('auth-error');
+            const successDiv = document.getElementById('auth-success');
+
+            if(!email) {
+                errorDiv.innerText = "Introduza o e-mail primeiro!";
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email.trim());
+                successDiv.innerText = "E-mail de redefinição enviado!";
+                successDiv.classList.remove('hidden');
+                errorDiv.classList.add('hidden');
+            } catch (err) {
+                errorDiv.innerText = "Erro ao enviar e-mail. Verifique o endereço.";
+                errorDiv.classList.remove('hidden');
+                successDiv.classList.add('hidden');
+            }
+        };
+
         window.userLogout = () => signOut(auth).then(() => location.reload());
 
-        const initUserSession = async (user) => {
+        const initUserSession = async (currentUser) => {
+            user = currentUser;
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
+            document.getElementById('welcome-user').innerText = `Bem-vindo, ${user.email}`;
 
-            const userDocRef = doc(db, 'pcap_users', user.uid); // Novo caminho aceito
+            const normalizedEmail = user.email.toLowerCase().trim();
+            const normalizedAdmin = ADMIN_EMAIL.toLowerCase().trim();
+            
+            if(normalizedEmail === normalizedAdmin) {
+                document.getElementById('btn-admin').classList.remove('hidden');
+            }
+
+            const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
+            await setDoc(profileRef, {
+                uid: user.uid,
+                email: user.email,
+                lastSeen: new Date().toISOString()
+            }, { merge: true });
+
+            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
             const docSnap = await getDoc(userDocRef);
 
             if (!docSnap.exists()) {
-                const initialData = [
-                    { name: "Português", topics: ["Ortografia", "Crase", "Interpretação", "Pontuação", "Concordância"] },
-                    { name: "D. Administrativo", topics: ["Atos Adm", "Poderes", "Licitações", "Agentes Públicos"] },
-                    { name: "D. Penal", topics: ["Teoria do Crime", "Crimes contra Pessoa", "Crimes contra Patrimônio"] },
-                    { name: "História e Geo AP", topics: ["Colonização AP", "Território Federal", "Economia AP"] },
-                    { name: "Informática", topics: ["Windows", "Segurança", "Office/LibreOffice"] }
+                const initialSubjects = [
+                    { name: "Português", color: "blue", topics: ["Ortografia", "Crase", "Interpretação", "Pontuação", "Concordância"] },
+                    { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Crimes contra Pessoa", "Crimes contra Patrimônio", "Penas"] },
+                    { name: "Direito Administrativo", color: "emerald", topics: ["Atos Administrativos", "Poderes", "Licitações", "Agentes Públicos"] },
+                    { name: "Informática", color: "indigo", topics: ["Windows", "Hardware/Software", "Segurança", "Office/LibreOffice"] },
+                    { name: "História e Geo AP", color: "amber", topics: ["Colonização AP", "Criação do Território", "Clima e Relevo AP", "Economia AP"] }
                 ];
-                userData = { subjects: initialData.map(s => ({ name: s.name, topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] })) })) };
+
+                userData = {
+                    userEmail: user.email,
+                    lastSeen: new Date().toISOString(),
+                    subjects: initialSubjects.map(s => ({
+                        name: s.name,
+                        color: s.color,
+                        topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] }))
+                    }))
+                };
                 await setDoc(userDocRef, userData);
+            } else {
+                await updateDoc(userDocRef, { 
+                    userEmail: user.email, 
+                    lastSeen: new Date().toISOString() 
+                });
             }
 
-            onSnapshot(userDocRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderApp(); } });
+            onSnapshot(userDocRef, (doc) => {
+                if (doc.exists()) {
+                    userData = doc.data();
+                    renderApp();
+                }
+            });
         };
 
-        onAuthStateChanged(auth, (u) => { if (u) { user = u; initUserSession(u); } });
+        onAuthStateChanged(auth, (u) => { if (u) { initUserSession(u); } });
 
         window.toggleStatus = async (subIdx, topIdx, colIdx) => {
             userData.subjects[subIdx].topics[topIdx].status[colIdx] = !userData.subjects[subIdx].topics[topIdx].status[colIdx];
-            await updateDoc(doc(db, 'pcap_users', user.uid), userData);
+            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
+            await updateDoc(userDocRef, userData);
         };
 
         window.showTab = (id) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-btn', 'text-white'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('text-slate-500'));
+            
             document.getElementById(id).classList.add('active');
             document.getElementById('btn-' + id).classList.add('active-btn');
+            
             if(id === 'evolucao') renderCharts();
+            if(id === 'admin') window.loadAdminData();
+        };
+
+        // --- ADMIN MONITORING ---
+        window.loadAdminData = async () => {
+            if(!user || user.email.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) return;
+            const listEl = document.getElementById('admin-users-list');
+            listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Buscando alunos...</td></tr>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
+                listEl.innerHTML = '';
+                
+                if(querySnapshot.empty) {
+                    listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400">Nenhum aluno registado ainda.</td></tr>';
+                    return;
+                }
+
+                for (const profileDoc of querySnapshot.docs) {
+                    const profileData = profileDoc.data();
+                    const progRef = doc(db, 'artifacts', appId, 'users', profileData.uid, 'settings', 'edital');
+                    const progSnap = await getDoc(progRef);
+                    
+                    let pct = 0;
+                    if(progSnap.exists()) {
+                        const data = progSnap.data();
+                        let total = 0, done = 0;
+                        data.subjects.forEach(s => s.topics.forEach(t => t.status.forEach(st => { total++; if(st) done++; })));
+                        pct = total > 0 ? Math.round((done/total)*100) : 0;
+                    }
+
+                    const lastDate = profileData.lastSeen ? new Date(profileData.lastSeen).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '---';
+
+                    listEl.innerHTML += `
+                        <tr class="border-b border-slate-50 hover:bg-slate-50/50">
+                            <td class="p-4 font-bold text-slate-700">${profileData.email || 'Usuário Sem E-mail'}</td>
+                            <td class="p-4 text-center">
+                                <div class="flex items-center gap-2 justify-center">
+                                    <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-indigo-500" style="width: ${pct}%"></div>
+                                    </div>
+                                    <span class="text-xs font-black text-indigo-600">${pct}%</span>
+                                </div>
+                            </td>
+                            <td class="p-4 text-center text-slate-400 text-[10px] font-bold">${lastDate}</td>
+                        </tr>
+                    `;
+                }
+            } catch (err) {
+                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro ao carregar: ${err.message}</td></tr>`;
+            }
         };
 
         const renderApp = () => {
@@ -235,25 +401,27 @@
                     const checks = top.status.map((s, cIdx) => {
                         if(s) { done++; subDone++; }
                         total++;
-                        return `<td class="p-3 text-center"><input type="checkbox" ${s ? 'checked' : ''} onchange="toggleStatus(${sIdx}, ${tIdx}, ${cIdx})" class="w-5 h-5 accent-indigo-600 cursor-pointer"></td>`;
+                        return `<td class="p-3 text-center"><input type="checkbox" class="checkbox-custom" ${s ? 'checked' : ''} onchange="toggleStatus(${sIdx}, ${tIdx}, ${cIdx})"></td>`;
                     }).join('');
-                    return `<tr class="border-b border-slate-50"><td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>${checks}</tr>`;
+                    return `<tr class="border-b border-slate-50 hover:bg-slate-50/50"><td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>${checks}</tr>`;
                 }).join('');
-                
+
                 const pct = Math.round((subDone/subTotal)*100);
-                container.innerHTML += `<div class="subject-card">
-                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
-                        <h3 class="font-black text-slate-800 uppercase">${sub.name}</h3>
-                        <span class="text-xl font-black text-indigo-600">${pct}%</span>
-                    </div>
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
-                            <tr><th class="p-4">Tópico</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr>
-                        </thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                </div>`;
+                container.innerHTML += `
+                    <div class="subject-card">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                            <h3 class="font-black text-slate-800 uppercase tracking-tight">${sub.name}</h3>
+                            <div class="text-right"><span class="text-xl font-black text-indigo-600">${pct}%</span></div>
+                        </div>
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
+                                <tr><th class="p-4">Tópico</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
             });
+
             const globalPct = Math.round((done/total)*100);
             document.getElementById('global-pct').innerText = globalPct + '%';
             document.getElementById('global-bar').style.width = globalPct + '%';
@@ -267,10 +435,16 @@
                 type: 'radar',
                 data: {
                     labels: userData.subjects.map(s => s.name),
-                    datasets: [{ label: 'Progresso %', data: userData.subjects.map(s => {
-                        let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
-                        return Math.round((d/(s.topics.length*4))*100);
-                    }), borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)' }]
+                    datasets: [{
+                        label: 'Desempenho %',
+                        data: userData.subjects.map(s => {
+                            let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
+                            return Math.round((d/(s.topics.length*4))*100);
+                        }),
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        borderWidth: 3
+                    }]
                 },
                 options: { maintainAspectRatio: false, scales: { r: { min: 0, max: 100 } } }
             });
