@@ -8,76 +8,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        
-        :root {
-            --primary: #4f46e5;
-            --bg: #f8fafc;
-            --text-main: #1e293b;
-            --border-color: #e2e8f0;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            color: var(--text-main);
-            min-height: 100vh;
-        }
-
-        .subject-card {
-            background: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
+        :root { --primary: #4f46e5; --bg: #f8fafc; --text-main: #1e293b; --border-color: #e2e8f0; }
+        body { background-color: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); min-height: 100vh; }
+        .subject-card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid var(--border-color); margin-bottom: 2rem; overflow: hidden; }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #auth-screen {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 2.5rem;
-            padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .active-btn {
-            background-color: #4f46e5 !important;
-            color: white !important;
-        }
-
-        .checkbox-custom {
-            width: 1.25rem;
-            height: 1.25rem;
-            cursor: pointer;
-            accent-color: #4f46e5;
-        }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #auth-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: white; width: 100%; max-width: 400px; border-radius: 2.5rem; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .active-btn { background-color: #4f46e5 !important; color: white !important; }
+        .checkbox-custom { width: 1.25rem; height: 1.25rem; cursor: pointer; accent-color: #4f46e5; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Tela de Login / Cadastro -->
+    <!-- Tela de Login -->
     <div id="auth-screen">
         <div class="auth-card">
             <div class="text-center mb-8">
@@ -85,7 +31,6 @@
                 <h2 id="auth-title" class="text-2xl font-black text-slate-900 tracking-tight">Bem-vindo à Elite</h2>
                 <p id="auth-subtitle" class="text-slate-500 text-sm font-medium mt-1">Faça login para gerenciar seu edital</p>
             </div>
-
             <div class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1.5 ml-1">E-mail</label>
@@ -98,35 +43,25 @@
                     </div>
                     <input type="password" id="auth-password" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500/20">
                 </div>
-                
-                <div id="auth-error" class="hidden text-rose-500 text-[10px] font-bold uppercase text-center bg-rose-50 py-2 rounded-xl border border-rose-100"></div>
-                <div id="auth-success" class="hidden text-emerald-600 text-[10px] font-bold uppercase text-center bg-emerald-50 py-2 rounded-xl border border-emerald-100"></div>
-
-                <button onclick="window.handleAuth()" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-black py-4.5 rounded-2xl shadow-xl hover:bg-indigo-700 transition-all uppercase text-xs tracking-widest mt-4">
-                    Acessar Plataforma
-                </button>
-
-                <div class="text-center pt-4">
-                    <button onclick="window.toggleAuthMode()" id="auth-toggle-btn" class="text-[10px] font-black uppercase text-indigo-500 hover:text-indigo-700 tracking-widest">Ainda não tem conta? Cadastre-se</button>
-                </div>
+                <div id="auth-error" class="hidden text-rose-500 text-[10px] font-bold uppercase text-center bg-rose-50 py-2 rounded-xl border border-rose-100 p-2"></div>
+                <div id="auth-success" class="hidden text-emerald-600 text-[10px] font-bold uppercase text-center bg-emerald-50 py-2 rounded-xl border border-emerald-100 p-2"></div>
+                <button onclick="window.handleAuth()" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-black py-4.5 rounded-2xl shadow-xl hover:bg-indigo-700 transition-all uppercase text-xs tracking-widest mt-4">Acessar Plataforma</button>
+                <div class="text-center pt-4"><button onclick="window.toggleAuthMode()" id="auth-toggle-btn" class="text-[10px] font-black uppercase text-indigo-500 hover:text-indigo-700 tracking-widest">Ainda não tem conta? Cadastre-se</button></div>
             </div>
         </div>
     </div>
 
-    <!-- Conteúdo Principal do App -->
+    <!-- Conteúdo Principal -->
     <div id="app-content" class="max-w-6xl mx-auto hidden py-8 px-4">
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
                 <div class="flex items-center gap-4 mb-4">
-                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-100">
-                        PC-AP • Macapá
-                    </div>
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-100">PC-AP • Macapá</div>
                     <button onclick="window.userLogout()" class="text-rose-400 hover:text-rose-600 text-[10px] font-black uppercase tracking-widest">Sair</button>
                 </div>
                 <h1 class="text-5xl font-black text-slate-900 tracking-tight" id="main-title">PC-AP ELITE</h1>
-                <p class="text-slate-500 font-semibold text-lg italic" id="welcome-user">Carregando perfil...</p>
+                <p class="text-slate-500 font-semibold text-lg italic" id="welcome-user">Gestão de Estudos</p>
             </div>
-            
             <div class="bg-white p-7 rounded-[2.5rem] shadow-xl border border-slate-100 min-w-[260px] text-center">
                 <div class="text-5xl font-black text-indigo-600 mb-1" id="global-pct">0%</div>
                 <div class="text-[10px] uppercase font-extrabold text-slate-400 tracking-widest">Conclusão Total</div>
@@ -142,37 +77,12 @@
             <button onclick="window.showTab('admin')" id="btn-admin" class="tab-btn hidden flex-none text-rose-500 bg-rose-50 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase border border-rose-100">👑 Admin</button>
         </nav>
 
-        <div id="planner" class="tab-content active">
-            <div id="edital-container" class="space-y-8"></div>
-        </div>
-
-        <div id="evolucao" class="tab-content">
-            <div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm h-[500px]">
-                <canvas id="radarChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Painel Administrativo -->
+        <div id="planner" class="tab-content active"><div id="edital-container" class="space-y-8"></div></div>
+        <div id="evolucao" class="tab-content"><div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm h-[500px]"><canvas id="radarChart"></canvas></div></div>
         <div id="admin" class="tab-content">
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-black text-slate-800 uppercase tracking-tight">Monitoramento de Alunos</h3>
-                    <button onclick="window.loadAdminData()" class="text-[10px] font-black text-indigo-600 uppercase bg-indigo-50 px-4 py-2 rounded-xl">Atualizar Lista</button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                            <tr>
-                                <th class="p-4">Aluno (E-mail)</th>
-                                <th class="p-4 text-center">Progresso Total</th>
-                                <th class="p-4 text-center">Último Acesso</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-list">
-                            <tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Clique em "Atualizar Lista" para ver os alunos.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-black text-slate-800 uppercase tracking-tight">Monitoramento de Alunos</h3><button onclick="window.loadAdminData()" class="text-[10px] font-black text-indigo-600 uppercase bg-indigo-50 px-4 py-2 rounded-xl">Atualizar</button></div>
+                <div class="overflow-x-auto"><table class="w-full text-left text-xs"><tbody id="admin-users-list"></tbody></table></div>
             </div>
         </div>
     </div>
@@ -182,7 +92,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-        // CONFIGURAÇÕES DO FIREBASE (ALEX)
         const firebaseConfig = {
             apiKey: "AIzaSyCcHcryUJhFfKlh22-opI4cmgxazrU_Lkw",
             authDomain: "edital-pcap.firebaseapp.com",
@@ -198,18 +107,13 @@
         const appId = "pcap-v1";
         const ADMIN_EMAIL = "alexssandro.m.g@gmail.com";
 
-        let user = null;
-        let isRegistering = false;
-        let userData = null;
+        let user = null; let isRegistering = false; let userData = null;
 
-        // --- LÓGICA DE AUTENTICAÇÃO ---
         window.toggleAuthMode = () => {
             isRegistering = !isRegistering;
             document.getElementById('auth-title').innerText = isRegistering ? "Criar Nova Conta" : "Bem-vindo à Elite";
             document.getElementById('auth-submit-btn').innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma";
             document.getElementById('auth-toggle-btn').innerText = isRegistering ? "Já tem conta? Faça login" : "Ainda não tem conta? Cadastre-se";
-            document.getElementById('auth-error').classList.add('hidden');
-            document.getElementById('auth-success').classList.add('hidden');
         };
 
         window.handleAuth = async () => {
@@ -217,121 +121,57 @@
             const password = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
             const btn = document.getElementById('auth-submit-btn');
-
             if(!email || !password) return;
-            btn.disabled = true;
-            btn.innerText = "Aguarde...";
-            errorDiv.classList.add('hidden');
-
+            btn.disabled = true; btn.innerText = "Aguarde..."; errorDiv.classList.add('hidden');
             try {
-                if(isRegistering) {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                } else {
-                    await signInWithEmailAndPassword(auth, email, password);
-                }
+                if(isRegistering) await createUserWithEmailAndPassword(auth, email, password);
+                else await signInWithEmailAndPassword(auth, email, password);
             } catch (err) {
-                errorDiv.innerText = "Erro: Dados inválidos ou e-mail já em uso";
+                errorDiv.innerText = "Erro: " + (err.code === 'auth/email-already-in-use' ? "E-mail em uso." : "Dados inválidos.");
                 errorDiv.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma";
-            }
+            } finally { btn.disabled = false; btn.innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma"; }
         };
 
         window.handleForgotPassword = async () => {
             const email = document.getElementById('auth-email').value.trim();
-            const errorDiv = document.getElementById('auth-error');
-            const successDiv = document.getElementById('auth-success');
-
-            if(!email) {
-                errorDiv.innerText = "Introduza o e-mail primeiro!";
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-
-            try {
-                await sendPasswordResetEmail(auth, email);
-                successDiv.innerText = "E-mail de redefinição enviado!";
-                successDiv.classList.remove('hidden');
-                errorDiv.classList.add('hidden');
-            } catch (err) {
-                errorDiv.innerText = "Erro ao enviar. Verifique o e-mail.";
-                errorDiv.classList.remove('hidden');
-            }
+            if(!email) return;
+            try { await sendPasswordResetEmail(auth, email); document.getElementById('auth-success').innerText = "E-mail de redefinição enviado!"; document.getElementById('auth-success').classList.remove('hidden'); } catch (err) {}
         };
 
         window.userLogout = () => signOut(auth).then(() => location.reload());
 
-        // --- INICIALIZAÇÃO DA SESSÃO ---
         const initUserSession = async (currentUser) => {
             user = currentUser;
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             document.getElementById('welcome-user').innerText = `Logado como: ${user.email}`;
+            if(user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) document.getElementById('btn-admin').classList.remove('hidden');
 
-            // Verificação Robusta de Admin
-            if(user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) {
-                document.getElementById('btn-admin').classList.remove('hidden');
-            }
+            const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
+            await setDoc(profileRef, { uid: user.uid, email: user.email, lastSeen: new Date().toISOString() }, { merge: true });
 
-            // Registrar Perfil Público (Para a lista de Admin)
-            try {
-                const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
-                await setDoc(profileRef, {
-                    uid: user.uid,
-                    email: user.email,
-                    lastSeen: new Date().toISOString()
-                }, { merge: true });
-            } catch(e) { console.warn("Erro ao registrar perfil público."); }
-
-            // Carregar Edital Privado do Usuário
             const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-            
-            try {
-                const docSnap = await getDoc(userDocRef);
-                if (!docSnap.exists()) {
-                    const initialSubjects = [
-                        { name: "Língua Portuguesa", color: "blue", topics: ["Ortografia e Acentuação", "Crase", "Compreensão de Texto", "Pontuação", "Concordância Verbal/Nominal"] },
-                        { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Tipicidade/Ilicitude", "Crimes contra a Pessoa", "Crimes contra o Patrimônio", "Das Penas"] },
-                        { name: "Direito Administrativo", color: "emerald", topics: ["Princípios da Adm", "Poderes e Atos Adm", "Licitações (Lei 14.133)", "Agentes Públicos", "Responsabilidade Civil"] },
-                        { name: "Direito Processual Penal", color: "orange", topics: ["Inquérito Policial", "Ação Penal", "Prisões e Medidas Cautelares", "Provas no Processo"] },
-                        { name: "Informática", color: "indigo", topics: ["Windows 10/11", "Hardware e Software", "Segurança da Informação", "LibreOffice e Office 2013"] },
-                        { name: "História e Geo Amapá", color: "amber", topics: ["Colonização do Amapá", "Território Federal do Amapá", "Aspectos Físicos (Clima/Vegetação)", "Economia Amapaense"] }
-                    ];
-
-                    userData = {
-                        userEmail: user.email,
-                        lastSeen: new Date().toISOString(),
-                        subjects: initialSubjects.map(s => ({
-                            name: s.name,
-                            color: s.color,
-                            topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] }))
-                        }))
-                    };
-                    await setDoc(userDocRef, userData);
-                } else {
-                    await updateDoc(userDocRef, { lastSeen: new Date().toISOString() });
-                }
-            } catch(e) {
-                console.error("Erro ao carregar Firestore.");
+            const docSnap = await getDoc(userDocRef);
+            if (!docSnap.exists()) {
+                const initialSubjects = [
+                    { name: "Língua Portuguesa", color: "blue", topics: ["Ortografia e Acentuação", "Crase", "Compreensão de Texto", "Pontuação", "Concordância Verbal/Nominal"] },
+                    { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Tipicidade/Ilicitude", "Crimes contra a Pessoa", "Crimes contra o Patrimônio", "Das Penas"] },
+                    { name: "Direito Administrativo", color: "emerald", topics: ["Princípios da Adm", "Poderes e Atos Adm", "Licitações (Lei 14.133)", "Agentes Públicos", "Responsabilidade Civil"] },
+                    { name: "Direito Processual Penal", color: "orange", topics: ["Inquérito Policial", "Ação Penal", "Prisões e Medidas Cautelares", "Provas no Processo"] },
+                    { name: "Informática", color: "indigo", topics: ["Windows 10/11", "Hardware e Software", "Segurança da Informação", "LibreOffice e Office 2013"] },
+                    { name: "História e Geo Amapá", color: "amber", topics: ["Colonização do Amapá", "Território Federal do Amapá", "Aspectos Físicos (Clima/Vegetação)", "Economia Amapaense"] }
+                ];
+                userData = { userEmail: user.email, lastSeen: new Date().toISOString(), subjects: initialSubjects.map(s => ({ name: s.name, color: s.color, topics: s.topics.map(t => ({ text: t, status: [false, false, false, false] })) })) };
+                await setDoc(userDocRef, userData);
             }
-
-            // Listener em Tempo Real
-            onSnapshot(userDocRef, (doc) => {
-                if (doc.exists()) {
-                    userData = doc.data();
-                    renderApp();
-                }
-            });
+            onSnapshot(userDocRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderApp(); } });
         };
 
-        onAuthStateChanged(auth, (u) => { if (u) { initUserSession(u); } });
+        onAuthStateChanged(auth, (u) => { if (u) initUserSession(u); });
 
-        // --- LÓGICA DO PLANNER ---
         window.toggleStatus = async (subIdx, topIdx, colIdx) => {
             userData.subjects[subIdx].topics[topIdx].status[colIdx] = !userData.subjects[subIdx].topics[topIdx].status[colIdx];
-            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-            await updateDoc(userDocRef, userData);
+            await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital'), userData);
         };
 
         window.showTab = (id) => {
@@ -345,65 +185,29 @@
 
         const renderApp = () => {
             const container = document.getElementById('edital-container');
-            container.innerHTML = '';
-            let total = 0, done = 0;
-
+            container.innerHTML = ''; let total = 0, done = 0;
             userData.subjects.forEach((sub, sIdx) => {
                 let subTotal = sub.topics.length * 4, subDone = 0;
                 const rows = sub.topics.map((top, tIdx) => {
-                    const checks = top.status.map((s, cIdx) => {
-                        if(s) { done++; subDone++; }
-                        total++;
-                        return `<td class="p-3 text-center"><input type="checkbox" class="checkbox-custom" ${s ? 'checked' : ''} onchange="toggleStatus(${sIdx}, ${tIdx}, ${cIdx})"></td>`;
-                    }).join('');
+                    const checks = top.status.map((s, cIdx) => { if(s) { done++; subDone++; } total++; return `<td class="p-3 text-center"><input type="checkbox" class="checkbox-custom" ${s ? 'checked' : ''} onchange="toggleStatus(${sIdx}, ${tIdx}, ${cIdx})"></td>`; }).join('');
                     return `<tr class="border-b border-slate-50 hover:bg-slate-50/50"><td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>${checks}</tr>`;
                 }).join('');
-
                 const pct = Math.round((subDone/subTotal)*100);
-                container.innerHTML += `
-                    <div class="subject-card">
-                        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
-                            <h3 class="font-black text-slate-800 uppercase tracking-tight">${sub.name}</h3>
-                            <div class="text-right"><span class="text-xl font-black text-indigo-600">${pct}%</span></div>
-                        </div>
-                        <table class="w-full text-left">
-                            <thead class="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
-                                <tr><th class="p-4">Tópico</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr>
-                            </thead>
-                            <tbody>${rows}</tbody>
-                        </table>
-                    </div>`;
+                container.innerHTML += `<div class="subject-card"><div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white"><h3 class="font-black text-slate-800 uppercase tracking-tight">${sub.name}</h3><div class="text-right"><span class="text-xl font-black text-indigo-600">${pct}%</span></div></div><table class="w-full text-left"><thead class="bg-slate-50 text-[9px] font-black uppercase text-slate-400"><tr><th class="p-4">Tópico</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody>${rows}</tbody></table></div>`;
             });
-
             const globalPct = Math.round((done/total)*100);
             document.getElementById('global-pct').innerText = globalPct + '%';
             document.getElementById('global-bar').style.width = globalPct + '%';
         };
 
-        // --- MONITORAMENTO ADMIN ---
         window.loadAdminData = async () => {
-            if(!user || user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return;
             const listEl = document.getElementById('admin-users-list');
-            listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Buscando alunos ativos...</td></tr>';
-
-            try {
-                const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
-                listEl.innerHTML = '';
-                
-                for (const profileDoc of querySnapshot.docs) {
-                    const p = profileDoc.data();
-                    const lastDate = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '---';
-                    
-                    listEl.innerHTML += `
-                        <tr class="border-b border-slate-50 hover:bg-slate-50/50">
-                            <td class="p-4 font-bold text-slate-700">${p.email}</td>
-                            <td class="p-4 text-center"><span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-lg text-[10px] font-black">ATIVO</span></td>
-                            <td class="p-4 text-center text-slate-400 text-[10px] font-bold">${lastDate}</td>
-                        </tr>`;
-                }
-            } catch (err) {
-                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro de permissão. Verifique as regras do Firestore.</td></tr>`;
-            }
+            const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
+            listEl.innerHTML = '';
+            snap.forEach(doc => {
+                const p = doc.data();
+                listEl.innerHTML += `<tr class="border-b border-slate-50"><td class="p-4 font-bold text-slate-700">${p.email}</td><td class="p-4 text-center"><span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-lg text-[10px] font-black">ATIVO</span></td><td class="p-4 text-center text-slate-400 text-[10px] font-bold">${new Date(p.lastSeen).toLocaleDateString('pt-BR')}</td></tr>`;
+            });
         };
 
         let myChart = null;
@@ -414,16 +218,7 @@
                 type: 'radar',
                 data: {
                     labels: userData.subjects.map(s => s.name),
-                    datasets: [{
-                        label: 'Desempenho %',
-                        data: userData.subjects.map(s => {
-                            let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
-                            return Math.round((d/(s.topics.length*4))*100);
-                        }),
-                        borderColor: '#4f46e5',
-                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                        borderWidth: 3
-                    }]
+                    datasets: [{ label: 'Desempenho %', data: userData.subjects.map(s => { let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; })); return Math.round((d/(s.topics.length*4))*100); }), borderColor: '#4f46e5', backgroundColor: 'rgba(79, 70, 229, 0.1)', borderWidth: 3 }]
                 },
                 options: { maintainAspectRatio: false, scales: { r: { min: 0, max: 100 } } }
             });
