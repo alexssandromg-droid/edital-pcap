@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Edition - PC-AP Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            color: var(--text-main);
+            transition: background-color 0.3s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .progress-bar-fill { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 1.3rem;
+            height: 1.3rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            cursor: pointer;
+            display: grid;
+            place-content: center;
+            transition: 0.2s all;
+        }
+
+        input[type="checkbox"]::before {
+            content: "";
+            width: 0.75rem;
+            height: 0.75rem;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em var(--primary);
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        input[type="checkbox"]:checked { border-color: var(--primary); background-color: #f5f3ff; }
+        input[type="checkbox"]:checked::before { transform: scale(1); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .count-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .heat-0 { background-color: #f1f5f9; color: #94a3b8; }
+        .heat-1 { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
+        .heat-2 { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+        .heat-3 { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+        .heat-4 { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
+        .heat-max { background-color: #f97316; color: white; border-color: #ea580c; animation: pulse-heat 2s infinite; }
+
+        .edit-btn-inline { opacity: 0; transition: opacity 0.2s; cursor: pointer; }
+        tr:hover .edit-btn-inline, .subject-header:hover .edit-btn-inline, .group:hover .edit-btn-inline { opacity: 1; }
+        
+        .active-btn {
+            background-color: #4f46e5 !important;
+            color: white !important;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        .calendar-cell { min-height: 100px; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; padding: 8px; transition: 0.2s; }
+        .calendar-cell.today { background-color: #f5f3ff; }
+        .calendar-event { font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+
+        .timeline-container { position: relative; padding-left: 32px; }
+        .timeline-container::before { content: ''; position: absolute; left: 11px; top: 10px; bottom: 10px; width: 2px; background: #e2e8f0; }
+        .timeline-item { position: relative; padding-bottom: 20px; }
+        .timeline-dot { position: absolute; left: -26px; top: 15px; width: 12px; height: 12px; border-radius: 50%; background: white; border: 2px solid var(--primary); z-index: 10; }
+        .timeline-item.done .timeline-dot { border-color: #10b981; background: #10b981; }
+
+        /* Auth Styles */
+        #auth-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 2.5rem;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Auth Screen -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center text-white text-3xl font-black">P</div>
+                <h2 id="auth-title" class="text-2xl font-black text-slate-900 tracking-tight">Bem-vindo à Elite</h2>
+                <p id="auth-subtitle" class="text-slate-500 text-sm font-medium mt-1">Faça login para gerenciar seu edital</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1.5 ml-1">E-mail</label>
+                    <input type="email" id="auth-email" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1.5 ml-1">Senha</label>
+                    <input type="password" id="auth-password" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all">
+                </div>
+                
+                <div id="auth-error" class="hidden text-rose-500 text-[10px] font-bold uppercase text-center bg-rose-50 py-2 rounded-xl border border-rose-100"></div>
+
+                <button onclick="window.handleAuth()" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-black py-4.5 rounded-2xl shadow-xl hover:bg-indigo-700 transition-all uppercase text-xs tracking-widest mt-4 flex items-center justify-center gap-2">
+                    Acessar Plataforma
+                </button>
+
+                <div class="text-center pt-4">
+                    <button onclick="window.toggleAuthMode()" id="auth-toggle-btn" class="text-[10px] font-black uppercase text-indigo-500 hover:text-indigo-700 tracking-widest">Ainda não tem conta? Cadastre-se</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="app-content" class="max-w-6xl mx-auto hidden">
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
+            <div class="flex-1">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-100">
+                        Operacional Elite • Ciclo PC-AP
+                    </div>
+                    <button onclick="window.userLogout()" class="text-rose-400 hover:text-rose-600 text-[10px] font-black uppercase tracking-widest">Sair</button>
+                </div>
+                
+                <div class="flex items-center gap-3 group mb-1">
+                    <h1 class="text-5xl font-black text-slate-900 tracking-tight" id="main-edital-title">PC-AP ELITE</h1>
+                    <button onclick="window.editEditalName()" class="text-slate-300 hover:text-indigo-500 transition-all opacity-0 p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-2 group">
+                    <p class="text-slate-500 font-semibold text-lg italic" id="main-edital-subtitle">Carregando...</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center gap-4 w-full md:w-auto">
+                <div class="bg-white p-7 rounded-[2.5rem] shadow-xl border border-slate-100 min-w-[260px] text-center w-full">
+                    <div class="text-5xl font-black text-indigo-600 mb-1" id="global-progress-pct">0%</div>
+                    <div class="text-[10px] uppercase font-extrabold text-slate-400 tracking-widest">Conclusão Total</div>
+                    <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 border border-slate-100 overflow-hidden">
+                        <div id="global-progress-bar" class="h-full bg-indigo-500 progress-bar-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="flex overflow-x-auto gap-2 p-2 bg-white rounded-3xl mb-10 shadow-sm border border-slate-100 no-scrollbar">
+            <button onclick="window.showTab('planner')" id="btn-planner" class="tab-btn active-btn flex-none py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase tracking-widest transition-all">📅 Planner</button>
+            <button onclick="window.showTab('agenda')" id="btn-agenda" class="tab-btn flex-none text-slate-500 hover:bg-slate-50 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase transition-all">🗓️ Agenda</button>
+            <button onclick="window.showTab('questoes')" id="btn-questoes" class="tab-btn flex-none text-slate-500 hover:bg-slate-50 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase transition-all">🎯 Questões</button>
+            <button onclick="window.showTab('evolucao')" id="btn-evolucao" class="tab-btn flex-none text-slate-500 hover:bg-slate-50 py-3.5 px-8 rounded-2xl font-extrabold text-xs uppercase transition-all">📈 Evolução</button>
+        </nav>
+
+        <!-- Tab Contents (Planner, Agenda, etc. - Similar to original code but linked to Firebase) -->
+        <div id="planner" class="tab-content active">
+            <div id="edital-container" class="space-y-8"></div>
+        </div>
+
+        <div id="agenda" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xs font-black uppercase text-indigo-600 tracking-widest">🚀 Ciclo de Estudos</h3>
+                            <button onclick="window.openTimelineModal()" class="bg-indigo-600 text-white w-9 h-9 rounded-full flex items-center justify-center font-bold shadow-lg hover:scale-110 transition-all">+</button>
+                        </div>
+                        <div id="study-timeline" class="timeline-container space-y-2 max-h-[500px] overflow-y-auto pr-2 no-scrollbar"></div>
+                    </div>
+                </div>
+                <div class="lg:col-span-8 bg-white p-6 rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden" id="dynamic-calendar-body">
+                    <!-- Calendar content -->
+                </div>
+            </div>
+        </div>
+
+        <div id="questoes" class="tab-content">
+             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-xl h-fit">
+                    <h3 class="text-xl font-black mb-6 text-slate-800">Registrar Treino</h3>
+                    <div class="space-y-4">
+                        <select id="q-select-subject" class="w-full p-4 rounded-2xl border border-slate-200 bg-slate-50 font-bold text-xs outline-none"></select>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="q-input-correct" placeholder="Acertos" class="w-full p-4 rounded-2xl border border-slate-200 bg-emerald-50 text-emerald-700 font-black text-center">
+                            <input type="number" id="q-input-wrong" placeholder="Erros" class="w-full p-4 rounded-2xl border border-slate-200 bg-rose-50 text-rose-700 font-black text-center">
+                        </div>
+                        <button onclick="window.saveQuestionStats()" class="w-full bg-indigo-600 text-white font-black py-4.5 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all uppercase text-xs tracking-widest mt-2">Salvar Treino</button>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
+                    <table class="w-full text-left text-xs"><tbody id="stats-table-body"></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <div id="evolucao" class="tab-content">
+            <div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm">
+                <div class="relative h-[400px] w-full"><canvas id="radarChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="timeline-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[3rem] p-10 shadow-2xl">
+            <h3 class="text-2xl font-black text-slate-800 mb-8 text-center tracking-tight">Nova Tarefa</h3>
+            <div class="space-y-5">
+                <select id="t-select-subject" class="w-full p-4 rounded-2xl border border-slate-200 bg-slate-50 font-bold text-xs"></select>
+                <input type="text" id="t-input-topic" placeholder="Qual o tópico?" class="w-full p-4 rounded-2xl border border-slate-200 bg-slate-50 font-bold text-xs">
+            </div>
+            <div class="flex gap-4 mt-10">
+                <button onclick="window.closeTimelineModal()" class="flex-1 p-4 rounded-2xl font-bold text-slate-400 hover:bg-slate-50 transition-all uppercase text-[10px]">Cancelar</button>
+                <button onclick="window.saveTimelineTask()" class="flex-1 bg-indigo-600 text-white p-4 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition-all uppercase text-[10px]">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-pcap-elite';
+
+        let user = null;
+        let isRegistering = false;
+        let userData = {};
+
+        // --- AUTH LOGIC ---
+
+        window.toggleAuthMode = () => {
+            isRegistering = !isRegistering;
+            document.getElementById('auth-title').innerText = isRegistering ? "Criar Nova Conta" : "Bem-vindo à Elite";
+            document.getElementById('auth-subtitle').innerText = isRegistering ? "Comece sua jornada operacional" : "Faça login para gerenciar seu edital";
+            document.getElementById('auth-submit-btn').innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma";
+            document.getElementById('auth-toggle-btn').innerText = isRegistering ? "Já tem conta? Faça login" : "Ainda não tem conta? Cadastre-se";
+        };
+
+        window.handleAuth = async () => {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorDiv = document.getElementById('auth-error');
+            const btn = document.getElementById('auth-submit-btn');
+
+            if(!email || !password) {
+                errorDiv.innerText = "Preencha todos os campos";
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Aguarde...";
+            errorDiv.classList.add('hidden');
+
+            try {
+                if(isRegistering) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (err) {
+                errorDiv.innerText = err.message.includes('auth/wrong-password') ? "Senha incorreta" : "Erro na autenticação";
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = isRegistering ? "Cadastrar Agora" : "Acessar Plataforma";
+            }
+        };
+
+        window.userLogout = () => {
+            signOut(auth);
+            location.reload();
+        };
+
+        // --- FIREBASE DATA SYNC ---
+
+        const initUserSession = async (user) => {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+
+            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'data');
+            const docSnap = await getDoc(userDocRef);
+
+            if (!docSnap.exists()) {
+                // Initialize default data for new user
+                userData = {
+                    title: "PC-AP ELITE",
+                    subtitle: "Gestão Avançada por Tópico",
+                    subjects: [
+                        { id: "sub_lp", name: "Língua Portuguesa", color: "blue", topics: [{id: "lp1", text: "Ortografia", status: [false, false, false, false]}] },
+                        { id: "sub_dir", name: "Direito Penal", color: "rose", topics: [{id: "dp1", text: "Teoria do Crime", status: [false, false, false, false]}] }
+                    ],
+                    stats: {},
+                    timeline: []
+                };
+                await setDoc(userDocRef, userData);
+            }
+
+            // Real-time listener for user data
+            onSnapshot(userDocRef, (doc) => {
+                if (doc.exists()) {
+                    userData = doc.data();
+                    renderApp();
+                }
+            });
+        };
+
+        onAuthStateChanged(auth, (u) => {
+            if (u) {
+                user = u;
+                initUserSession(u);
+            } else {
+                // Try initial token or wait for user to log in
+                const initAuth = async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        try { await signInWithCustomToken(auth, __initial_auth_token); } catch(e) {}
+                    }
+                };
+                initAuth();
+            }
+        });
+
+        // --- APP LOGIC (Linked to Firebase) ---
+
+        const updateRemoteData = async () => {
+            if (!user) return;
+            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'data');
+            await updateDoc(userDocRef, userData);
+        };
+
+        window.toggleStatus = async (subIdx, topIdx, colIdx) => {
+            userData.subjects[subIdx].topics[topIdx].status[colIdx] = !userData.subjects[subIdx].topics[topIdx].status[colIdx];
+            await updateRemoteData();
+        };
+
+        window.editEditalName = async () => {
+            const n = prompt("Nome do Edital:", userData.title);
+            if(n) {
+                userData.title = n.toUpperCase();
+                await updateRemoteData();
+            }
+        };
+
+        window.showTab = (id) => {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-btn'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('btn-' + id).classList.add('active-btn');
+            if(id === 'evolucao') renderCharts();
+        };
+
+        const renderApp = () => {
+            document.getElementById('main-edital-title').innerText = userData.title;
+            document.getElementById('main-edital-subtitle').innerText = userData.subtitle;
+            
+            const container = document.getElementById('edital-container');
+            container.innerHTML = '';
+
+            let totalPoints = 0;
+            let earnedPoints = 0;
+
+            userData.subjects.forEach((sub, sIdx) => {
+                let subEarned = 0;
+                let subTotal = sub.topics.length * 4;
+
+                const rows = sub.topics.map((top, tIdx) => {
+                    const statusHtml = top.status.map((s, cIdx) => {
+                        if(s) { earnedPoints++; subEarned++; }
+                        totalPoints++;
+                        return `<td class="p-4 text-center"><input type="checkbox" ${s ? 'checked' : ''} onchange="toggleStatus(${sIdx}, ${tIdx}, ${cIdx})"></td>`;
+                    }).join('');
+
+                    return `<tr class="border-b border-slate-50 hover:bg-slate-50/50">
+                        <td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>
+                        ${statusHtml}
+                    </tr>`;
+                }).join('');
+
+                const pct = subTotal > 0 ? Math.round((subEarned/subTotal)*100) : 0;
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black">${sub.name.charAt(0)}</div>
+                            <h3 class="font-black text-slate-800">${sub.name}</h3>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black text-indigo-600">${pct}%</div>
+                            <div class="text-[8px] uppercase font-bold text-slate-400">Domínio</div>
+                        </div>
+                    </div>
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50 text-[9px] font-black uppercase text-slate-400">
+                                <th class="p-4">Tópico</th><th class="p-4 text-center">T</th><th class="p-4 text-center">Q</th><th class="p-4 text-center">R7</th><th class="p-4 text-center">R28</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                `;
+                container.appendChild(card);
+            });
+
+            const globalPct = totalPoints > 0 ? Math.round((earnedPoints/totalPoints)*100) : 0;
+            document.getElementById('global-progress-pct').innerText = globalPct + '%';
+            document.getElementById('global-progress-bar').style.width = globalPct + '%';
+
+            // Sync selectors for other tabs
+            const subSelects = ['q-select-subject', 't-select-subject'];
+            subSelects.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.innerHTML = userData.subjects.map((s, i) => `<option value="${i}">${s.name}</option>`).join('');
+            });
+        };
+
+        const renderCharts = () => {
+            const ctx = document.getElementById('radarChart');
+            if(!ctx) return;
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: userData.subjects.map(s => s.name),
+                    datasets: [{
+                        label: 'Desempenho %',
+                        data: userData.subjects.map(s => {
+                            let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
+                            return Math.round((d/(s.topics.length*4))*100);
+                        }),
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)'
+                    }]
+                },
+                options: { maintainAspectRatio: false }
+            });
+        };
+
+        window.openTimelineModal = () => document.getElementById('timeline-modal').style.display = 'flex';
+        window.closeTimelineModal = () => document.getElementById('timeline-modal').style.display = 'none';
+
+        window.saveTimelineTask = async () => {
+            const subIdx = document.getElementById('t-select-subject').value;
+            const topic = document.getElementById('t-input-topic').value;
+            if(!topic) return;
+            
+            if(!userData.timeline) userData.timeline = [];
+            userData.timeline.push({
+                id: Date.now(),
+                subject: userData.subjects[subIdx].name,
+                topic: topic,
+                done: false
+            });
+            await updateRemoteData();
+            window.closeTimelineModal();
+        };
+
+    </script>
+</body>
+</html>
