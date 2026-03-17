@@ -77,7 +77,7 @@
 </head>
 <body>
 
-    <!-- Tela de Login -->
+    <!-- Tela de Login / Cadastro -->
     <div id="auth-screen">
         <div class="auth-card">
             <div class="text-center mb-8">
@@ -113,8 +113,8 @@
         </div>
     </div>
 
-    <!-- Conteúdo Principal -->
-    <div id="app-content" class="max-w-6xl mx-auto hidden py-8">
+    <!-- Conteúdo Principal do App -->
+    <div id="app-content" class="max-w-6xl mx-auto hidden py-8 px-4">
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
                 <div class="flex items-center gap-4 mb-4">
@@ -124,14 +124,14 @@
                     <button onclick="window.userLogout()" class="text-rose-400 hover:text-rose-600 text-[10px] font-black uppercase tracking-widest">Sair</button>
                 </div>
                 <h1 class="text-5xl font-black text-slate-900 tracking-tight" id="main-title">PC-AP ELITE</h1>
-                <p class="text-slate-500 font-semibold text-lg italic" id="welcome-user">Sistema de Gestão de Estudos</p>
+                <p class="text-slate-500 font-semibold text-lg italic" id="welcome-user">Carregando perfil...</p>
             </div>
             
             <div class="bg-white p-7 rounded-[2.5rem] shadow-xl border border-slate-100 min-w-[260px] text-center">
                 <div class="text-5xl font-black text-indigo-600 mb-1" id="global-pct">0%</div>
                 <div class="text-[10px] uppercase font-extrabold text-slate-400 tracking-widest">Conclusão Total</div>
                 <div class="w-full h-2.5 bg-slate-100 rounded-full mt-4 border border-slate-100 overflow-hidden">
-                    <div id="global-bar" class="h-full bg-indigo-500 transition-all duration-1000"></div>
+                    <div id="global-bar" class="h-full bg-indigo-500 transition-all duration-1000" style="width: 0%"></div>
                 </div>
             </div>
         </header>
@@ -147,10 +147,12 @@
         </div>
 
         <div id="evolucao" class="tab-content">
-            <div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm h-[500px]"><canvas id="radarChart"></canvas></div>
+            <div class="bg-white p-10 rounded-[3rem] border border-slate-200 shadow-sm h-[500px]">
+                <canvas id="radarChart"></canvas>
+            </div>
         </div>
 
-        <!-- Painel Admin -->
+        <!-- Painel Administrativo -->
         <div id="admin" class="tab-content">
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
                 <div class="flex justify-between items-center mb-6">
@@ -176,10 +178,11 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
+        // CONFIGURAÇÕES DO FIREBASE (ALEX)
         const firebaseConfig = {
             apiKey: "AIzaSyCcHcryUJhFfKlh22-opI4cmgxazrU_Lkw",
             authDomain: "edital-pcap.firebaseapp.com",
@@ -199,7 +202,7 @@
         let isRegistering = false;
         let userData = null;
 
-        // --- AUTH LOGIC ---
+        // --- LÓGICA DE AUTENTICAÇÃO ---
         window.toggleAuthMode = () => {
             isRegistering = !isRegistering;
             document.getElementById('auth-title').innerText = isRegistering ? "Criar Nova Conta" : "Bem-vindo à Elite";
@@ -210,19 +213,15 @@
         };
 
         window.handleAuth = async () => {
-            const emailInput = document.getElementById('auth-email');
-            const passwordInput = document.getElementById('auth-password');
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
-            const successDiv = document.getElementById('auth-success');
             const btn = document.getElementById('auth-submit-btn');
 
             if(!email || !password) return;
             btn.disabled = true;
             btn.innerText = "Aguarde...";
             errorDiv.classList.add('hidden');
-            successDiv.classList.add('hidden');
 
             try {
                 if(isRegistering) {
@@ -231,14 +230,7 @@
                     await signInWithEmailAndPassword(auth, email, password);
                 }
             } catch (err) {
-                console.error("Erro Auth:", err.code);
-                if(err.code === 'auth/email-already-in-use') {
-                    errorDiv.innerText = "Este e-mail já está em uso. Faça login.";
-                } else if(err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                    errorDiv.innerText = "E-mail ou senha incorretos.";
-                } else {
-                    errorDiv.innerText = "Erro ao acessar plataforma. Tente novamente.";
-                }
+                errorDiv.innerText = "Erro: Dados inválidos ou e-mail já em uso";
                 errorDiv.classList.remove('hidden');
             } finally {
                 btn.disabled = false;
@@ -270,21 +262,19 @@
 
         window.userLogout = () => signOut(auth).then(() => location.reload());
 
+        // --- INICIALIZAÇÃO DA SESSÃO ---
         const initUserSession = async (currentUser) => {
             user = currentUser;
-            
-            // UI Switch IMEDIATO
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
-            document.getElementById('welcome-user').innerText = `Bem-vindo, ${user.email}`;
+            document.getElementById('welcome-user').innerText = `Logado como: ${user.email}`;
 
-            // Verificação de Admin
-            const normalizedEmail = user.email.toLowerCase().trim();
-            if(normalizedEmail === ADMIN_EMAIL.toLowerCase().trim()) {
+            // Verificação Robusta de Admin
+            if(user.email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase().trim()) {
                 document.getElementById('btn-admin').classList.remove('hidden');
             }
 
-            // Registo de Perfil (Opcional, não trava se falhar)
+            // Registrar Perfil Público (Para a lista de Admin)
             try {
                 const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
                 await setDoc(profileRef, {
@@ -292,20 +282,21 @@
                     email: user.email,
                     lastSeen: new Date().toISOString()
                 }, { merge: true });
-            } catch(e) { console.warn("Erro ao registrar perfil público (provavelmente regras de escrita)."); }
+            } catch(e) { console.warn("Erro ao registrar perfil público."); }
 
-            // Documento de Edital do Usuário
+            // Carregar Edital Privado do Usuário
             const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
             
             try {
                 const docSnap = await getDoc(userDocRef);
                 if (!docSnap.exists()) {
                     const initialSubjects = [
-                        { name: "Português", color: "blue", topics: ["Ortografia", "Crase", "Interpretação", "Pontuação", "Concordância"] },
-                        { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Crimes contra Pessoa", "Crimes contra Patrimônio", "Penas"] },
-                        { name: "Direito Administrativo", color: "emerald", topics: ["Atos Administrativos", "Poderes", "Licitações", "Agentes Públicos"] },
-                        { name: "Informática", color: "indigo", topics: ["Windows", "Hardware/Software", "Segurança", "Office/LibreOffice"] },
-                        { name: "História e Geo AP", color: "amber", topics: ["Colonização AP", "Criação do Território", "Clima e Relevo AP", "Economia AP"] }
+                        { name: "Língua Portuguesa", color: "blue", topics: ["Ortografia e Acentuação", "Crase", "Compreensão de Texto", "Pontuação", "Concordância Verbal/Nominal"] },
+                        { name: "Direito Penal", color: "rose", topics: ["Teoria do Crime", "Tipicidade/Ilicitude", "Crimes contra a Pessoa", "Crimes contra o Patrimônio", "Das Penas"] },
+                        { name: "Direito Administrativo", color: "emerald", topics: ["Princípios da Adm", "Poderes e Atos Adm", "Licitações (Lei 14.133)", "Agentes Públicos", "Responsabilidade Civil"] },
+                        { name: "Direito Processual Penal", color: "orange", topics: ["Inquérito Policial", "Ação Penal", "Prisões e Medidas Cautelares", "Provas no Processo"] },
+                        { name: "Informática", color: "indigo", topics: ["Windows 10/11", "Hardware e Software", "Segurança da Informação", "LibreOffice e Office 2013"] },
+                        { name: "História e Geo Amapá", color: "amber", topics: ["Colonização do Amapá", "Território Federal do Amapá", "Aspectos Físicos (Clima/Vegetação)", "Economia Amapaense"] }
                     ];
 
                     userData = {
@@ -322,72 +313,41 @@
                     await updateDoc(userDocRef, { lastSeen: new Date().toISOString() });
                 }
             } catch(e) {
-                console.error("Erro ao carregar dados do usuário. Verifique as regras do Firestore.");
-                document.getElementById('edital-container').innerHTML = `<div class="p-8 text-center bg-rose-50 text-rose-600 rounded-3xl font-bold">Erro de conexão com o Banco de Dados. Verifique se as regras do Firestore estão no "Modo de Teste".</div>`;
+                console.error("Erro ao carregar Firestore.");
             }
 
-            // Ouvinte em tempo real com callback de erro obrigatório
+            // Listener em Tempo Real
             onSnapshot(userDocRef, (doc) => {
                 if (doc.exists()) {
                     userData = doc.data();
                     renderApp();
                 }
-            }, (error) => {
-                console.error("Erro no Snapshot:", error);
             });
         };
 
         onAuthStateChanged(auth, (u) => { if (u) { initUserSession(u); } });
 
+        // --- LÓGICA DO PLANNER ---
         window.toggleStatus = async (subIdx, topIdx, colIdx) => {
             userData.subjects[subIdx].topics[topIdx].status[colIdx] = !userData.subjects[subIdx].topics[topIdx].status[colIdx];
             const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-            try {
-                await updateDoc(userDocRef, userData);
-            } catch(e) { console.error("Falha ao salvar progresso."); }
+            await updateDoc(userDocRef, userData);
         };
 
         window.showTab = (id) => {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-btn', 'text-white'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.add('text-slate-500'));
             document.getElementById(id).classList.add('active');
             document.getElementById('btn-' + id).classList.add('active-btn');
             if(id === 'evolucao') renderCharts();
             if(id === 'admin') window.loadAdminData();
         };
 
-        window.loadAdminData = async () => {
-            if(!user || user.email.toLowerCase().trim() !== ADMIN_EMAIL.toLowerCase().trim()) return;
-            const listEl = document.getElementById('admin-users-list');
-            listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Buscando alunos...</td></tr>';
-
-            try {
-                const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
-                listEl.innerHTML = '';
-                if(querySnapshot.empty) {
-                    listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400">Nenhum aluno registrado.</td></tr>';
-                    return;
-                }
-                for (const profileDoc of querySnapshot.docs) {
-                    const profileData = profileDoc.data();
-                    const lastDate = profileData.lastSeen ? new Date(profileData.lastSeen).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '---';
-                    listEl.innerHTML += `
-                        <tr class="border-b border-slate-50 hover:bg-slate-50/50">
-                            <td class="p-4 font-bold text-slate-700">${profileData.email}</td>
-                            <td class="p-4 text-center"><span class="text-xs font-black text-indigo-600">Ativo</span></td>
-                            <td class="p-4 text-center text-slate-400 text-[10px] font-bold">${lastDate}</td>
-                        </tr>`;
-                }
-            } catch (err) {
-                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro de permissão no Admin.</td></tr>`;
-            }
-        };
-
         const renderApp = () => {
             const container = document.getElementById('edital-container');
             container.innerHTML = '';
             let total = 0, done = 0;
+
             userData.subjects.forEach((sub, sIdx) => {
                 let subTotal = sub.topics.length * 4, subDone = 0;
                 const rows = sub.topics.map((top, tIdx) => {
@@ -398,6 +358,7 @@
                     }).join('');
                     return `<tr class="border-b border-slate-50 hover:bg-slate-50/50"><td class="p-4 font-bold text-xs text-slate-700">${top.text}</td>${checks}</tr>`;
                 }).join('');
+
                 const pct = Math.round((subDone/subTotal)*100);
                 container.innerHTML += `
                     <div class="subject-card">
@@ -413,9 +374,36 @@
                         </table>
                     </div>`;
             });
-            const globalPct = total > 0 ? Math.round((done/total)*100) : 0;
+
+            const globalPct = Math.round((done/total)*100);
             document.getElementById('global-pct').innerText = globalPct + '%';
             document.getElementById('global-bar').style.width = globalPct + '%';
+        };
+
+        // --- MONITORAMENTO ADMIN ---
+        window.loadAdminData = async () => {
+            if(!user || user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return;
+            const listEl = document.getElementById('admin-users-list');
+            listEl.innerHTML = '<tr><td colspan="3" class="p-8 text-center text-slate-400 italic">Buscando alunos ativos...</td></tr>';
+
+            try {
+                const querySnapshot = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
+                listEl.innerHTML = '';
+                
+                for (const profileDoc of querySnapshot.docs) {
+                    const p = profileDoc.data();
+                    const lastDate = p.lastSeen ? new Date(p.lastSeen).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '---';
+                    
+                    listEl.innerHTML += `
+                        <tr class="border-b border-slate-50 hover:bg-slate-50/50">
+                            <td class="p-4 font-bold text-slate-700">${p.email}</td>
+                            <td class="p-4 text-center"><span class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-lg text-[10px] font-black">ATIVO</span></td>
+                            <td class="p-4 text-center text-slate-400 text-[10px] font-bold">${lastDate}</td>
+                        </tr>`;
+                }
+            } catch (err) {
+                listEl.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-rose-400">Erro de permissão. Verifique as regras do Firestore.</td></tr>`;
+            }
         };
 
         let myChart = null;
@@ -430,7 +418,7 @@
                         label: 'Desempenho %',
                         data: userData.subjects.map(s => {
                             let d = 0; s.topics.forEach(t => t.status.forEach(st => { if(st) d++; }));
-                            return total > 0 ? Math.round((d/(s.topics.length*4))*100) : 0;
+                            return Math.round((d/(s.topics.length*4))*100);
                         }),
                         borderColor: '#4f46e5',
                         backgroundColor: 'rgba(79, 70, 229, 0.1)',
