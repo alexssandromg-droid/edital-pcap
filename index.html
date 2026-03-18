@@ -23,135 +23,145 @@
         input[type="checkbox"] { appearance: none; width: 1.2rem; height: 1.2rem; border: 2px solid #cbd5e1; border-radius: 5px; cursor: pointer; display: grid; place-content: center; transition: 0.2s; }
         input[type="checkbox"]:checked { border-color: var(--primary); background-color: #f5f3ff; }
         input[type="checkbox"]:checked::after { content: "✓"; color: var(--primary); font-size: 10px; font-weight: 900; }
+        input[type="checkbox"]:disabled { opacity: 0.3; cursor: not-allowed; background-color: #f1f5f9; }
 
-        #pdf-overlay { position: fixed; inset: 0; background: white; z-index: 100; overflow-y: auto; display: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        #study-hub-overlay { position: fixed; inset: 0; background: white; z-index: 100; overflow-y: auto; display: none; }
         .study-container { max-width: 1000px; margin: 0 auto; padding: 0 20px 100px 20px; }
         
-        .prose h1 { font-weight: 900; font-size: 2.8rem; color: #1e293b; border-left: 15px solid #4f46e5; padding-left: 1.5rem; }
+        .prose h1 { font-weight: 900; font-size: 2.5rem; color: #1e293b; border-left: 10px solid #4f46e5; padding-left: 1.5rem; }
         .hl-yellow { background-color: #fef08a; padding: 1px 4px; border-radius: 4px; font-weight: bold; }
-        .hl-green { background-color: #bbf7d0; padding: 1px 4px; border-radius: 4px; font-weight: bold; }
-        .hl-pink { background-color: #fbcfe8; padding: 1px 4px; border-radius: 4px; font-weight: bold; }
         
-        .article-box { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border-left: 8px solid #4f46e5; }
-        .q-card { border: 2px solid #f1f5f9; border-radius: 2rem; padding: 2.5rem; background: white; margin-bottom: 2rem; }
-        .q-option { display: block; padding: 1.25rem; border: 2px solid #e2e8f0; border-radius: 1.25rem; margin-top: 0.75rem; cursor: pointer; transition: 0.2s; font-weight: 600; }
-        
-        .q-option.correct-choice { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534 !important; }
-        .q-option.wrong-choice { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
-        
-        .explanation { display: none; margin-top: 1.5rem; padding: 2rem; background: #f0fdf4; border-radius: 1.5rem; border-left: 6px solid #22c55e; }
         .btn-action { opacity: 0; transition: 0.2s opacity; }
         .group:hover .btn-action { opacity: 1; }
+
+        .material-item { background: #f8fafc; border: 1px solid #e2e8f0; transition: 0.2s; border-radius: 1.5rem; }
+        .material-item:hover { border-color: #4f46e5; transform: translateY(-2px); }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="pdf-overlay" class="no-scrollbar">
+    <!-- OVERLAY: HUB DE ESTUDO -->
+    <div id="study-hub-overlay" class="no-scrollbar">
         <div class="sticky top-0 bg-white/95 backdrop-blur-md border-b p-4 flex flex-wrap justify-between items-center gap-4 z-50">
-            <button onclick="window.closePDF()" class="text-slate-400 hover:text-slate-900 font-black text-xs uppercase transition-all flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg> Sair do Hub
+            <button onclick="window.closeHub()" class="text-slate-400 hover:text-slate-900 font-black text-xs uppercase flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg> Voltar
             </button>
             <div class="flex bg-slate-100 p-1.5 rounded-2xl">
-                <button onclick="window.switchStudyTab('theory')" id="btn-tab-theory" class="px-8 py-2.5 rounded-xl text-[11px] font-black uppercase active-tab">📚 Teoria IA</button>
-                <button onclick="window.switchStudyTab('quiz')" id="btn-tab-quiz" class="px-8 py-2.5 rounded-xl text-[11px] font-black uppercase transition-all">🎯 Simulado</button>
+                <button onclick="window.switchHubTab('theory')" id="btn-hub-theory" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase active-tab">📚 Teoria IA</button>
+                <button onclick="window.switchHubTab('files')" id="btn-hub-files" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase">📁 Materiais</button>
+                <button onclick="window.switchHubTab('register')" id="btn-hub-register" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase">📝 Reg. Questões</button>
             </div>
-            <button onclick="window.printPDF()" class="bg-slate-100 text-slate-700 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase border border-slate-200">PDF</button>
+            <button onclick="window.printContent()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase">Imprimir</button>
         </div>
         
         <div class="study-container">
-            <div id="study-theory" class="tab-content active pt-10">
-                <div class="flex flex-col items-center text-center mb-12 bg-slate-900 p-12 rounded-[3.5rem] shadow-2xl text-white">
-                    <span class="bg-indigo-500 text-white px-4 py-1 rounded-full text-[10px] font-black uppercase mb-4">Manual Operacional IA</span>
-                    <h2 id="study-topic-title" class="text-4xl font-black uppercase mb-4 tracking-tighter">Título</h2>
-                    <button onclick="window.generateIA()" id="main-gen-theory" class="bg-indigo-500 hover:bg-indigo-600 px-12 py-5 rounded-full font-black uppercase text-xs shadow-xl transition-all">Gerar Material Completo 🚀</button>
+            <!-- ABA TEORIA IA -->
+            <div id="hub-theory" class="tab-content active pt-10">
+                <div class="bg-slate-900 p-10 rounded-[3rem] text-center mb-10 shadow-2xl">
+                    <h2 id="hub-topic-title" class="text-4xl font-black uppercase text-white mb-4 tracking-tighter">Tópico</h2>
+                    <button onclick="window.generateIA()" id="gen-ia-btn" class="bg-indigo-500 hover:bg-indigo-600 px-10 py-5 rounded-full font-black uppercase text-xs shadow-xl text-white transition-all">Gerar Manual de Elite 🚀</button>
                 </div>
-                <div id="pdf-content" class="prose bg-white p-10 md:p-24 rounded-[4rem] border border-slate-100 shadow-2xl min-h-[800px] mb-20 relative">
-                    <div class="flex flex-col items-center justify-center py-60 text-slate-300">
+                <div id="ia-content" class="prose bg-white p-10 md:p-20 rounded-[4rem] border border-slate-100 shadow-xl min-h-[500px]">
+                    <div class="flex flex-col items-center justify-center py-40 text-slate-300">
                         <div class="text-7xl mb-6">📖</div>
-                        <p class="font-black uppercase text-xs tracking-widest text-center">Inicie o processamento da missão...</p>
+                        <p class="font-black uppercase text-xs tracking-widest">Aguardando comando...</p>
                     </div>
                 </div>
             </div>
 
-            <div id="study-quiz" class="tab-content pt-10">
-                <div class="bg-emerald-50 border border-emerald-100 p-12 rounded-[3.5rem] text-center mb-12 shadow-sm">
-                    <h2 class="text-4xl font-black text-emerald-900 uppercase mb-4 tracking-tighter">Bateria de Questões</h2>
-                    <p class="text-emerald-700 font-bold mb-8 italic">Identifique-se como Agente para começar.</p>
-                    <div class="max-w-xs mx-auto mb-8">
-                        <input type="text" id="quiz-nickname" placeholder="Seu Apelido..." class="w-full p-5 rounded-2xl border-2 border-emerald-200 outline-none focus:border-emerald-500 font-black text-center text-emerald-900 transition-all">
+            <!-- ABA MATERIAIS / PASTA -->
+            <div id="hub-files" class="tab-content pt-10">
+                <div class="bg-indigo-50 border border-indigo-100 p-10 rounded-[3rem] mb-10 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-3xl font-black text-indigo-900 uppercase mb-2">📁 Materiais</h2>
+                        <p class="text-indigo-600 font-bold text-sm italic">Guarde os seus PDFs e anotações deste tópico.</p>
                     </div>
-                    <button onclick="window.generateQuiz()" id="btn-gen-quiz" class="bg-emerald-600 text-white px-16 py-5 rounded-full font-black uppercase text-xs shadow-2xl">Gerar 10 Questões Agora</button>
                 </div>
-                <div id="quiz-content" class="space-y-12 mb-24"></div>
-                <div id="quiz-summary" class="hidden bg-slate-900 p-16 rounded-[4rem] text-center text-white mb-24 shadow-2xl">
-                    <div class="text-7xl mb-8">🎖️</div>
-                    <h3 class="text-3xl font-black uppercase mb-2 text-white">Treino Concluído</h3>
-                    <div class="flex justify-center gap-16 my-12">
-                        <div><p class="text-7xl font-black text-emerald-400" id="summary-hits">0</p><p class="text-xs uppercase font-black opacity-50">Acertos</p></div>
-                        <div><p class="text-7xl font-black text-rose-400" id="summary-miss">0</p><p class="text-xs uppercase font-black opacity-50">Erros</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="files-list">
+                    <!-- Gerado via JS -->
+                </div>
+            </div>
+
+            <!-- ABA REGISTRAR QUESTÕES -->
+            <div id="hub-register" class="tab-content pt-10">
+                <div class="max-w-xl mx-auto bg-white p-10 rounded-[3rem] border border-slate-100 shadow-2xl">
+                    <h2 class="text-3xl font-black text-slate-900 uppercase text-center mb-8 tracking-tighter">Registar Treino</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest">Apelido do Agente</label>
+                            <input type="text" id="reg-nickname" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-black text-center text-indigo-600 outline-none focus:ring-2 focus:ring-indigo-500/20">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Acertos</label>
+                                <input type="number" id="reg-hits" class="w-full p-4 rounded-2xl bg-emerald-50 border border-emerald-100 font-black text-center text-emerald-700 outline-none" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Erros</label>
+                                <input type="number" id="reg-miss" class="w-full p-4 rounded-2xl bg-rose-50 border border-rose-100 font-black text-center text-rose-700 outline-none" placeholder="0">
+                            </div>
+                        </div>
+                        <button onclick="window.saveQuestaoManual()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-black transition-all">Salvar no Histórico 💾</button>
                     </div>
-                    <div class="text-3xl font-black mb-10 text-indigo-300 italic">NOTA: <span id="summary-grade" class="text-white">0.0</span> / 10</div>
-                    <button onclick="window.saveAndClose()" class="bg-white text-indigo-600 px-16 py-6 rounded-full font-black uppercase text-sm shadow-xl">Registrar Nota e Sair</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- TELA DE LOGIN -->
     <div id="auth-screen" class="auth-screen">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-10 shadow-2xl text-center">
-            <div class="text-center mb-10">
-                <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center text-white text-3xl font-black shadow-lg">P</div>
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">PC-AP Elite</h2>
-                <p class="text-slate-500 text-sm font-medium">Acesso Operacional</p>
-            </div>
-            <div class="space-y-4">
+            <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl font-black shadow-lg">P</div>
+            <h2 id="auth-title" class="text-2xl font-black text-slate-900 tracking-widest uppercase">PC-AP Elite</h2>
+            <div class="mt-8 space-y-4 text-left">
                 <input type="email" id="auth-email" placeholder="E-mail" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none">
                 <input type="password" id="auth-password" placeholder="Senha" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none">
-                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-indigo-700 uppercase text-xs mt-2 transition-all">Entrar</button>
-                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black uppercase text-indigo-500 mt-2 text-center">Cadastrar</button>
+                <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-indigo-700 uppercase text-xs mt-2 transition-all">Acessar</button>
+                <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black uppercase text-indigo-500 mt-2 text-center underline">Não tenho conta? Cadastrar</button>
             </div>
         </div>
     </div>
 
+    <!-- MAIN APP -->
     <div id="main-app" class="max-w-6xl mx-auto hidden py-10 px-4">
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
-            <div>
-                <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic">Amapá • 2026</span>
+            <div class="flex-1">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic">Operacional 2026</span>
                 <h1 class="text-6xl font-black text-slate-900 tracking-tighter">MEU EDITAL</h1>
-                <p id="welcome-msg" class="text-slate-500 font-semibold text-xl italic">Agente, qual a missão de hoje?</p>
+                <p id="welcome-msg" class="text-slate-500 font-semibold text-xl italic">Agente, pronto para a missão?</p>
             </div>
-            <div class="flex flex-col items-center gap-4">
-                <div class="bg-white px-10 py-6 rounded-[2.5rem] border border-slate-100 shadow-2xl text-center min-w-[200px]">
-                    <div id="progress-pct" class="text-5xl font-black text-indigo-600">0%</div>
-                    <div class="text-[10px] uppercase font-black text-slate-400 tracking-widest mt-1 text-center">Conclusão Total</div>
-                </div>
-                <button onclick="window.handleLogout()" class="text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase tracking-widest transition-all">Sair</button>
+            <div class="bg-white px-10 py-6 rounded-[2.5rem] border border-slate-100 shadow-2xl text-center min-w-[200px]">
+                <div id="progress-pct" class="text-5xl font-black text-indigo-600">0%</div>
+                <div class="text-[10px] uppercase font-black text-slate-400 tracking-widest mt-1">Conclusão</div>
+                <button onclick="window.handleLogout()" class="mt-4 text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase block w-full text-center">Sair do Sistema</button>
             </div>
         </header>
 
-        <nav class="flex flex-wrap gap-2 p-2 bg-white rounded-[2rem] mb-12 shadow-sm border border-slate-100 w-fit">
-            <button onclick="window.showTab('planner')" id="btn-planner" class="tab-btn active-tab px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase tracking-widest transition-all">📅 Planner</button>
-            <button onclick="window.showTab('history')" id="btn-history" class="tab-btn px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase tracking-widest text-emerald-600 bg-emerald-50 transition-all">📊 Histórico</button>
-            <button onclick="window.showTab('admin')" id="btn-admin" class="tab-btn hidden px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase tracking-widest text-rose-500 bg-rose-50 transition-all">👑 Adm</button>
+        <nav class="flex gap-2 p-2 bg-white rounded-[2rem] mb-12 shadow-sm border border-slate-100 w-fit">
+            <button onclick="window.showTab('planner')" id="btn-planner" class="tab-btn active-tab px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase transition-all">📅 Planner</button>
+            <button onclick="window.showTab('history')" id="btn-history" class="tab-btn px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase text-emerald-600 bg-emerald-50">📊 Histórico</button>
+            <button onclick="window.showTab('admin')" id="btn-admin" class="tab-btn hidden px-8 py-3.5 rounded-[1.25rem] font-black text-[11px] uppercase text-rose-500 bg-rose-50">👑 Adm</button>
         </nav>
 
         <div id="planner" class="tab-content active">
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex justify-between items-center mb-8 px-2">
                 <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest italic">Edital Verticalizado Gerenciável</h3>
-                <button onclick="window.addSubject()" class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg hover:bg-slate-800 transition-all">+ Matéria</button>
+                <button onclick="window.addSubject()" class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg hover:bg-black transition-all">+ Matéria</button>
             </div>
             <div id="edital-list" class="space-y-12"></div>
         </div>
 
         <div id="history" class="tab-content">
             <div class="card p-10">
-                <h3 class="text-2xl font-black mb-8 uppercase tracking-tight text-slate-800">Ranking do Simulado</h3>
-                <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400"><tr><th class="p-4">Data</th><th class="p-4">Agente</th><th class="p-4">Tópico</th><th class="p-4 text-center">Acertos</th><th class="p-4 text-right">Nota</th></tr></thead><tbody id="history-body"></tbody></table></div>
+                <h3 class="text-2xl font-black mb-8 uppercase tracking-tight text-slate-800">Registros de Desempenho</h3>
+                <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 tracking-widest"><tr><th class="p-4">Data</th><th class="p-4">Agente</th><th class="p-4">Tópico</th><th class="p-4 text-center">Acertos</th><th class="p-4 text-right">Nota</th></tr></thead><tbody id="history-body"></tbody></table></div>
             </div>
         </div>
 
         <div id="admin" class="tab-content">
-            <div class="card p-10"><h3 class="text-2xl font-black mb-8 uppercase text-slate-800">Agentes Inscritos</h3><div class="overflow-x-auto"><table class="w-full text-left text-xs"><tbody id="admin-users"></tbody></table></div></div>
+            <div class="card p-10"><h3 class="text-2xl font-black mb-8 uppercase text-slate-800">Agentes Ativos</h3><div class="overflow-x-auto"><table class="w-full text-left text-xs"><tbody id="admin-users"></tbody></table></div></div>
         </div>
     </div>
 
@@ -172,195 +182,135 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = "pcap-v7-final-pro-final-nick";
-        const apiKey = "AIzaSyBAZ0eGwPifAlpghkehd6Ze1BixhvA-t-Q"; // TUA CHAVE AQUI
+        const appId = "pcap-elite-v9-stable";
+        const apiKey = "AIzaSyBAZ0eGwPifAlpghkehd6Ze1BixhvA-t-Q";
 
-        let user = null; let userData = null; let currentSubject = ""; let currentTopic = ""; 
-        let currentScore = {hits: 0, miss: 0}; let currentNickname = "";
+        let user = null; let userData = null; let currentSubjectIdx = null; let currentTopicIdx = null;
+        let isLoginMode = true;
 
-        // --- CORE FUNCTIONS ---
-        window.loadAdmin = async () => {
-            const body = document.getElementById('admin-users'); if(!body) return;
-            try {
-                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
-                body.innerHTML = snap.docs.map(d => `<tr class="border-b"><td class="p-4 font-bold text-slate-700">${d.data().email}</td><td class="p-4 text-center text-emerald-500 font-black uppercase text-[10px]">Ativo</td><td class="p-4 text-right">${new Date(d.data().lastSeen).toLocaleDateString()}</td></tr>`).join('');
-            } catch (e) { body.innerHTML = '<tr><td colspan="3" class="p-4 text-rose-500 text-center">Erro no acesso.</td></tr>'; }
-        };
-
-        window.showTab = (id) => { 
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); 
-            const target = document.getElementById(id);
-            const btn = document.getElementById('btn-'+id);
-            if(target) target.classList.add('active'); 
-            if(btn) btn.classList.add('active-tab'); 
-            if(id === 'admin') window.loadAdmin(); 
-            if(id === 'history') renderHistory();
+        // --- AUTH ---
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Novo Cadastro";
+            document.getElementById('auth-btn').innerText = isLoginMode ? "Acessar" : "Criar Conta";
+            document.getElementById('auth-toggle').innerText = isLoginMode ? "Não tenho conta? Cadastrar" : "Já tenho conta? Login";
         };
 
         window.handleAuth = async () => {
-            const e = document.getElementById('auth-email').value;
+            const e = document.getElementById('auth-email').value.trim();
             const p = document.getElementById('auth-password').value;
-            const isReg = document.getElementById('auth-btn').innerText === "Criar Conta";
+            if(!e || !p) return alert("Preencha os campos!");
+            
             try {
-                if(isReg) await createUserWithEmailAndPassword(auth, e, p);
-                else await signInWithEmailAndPassword(auth, e, p);
-            } catch(e) { alert("Dados inválidos."); }
-        };
-
-        window.toggleAuthMode = () => {
-            const btn = document.getElementById('auth-btn');
-            const tog = document.getElementById('auth-toggle');
-            if(btn.innerText === "Entrar") { btn.innerText = "Criar Conta"; tog.innerText = "Já tem conta? Login"; }
-            else { btn.innerText = "Entrar"; tog.innerText = "Cadastrar"; }
+                if(isLoginMode) await signInWithEmailAndPassword(auth, e, p);
+                else await createUserWithEmailAndPassword(auth, e, p);
+            } catch(err) { alert("Erro: " + err.message); }
         };
 
         window.handleLogout = () => signOut(auth).then(() => location.reload());
 
-        // --- DATA SYNC ---
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 user = u;
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
-                if(user.email.toLowerCase() === "alexssandro.m.g@gmail.com") document.getElementById('btn-admin').classList.remove('hidden');
+                if(user.email === "alexssandro.m.g@gmail.com") document.getElementById('btn-admin').classList.remove('hidden');
                 
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid), { email: user.email, lastSeen: new Date().toISOString() }, { merge: true });
 
                 const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
                 const snap = await getDoc(userRef);
                 if (!snap.exists()) {
-                    userData = { subjects: [{ name: "DIREITO PENAL", topics: [{id: "t1", text: "Teoria do Crime", status: [false,false,false,false]}] }], quizHistory: [] };
+                    userData = { subjects: [{ name: "DIREITO PENAL", topics: [{id: "t1", text: "Teoria do Crime", status: [false,false,false,false], files: []}] }], quizHistory: [] };
                     await setDoc(userRef, userData);
                 }
-                onSnapshot(userRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderPlanner(); renderHistory(); } });
+                onSnapshot(userRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderPlanner(); renderHistory(); if(currentTopicIdx !== null) renderFiles(); } });
             }
         });
 
-        // --- STUDY HUB (IA) ---
-        window.openStudyHub = (sub, top) => {
-            currentSubject = sub; currentTopic = top;
-            document.getElementById('study-topic-title').innerText = top;
-            document.getElementById('pdf-overlay').style.display = 'block';
-            document.getElementById('quiz-nickname').value = "";
-            window.switchStudyTab('theory');
-            document.getElementById('pdf-content').innerHTML = `<div class="flex flex-col items-center justify-center py-40 text-slate-300 text-center"><div class="text-7xl mb-8">📖</div><p class="font-black uppercase text-xs tracking-widest text-center text-slate-400">Inicie a Geração Operacional acima</p></div>`;
-            document.getElementById('main-gen-theory').innerText = "Gerar Manual de Elite IA 🚀";
-            document.getElementById('main-gen-theory').disabled = false;
+        // --- HUB LOGIC ---
+        window.openHub = (sIdx, tIdx) => {
+            currentSubjectIdx = sIdx; currentTopicIdx = tIdx;
+            document.getElementById('hub-topic-title').innerText = userData.subjects[sIdx].topics[tIdx].text;
+            document.getElementById('study-hub-overlay').style.display = 'block';
+            window.switchHubTab('theory');
+            renderFiles();
         };
 
-        window.generateIA = async () => {
-            const btn = document.getElementById('main-gen-theory');
-            btn.disabled = true; btn.innerText = "PROCESSANDO...";
-            const contentArea = document.getElementById('pdf-content');
-            contentArea.innerHTML = `<div class="flex flex-col items-center py-60"><div class="w-16 h-16 border-8 border-indigo-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-8 font-black uppercase text-[10px] text-slate-400 tracking-[0.4em] animate-pulse">IA Organizando Manual Operacional...</p></div>`;
-            
-            const isLaw = currentSubject.includes('DIREITO') || currentSubject.includes('PENAL') || currentSubject.includes('CONSTITUCIONAL');
-            
-            const prompt = `Gere uma APOSTILA COMPLETA de elite para PC-AP: ${currentTopic} (${currentSubject}).
-            - Use <span class="hl-yellow">...</span> para conceitos.
-            - Use <span class="hl-green">...</span> para prazos.
-            - Use <span class="hl-pink">...</span> para exceções.
-            ${isLaw ? '- Cite artigos em blocos <div class="article-box"> e explique cada um com exemplo policial.' : '- Use tabelas e didática visual.'}
-            Estrutura: # Título, ## Como Estudar, ## Doutrina, ## Jurisprudência, ## Mapa de Calor, ## Pegadinhas.`;
+        window.closeHub = () => { document.getElementById('study-hub-overlay').style.display = 'none'; currentSubjectIdx = null; currentTopicIdx = null; };
 
+        window.switchHubTab = (id) => {
+            document.querySelectorAll('#study-hub-overlay .tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('#study-hub-overlay nav button').forEach(b => b.classList.remove('active-tab'));
+            document.getElementById('hub-' + id).classList.add('active');
+            document.getElementById('btn-hub-' + id).classList.add('active-tab');
+        };
+
+        // --- FILES ---
+        window.addFileLink = async () => {
+            const name = prompt("Nome do PDF/Resumo:"); if(!name) return;
+            const url = prompt("Link do Arquivo (ou digite #):", "#");
+            if(!userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files) userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files = [];
+            userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files.push({ name, url });
+            await sync();
+        };
+
+        const renderFiles = () => {
+            const list = document.getElementById('files-list');
+            const files = userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files || [];
+            const addBtn = `<button onclick="window.addFileLink()" class="border-2 border-dashed border-slate-200 p-8 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 hover:border-indigo-400 transition-all shadow-sm"><span class="text-4xl mb-2">+</span><span class="font-black uppercase text-[10px]">Novo Material</span></button>`;
+            list.innerHTML = files.map((f, idx) => `
+                <div class="material-item p-6 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-4">
+                        <div class="text-2xl">📄</div>
+                        <div><p class="font-black uppercase text-[11px] text-slate-800">${f.name}</p><a href="${f.url}" target="_blank" class="text-indigo-500 font-bold text-[9px] uppercase hover:underline">Abrir Link</a></div>
+                    </div>
+                    <button onclick="window.deleteFile(${idx})" class="text-rose-300 hover:text-rose-500 p-2 text-xl">✕</button>
+                </div>
+            `).join('') + addBtn;
+        };
+
+        window.deleteFile = async (idx) => { if(confirm("Apagar material?")) { userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files.splice(idx, 1); await sync(); } };
+
+        // --- MANUAL SAVE ---
+        window.saveQuestaoManual = async () => {
+            const nick = document.getElementById('reg-nickname').value.trim();
+            const hits = parseInt(document.getElementById('reg-hits').value) || 0;
+            const miss = parseInt(document.getElementById('reg-miss').value) || 0;
+            if(!nick) return alert("Insira o seu apelido!");
+            const total = hits + miss;
+            const grade = total > 0 ? ((hits/total)*10).toFixed(1) : "0.0";
+            if(!userData.quizHistory) userData.quizHistory = [];
+            userData.quizHistory.push({ date: new Date().toISOString(), nickname: nick, subject: userData.subjects[currentSubjectIdx].name, topic: userData.subjects[currentSubjectIdx].topics[currentTopicIdx].text, hits, total, grade });
+            await sync();
+            alert("Desempenho Registrado!");
+            window.closeHub();
+        };
+
+        // --- CORE SYNC & RENDER ---
+        const sync = async () => { await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital'), userData); };
+        window.editSubject = async (i) => { const n = prompt("Novo nome:", userData.subjects[i].name); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); } };
+        window.removeSubject = async (i) => { if(confirm("Apagar matéria?")) { userData.subjects.splice(i, 1); await sync(); } };
+        window.editTopic = async (s, t) => { const n = prompt("Novo nome:", userData.subjects[s].topics[t].text); if(n) { userData.subjects[s].topics[t].text = n; await sync(); } };
+        window.removeTopic = async (s, t) => { if(confirm("Remover tópico?")) { userData.subjects[s].topics.splice(t, 1); await sync(); } };
+        window.addSubject = async () => { const n = prompt("Matéria:"); if(n) { userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); } };
+        window.addTopic = async (i) => { const t = prompt("Assunto:"); if(t) { userData.subjects[i].topics.push({id:Math.random().toString(36).substr(2,9), text:t, status:[false,false,false,false], files: []}); await sync(); } };
+        window.toggleCheck = async (s, t, c) => { userData.subjects[s].topics[t].status[c] = !userData.subjects[s].topics[t].status[c]; await sync(); };
+
+        window.generateIA = async () => {
+            const btn = document.getElementById('gen-ia-btn'); btn.disabled = true; btn.innerText = "IA PROCESSANDO...";
+            const area = document.getElementById('ia-content');
+            area.innerHTML = `<div class="flex flex-col items-center py-40"><div class="w-16 h-16 border-8 border-indigo-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-8 font-black uppercase text-xs tracking-widest text-slate-400">IA Gerando Teoria Completa...</p></div>`;
+            const prompt = `Apostila para PC-AP: ${userData.subjects[currentSubjectIdx].topics[currentTopicIdx].text}. Use marca-texto <span class="hl-yellow">...</span>. Estrutura profissional.`;
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                 });
-                const result = await response.json();
-                contentArea.innerHTML = marked.parse(result.candidates?.[0]?.content?.parts?.[0]?.text || "Erro.");
-                btn.innerText = "Teoria Gerada!";
-            } catch(e) { contentArea.innerHTML = "Falha no sistema de IA."; btn.disabled = false; }
-        };
-
-        // --- SIMULADO ---
-        window.generateQuiz = async () => {
-            const nick = document.getElementById('quiz-nickname').value.trim();
-            if(!nick) { alert("Insira um apelido para o registro Agente!"); return; }
-            currentNickname = nick;
-
-            const quizArea = document.getElementById('quiz-content');
-            document.getElementById('btn-gen-quiz').disabled = true;
-            quizArea.innerHTML = `<div class="flex justify-center py-40"><div class="w-16 h-16 border-8 border-emerald-600 border-t-transparent rounded-full animate-spin"></div></div>`;
-            document.getElementById('quiz-summary').classList.add('hidden');
-            currentScore = {hits: 0, miss: 0};
-
-            const prompt = `Gere 10 questões de múltipla escolha para ${currentTopic} da PC-AP. JSON: [{"q": "...", "options": ["A", "B", "C", "D", "E"], "correct": index, "explanation": "comentário técnico detalhado"}].`;
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json" } })
-                });
-                const result = await response.json();
-                const questions = JSON.parse(result.candidates[0].content.parts[0].text);
-                
-                quizArea.innerHTML = questions.map((q, qIdx) => `
-                    <div class="q-card shadow-lg">
-                        <span class="bg-indigo-600 text-white px-5 py-2 rounded-full text-[10px] font-black tracking-widest mb-8 inline-block uppercase">MISSÃO ${qIdx+1}</span>
-                        <p class="font-black text-slate-800 text-xl mb-10 leading-relaxed">${q.q}</p>
-                        <div class="space-y-4">${q.options.map((opt, oIdx) => `<div class="q-option border-2" onclick="window.checkQ(this, ${oIdx}, ${q.correct}, ${qIdx})">${opt}</div>`).join('')}</div>
-                        <div id="exp-${qIdx}" class="explanation shadow-inner"><p class="font-black text-emerald-700 mb-2 uppercase text-[10px]">Comentário do Instrutor:</p><p class="text-slate-600 font-medium">${q.explanation}</p></div>
-                    </div>`).join('') + `<div class="text-center pb-20"><button onclick="window.finishQuiz()" class="bg-emerald-600 text-white px-20 py-6 rounded-full font-black uppercase text-sm shadow-2xl">Finalizar Simulado</button></div>`;
-            } catch(e) { quizArea.innerHTML = "Erro ao gerar bateria."; }
-            document.getElementById('btn-gen-quiz').disabled = false;
-        };
-
-        window.checkQ = (el, selected, correct, qIdx) => {
-            const parent = el.parentElement; if(parent.style.pointerEvents === "none") return;
-            if(selected === correct) { el.classList.add("correct-choice"); currentScore.hits++; }
-            else { el.classList.add("wrong-choice"); parent.children[correct].classList.add("correct-choice"); currentScore.miss++; }
-            document.getElementById(`exp-${qIdx}`).style.display = "block";
-            parent.style.pointerEvents = "none";
-        };
-
-        window.finishQuiz = () => {
-            const grade = ((currentScore.hits / 10) * 10).toFixed(1);
-            document.getElementById('quiz-summary').classList.remove('hidden');
-            document.getElementById('summary-hits').innerText = currentScore.hits;
-            document.getElementById('summary-miss').innerText = currentScore.miss;
-            document.getElementById('summary-grade').innerText = grade;
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        };
-
-        window.saveAndClose = async () => {
-            if(!userData.quizHistory) userData.quizHistory = [];
-            userData.quizHistory.push({ date: new Date().toISOString(), nickname: currentNickname, subject: currentSubject, topic: currentTopic, hits: currentScore.hits, grade: ((currentScore.hits/10)*10).toFixed(1) });
-            await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital'), userData);
-            window.closePDF();
-        };
-
-        // --- MANAGEMENT ---
-        window.editSubject = async (idx) => {
-            const name = prompt("Novo nome da Matéria:", userData.subjects[idx].name);
-            if(name) { userData.subjects[idx].name = name.toUpperCase(); await sync(); }
-        };
-        window.removeSubject = async (idx) => {
-            if(confirm("Apagar matéria e tópicos?")) { userData.subjects.splice(idx, 1); await sync(); }
-        };
-        window.editTopic = async (sIdx, tIdx) => {
-            const name = prompt("Novo nome do Tópico:", userData.subjects[sIdx].topics[tIdx].text);
-            if(name) { userData.subjects[sIdx].topics[tIdx].text = name; await sync(); }
-        };
-        window.removeTopic = async (sIdx, tIdx) => {
-            if(confirm("Excluir alvo operacional?")) { userData.subjects[sIdx].topics.splice(tIdx, 1); await sync(); }
-        };
-        window.addSubject = async () => {
-            const n = prompt("Nome da Matéria:");
-            if(n) { userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); }
-        };
-        window.addTopic = async (idx) => {
-            const t = prompt("Assunto:");
-            if(t) { userData.subjects[idx].topics.push({id:Math.random().toString(36).substr(2,9), text:t, status:[false,false,false,false]}); await sync(); }
-        };
-
-        const sync = async () => { await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital'), userData); };
-
-        const renderHistory = () => {
-            const body = document.getElementById('history-body'); if(!body) return;
-            body.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-100 hover:bg-slate-50 transition-all"><td class="p-4 text-slate-400 font-bold text-[10px]">${new Date(h.date).toLocaleDateString()}</td><td class="p-4 font-black text-indigo-600 uppercase text-[10px]">${h.nickname || 'Agente'}</td><td class="p-4"><p class="font-black text-slate-800 uppercase text-[10px]">${h.subject}</p><p class="text-[10px] text-slate-400 font-black">${h.topic}</p></td><td class="p-4 text-center"><span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black">${h.hits}/10</span></td><td class="p-4 text-right"><span class="text-lg font-black ${h.grade >= 7 ? 'text-emerald-500' : 'text-rose-500'}">${h.grade}</span></td></tr>`).join('');
+                const data = await res.json();
+                area.innerHTML = marked.parse(data.candidates?.[0]?.content?.parts?.[0]?.text || "Erro na geração.");
+                btn.innerText = "Finalizado!";
+            } catch(e) { area.innerHTML = "Falha na IA."; btn.disabled = false; }
         };
 
         const renderPlanner = () => {
@@ -370,18 +320,36 @@
                 const rows = (sub.topics || []).map((top, tIdx) => {
                     t += 4; d += top.status.filter(x=>x).length;
                     const checks = top.status.map((s, cIdx) => `<td class="p-4 text-center"><div class="flex justify-center"><input type="checkbox" ${s?'checked':''} ${cIdx>0 && !top.status[cIdx-1]?'disabled':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})"></div></td>`).join('');
-                    return `<tr class="border-b border-slate-50 hover:bg-slate-50/50 group transition-all"><td class="p-4"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><button onclick="window.openStudyHub('${sub.name}', '${top.text}')" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-4 transition-all"><span class="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-xl text-[10px] shadow-lg shadow-indigo-100">GO</span> ${top.text}</button></div><div class="flex gap-2 btn-action"><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-indigo-500 p-1">✎</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-rose-500 p-1">✕</button></div></div></td>${checks}</tr>`;
+                    return `<tr class="border-b border-slate-50 hover:bg-slate-50 transition-all group"><td class="p-4"><div class="flex items-center justify-between"><button onclick="window.openHub(${sIdx}, ${tIdx})" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-3"><span class="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</span> ${top.text}</button><div class="flex gap-2 btn-action"><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-indigo-500">✎</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-rose-500">✕</button></div></div></td>${checks}</tr>`;
                 }).join('');
-                
-                list.innerHTML += `<div class="card shadow-xl group"><div class="p-8 bg-white border-b flex justify-between items-center px-10"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter">${sub.name}</h4><div class="flex gap-2 btn-action"><button onclick="window.editSubject(${sIdx})" class="text-slate-400 hover:text-indigo-500 text-xs font-bold uppercase tracking-widest">Editar</button><button onclick="window.removeSubject(${sIdx})" class="text-slate-400 hover:text-rose-500 text-xs font-bold uppercase tracking-widest">Excluir</button></div></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/50 border-b border-slate-100"><th class="p-5 text-left text-slate-400 tracking-widest">Missão</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo</button></div></div>`;
+                list.innerHTML += `<div class="card shadow-xl group"><div class="p-8 bg-white border-b flex justify-between items-center px-10"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter">${sub.name}</h4><div class="flex gap-2 btn-action"><button onclick="window.editSubject(${sIdx})" class="text-slate-400 hover:text-indigo-500 text-xs font-bold uppercase tracking-widest">Editar</button><button onclick="window.removeSubject(${sIdx})" class="text-slate-400 hover:text-rose-500 text-xs font-bold uppercase tracking-widest">Apagar</button></div></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/50 border-b border-slate-100"><th class="p-5 text-left text-slate-400">Missão Operacional</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo</button></div></div>`;
             });
             const p = document.getElementById('progress-pct'); if(p) p.innerText = t?Math.round((d/t)*100)+'%':'0%';
         };
 
-        window.switchStudyTab = (tab) => { document.querySelectorAll('#pdf-overlay .tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('#pdf-overlay nav button').forEach(b => b.classList.remove('active-tab')); document.getElementById('study-' + tab).classList.add('active'); document.getElementById('btn-tab-' + tab).classList.add('active-tab'); };
-        window.closePDF = () => document.getElementById('pdf-overlay').style.display = 'none';
-        window.printPDF = () => window.print();
-        window.toggleCheck = async (sIdx, tIdx, cIdx) => { userData.subjects[sIdx].topics[tIdx].status[cIdx] = !userData.subjects[sIdx].topics[tIdx].status[cIdx]; await sync(); };
+        const renderHistory = () => {
+            const body = document.getElementById('history-body'); if(!body) return;
+            body.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-100"><td class="p-4 text-slate-400 font-bold text-[10px]">${new Date(h.date).toLocaleDateString()}</td><td class="p-4 font-black text-indigo-600 uppercase text-[10px]">${h.nickname}</td><td class="p-4 text-[10px] font-black uppercase text-slate-700">${h.topic}</td><td class="p-4 text-center"><span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black">${h.hits}/${h.total}</span></td><td class="p-4 text-right"><span class="text-lg font-black ${h.grade >= 7 ? 'text-emerald-500' : 'text-rose-500'}">${h.grade}</span></td></tr>`).join('');
+        };
+
+        window.loadAdmin = async () => {
+            const body = document.getElementById('admin-users'); if(!body) return;
+            try {
+                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
+                body.innerHTML = snap.docs.map(d => `<tr class="border-b"><td class="p-4 font-bold text-slate-700">${d.data().email}</td><td class="p-4 text-center text-emerald-500 font-black uppercase text-[10px]">Ativo</td><td class="p-4 text-right text-slate-400">${new Date(d.data().lastSeen).toLocaleDateString()}</td></tr>`).join('');
+            } catch (e) { body.innerHTML = '<tr><td colspan="3" class="p-4">Erro.</td></tr>'; }
+        };
+
+        window.showTab = (id) => { 
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); 
+            document.getElementById(id).classList.add('active'); 
+            document.getElementById('btn-'+id).classList.add('active-tab'); 
+            if(id === 'admin') window.loadAdmin(); 
+            if(id === 'history') renderHistory();
+        };
+
+        window.printContent = () => window.print();
     </script>
 </body>
 </html>
