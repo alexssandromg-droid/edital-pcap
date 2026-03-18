@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Edition - PC-AP Planner Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         :root { --primary: #4f46e5; --bg: #f8fafc; --text: #1e293b; }
         body { background-color: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text); min-height: 100vh; }
         
         .auth-screen { position: fixed; inset: 0; background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .blocked-screen { position: fixed; inset: 0; background: #fff; z-index: 9998; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
         .card { background: white; border-radius: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 1.5rem; overflow: hidden; }
         
         .tab-content { display: none; }
@@ -30,87 +30,90 @@
         #study-hub-overlay { position: fixed; inset: 0; background: white; z-index: 100; overflow-y: auto; display: none; }
         .study-container { max-width: 1000px; margin: 0 auto; padding: 0 20px 100px 20px; }
         
-        .prose h1 { font-weight: 900; font-size: 2.5rem; color: #1e293b; border-left: 10px solid #4f46e5; padding-left: 1.5rem; }
-        .hl-yellow { background-color: #fef08a; padding: 1px 4px; border-radius: 4px; font-weight: bold; }
-        
         .btn-action { opacity: 0; transition: 0.2s opacity; }
         .group:hover .btn-action { opacity: 1; }
 
         .material-item { background: #f8fafc; border: 1px solid #e2e8f0; transition: 0.2s; border-radius: 1.5rem; }
         .material-item:hover { border-color: #4f46e5; transform: translateY(-2px); }
+
+        .review-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; display: inline-flex; align-items: center; gap: 3px; }
+        .badge-r7 { background: #e0e7ff; color: #4338ca; }
+        .badge-r28 { background: #fef3c7; color: #92400e; }
+
+        .part-btn { border: 2px solid #e2e8f0; padding: 10px; border-radius: 12px; font-weight: 800; font-size: 11px; transition: 0.2s; }
+        .part-btn.active { border-color: #4f46e5; background: #f5f3ff; color: #4f46e5; }
+        
+        .admin-only { display: none; }
+        body.is-admin .admin-only { display: block; }
+        body.is-admin .admin-only-flex { display: flex; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- OVERLAY: HUB DE ESTUDO -->
+    <!-- TELA BLOQUEADA -->
+    <div id="blocked-screen" class="blocked-screen hidden">
+        <div class="max-w-md">
+            <div class="text-6xl mb-6">🔒</div>
+            <h2 class="text-3xl font-black text-slate-900 mb-4 uppercase">Acesso Suspenso</h2>
+            <p class="text-slate-500 font-bold mb-8">Olá, Agente. O seu acesso precisa de ser validado pelo Administrador ou o pagamento não foi identificado.</p>
+            <button onclick="window.handleLogout()" class="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black uppercase text-xs shadow-xl">Sair</button>
+        </div>
+    </div>
+
+    <!-- HUB DE ESTUDO -->
     <div id="study-hub-overlay" class="no-scrollbar">
         <div class="sticky top-0 bg-white/95 backdrop-blur-md border-b p-4 flex flex-wrap justify-between items-center gap-4 z-50">
             <button onclick="window.closeHub()" class="text-slate-400 hover:text-slate-900 font-black text-xs uppercase flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg> Voltar
             </button>
             <div class="flex bg-slate-100 p-1.5 rounded-2xl">
-                <button onclick="window.switchHubTab('theory')" id="btn-hub-theory" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase active-tab">📚 Teoria IA</button>
+                <button onclick="window.switchHubTab('theory-split')" id="btn-hub-theory-split" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase active-tab">📖 Planejar Teoria</button>
                 <button onclick="window.switchHubTab('files')" id="btn-hub-files" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase">📁 Materiais</button>
                 <button onclick="window.switchHubTab('register')" id="btn-hub-register" class="px-6 py-2.5 rounded-xl text-[11px] font-black uppercase">📝 Reg. Questões</button>
             </div>
-            <button onclick="window.printContent()" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase">Imprimir</button>
+            <div class="w-20"></div>
         </div>
-        
         <div class="study-container">
-            <!-- ABA TEORIA IA -->
-            <div id="hub-theory" class="tab-content active pt-10">
-                <div class="bg-slate-900 p-10 rounded-[3rem] text-center mb-10 shadow-2xl">
-                    <h2 id="hub-topic-title" class="text-4xl font-black uppercase text-white mb-4 tracking-tighter">Tópico</h2>
-                    <button onclick="window.generateIA()" id="gen-ia-btn" class="bg-indigo-500 hover:bg-indigo-600 px-10 py-5 rounded-full font-black uppercase text-xs shadow-xl text-white transition-all">Gerar Manual de Elite 🚀</button>
-                </div>
-                <div id="ia-content" class="prose bg-white p-10 md:p-20 rounded-[4rem] border border-slate-100 shadow-xl min-h-[500px]">
-                    <div class="flex flex-col items-center justify-center py-40 text-slate-300">
-                        <div class="text-7xl mb-6">📖</div>
-                        <p class="font-black uppercase text-xs tracking-widest">Aguardando comando...</p>
+            <div id="hub-theory-split" class="tab-content active pt-10">
+                <div class="bg-slate-900 p-10 rounded-[3rem] text-center mb-10 shadow-2xl text-white">
+                    <h2 id="hub-topic-title" class="text-4xl font-black uppercase mb-4 tracking-tighter">Tópico</h2>
+                    <div class="flex flex-col items-center gap-6">
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-slate-500 mb-4 tracking-widest">Divisão do estudo em:</p>
+                            <div class="flex gap-3" id="parts-selector-container">
+                                <button onclick="window.setTheoryParts(1)" class="part-btn px-6" id="parts-1">1 Parte</button>
+                                <button onclick="window.setTheoryParts(2)" class="part-btn px-6" id="parts-2">2 Partes</button>
+                                <button onclick="window.setTheoryParts(3)" class="part-btn px-6" id="parts-3">3 Partes</button>
+                                <button onclick="window.setTheoryParts(4)" class="part-btn px-6" id="parts-4">4 Partes</button>
+                            </div>
+                        </div>
+                        <div id="parts-checklist" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-lg mt-4"></div>
                     </div>
                 </div>
             </div>
-
-            <!-- ABA MATERIAIS / PASTA -->
             <div id="hub-files" class="tab-content pt-10">
-                <div class="bg-indigo-50 border border-indigo-100 p-10 rounded-[3rem] mb-10 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-3xl font-black text-indigo-900 uppercase mb-2">📁 Materiais</h2>
-                        <p class="text-indigo-600 font-bold text-sm italic">Guarde os seus PDFs e anotações deste tópico.</p>
-                    </div>
+                <div class="bg-indigo-50 border border-indigo-100 p-10 rounded-[3rem] mb-10 text-center">
+                    <h2 class="text-3xl font-black text-indigo-900 uppercase">📁 Materiais de Apoio</h2>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="files-list">
-                    <!-- Gerado via JS -->
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="files-list"></div>
             </div>
-
-            <!-- ABA REGISTRAR QUESTÕES -->
             <div id="hub-register" class="tab-content pt-10">
                 <div class="max-w-xl mx-auto bg-white p-10 rounded-[3rem] border border-slate-100 shadow-2xl">
-                    <h2 class="text-3xl font-black text-slate-900 uppercase text-center mb-8 tracking-tighter">Registar Treino</h2>
+                    <h2 class="text-3xl font-black text-slate-900 uppercase text-center mb-8 tracking-tighter">Registrar Questões</h2>
                     <div class="space-y-6">
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-slate-400 ml-2 tracking-widest">Apelido do Agente</label>
-                            <input type="text" id="reg-nickname" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-black text-center text-indigo-600 outline-none focus:ring-2 focus:ring-indigo-500/20">
-                        </div>
+                        <input type="text" id="reg-nickname" placeholder="Seu Apelido" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-black text-center text-indigo-600 outline-none">
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Acertos</label>
-                                <input type="number" id="reg-hits" class="w-full p-4 rounded-2xl bg-emerald-50 border border-emerald-100 font-black text-center text-emerald-700 outline-none" placeholder="0">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Erros</label>
-                                <input type="number" id="reg-miss" class="w-full p-4 rounded-2xl bg-rose-50 border border-rose-100 font-black text-center text-rose-700 outline-none" placeholder="0">
-                            </div>
+                            <input type="number" id="reg-hits" class="w-full p-4 rounded-2xl bg-emerald-50 border border-emerald-100 font-black text-center text-emerald-700 outline-none" placeholder="Acertos">
+                            <input type="number" id="reg-miss" class="w-full p-4 rounded-2xl bg-rose-50 border border-rose-100 font-black text-center text-rose-700 outline-none" placeholder="Erros">
                         </div>
-                        <button onclick="window.saveQuestaoManual()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-black transition-all">Salvar no Histórico 💾</button>
+                        <button onclick="window.saveQuestaoManual()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-black transition-all">Salvar Registro</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TELA DE LOGIN -->
+    <!-- LOGIN / CADASTRO -->
     <div id="auth-screen" class="auth-screen">
         <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-10 shadow-2xl text-center">
             <div class="w-16 h-16 bg-indigo-600 rounded-2xl mx-auto mb-6 flex items-center justify-center text-white text-3xl font-black shadow-lg">P</div>
@@ -118,24 +121,33 @@
             <div class="mt-8 space-y-4 text-left">
                 <input type="email" id="auth-email" placeholder="E-mail" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none">
                 <input type="password" id="auth-password" placeholder="Senha" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none">
+                
+                <div id="edict-selection-container" class="hidden">
+                    <label class="text-[10px] font-black uppercase text-slate-400 ml-2">Qual Edital vai seguir?</label>
+                    <select id="auth-edict-choice" class="w-full p-4 rounded-2xl bg-indigo-50 border border-indigo-100 font-bold text-sm outline-none">
+                        <option value="pcap_agente">PC-AP (Agente de Polícia)</option>
+                        <option value="pcap_escrivao">PC-AP (Escrivão de Polícia)</option>
+                        <option value="pcap_delegado">PC-AP (Delegado)</option>
+                    </select>
+                </div>
+
                 <button onclick="window.handleAuth()" id="auth-btn" class="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl hover:bg-indigo-700 uppercase text-xs mt-2 transition-all">Acessar</button>
                 <button onclick="window.toggleAuthMode()" id="auth-toggle" class="w-full text-[10px] font-black uppercase text-indigo-500 mt-2 text-center underline">Não tenho conta? Cadastrar</button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN APP -->
+    <!-- APP PRINCIPAL -->
     <div id="main-app" class="max-w-6xl mx-auto hidden py-10 px-4">
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex-1">
-                <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic">Operacional 2026</span>
-                <h1 class="text-6xl font-black text-slate-900 tracking-tighter">MEU EDITAL</h1>
-                <p id="welcome-msg" class="text-slate-500 font-semibold text-xl italic">Agente, pronto para a missão?</p>
+                <span id="user-edict-badge" class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic">Edital Carregando...</span>
+                <h1 class="text-6xl font-black text-slate-900 tracking-tighter">MEU PLANNER</h1>
             </div>
             <div class="bg-white px-10 py-6 rounded-[2.5rem] border border-slate-100 shadow-2xl text-center min-w-[200px]">
                 <div id="progress-pct" class="text-5xl font-black text-indigo-600">0%</div>
                 <div class="text-[10px] uppercase font-black text-slate-400 tracking-widest mt-1">Conclusão</div>
-                <button onclick="window.handleLogout()" class="mt-4 text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase block w-full text-center">Sair do Sistema</button>
+                <button onclick="window.handleLogout()" class="mt-4 text-rose-400 hover:text-rose-600 font-black text-[10px] uppercase block w-full text-center">Desconectar</button>
             </div>
         </header>
 
@@ -147,21 +159,18 @@
 
         <div id="planner" class="tab-content active">
             <div class="flex justify-between items-center mb-8 px-2">
-                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest italic">Edital Verticalizado Gerenciável</h3>
-                <button onclick="window.addSubject()" class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg hover:bg-black transition-all">+ Matéria</button>
+                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest italic tracking-tight">Status do seu Cronograma</h3>
+                <button onclick="window.addSubject()" class="bg-slate-900 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg hover:bg-black transition-all admin-only">+ Matéria (ADM)</button>
             </div>
             <div id="edital-list" class="space-y-12"></div>
         </div>
 
         <div id="history" class="tab-content">
-            <div class="card p-10">
-                <h3 class="text-2xl font-black mb-8 uppercase tracking-tight text-slate-800">Registros de Desempenho</h3>
-                <div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 tracking-widest"><tr><th class="p-4">Data</th><th class="p-4">Agente</th><th class="p-4">Tópico</th><th class="p-4 text-center">Acertos</th><th class="p-4 text-right">Nota</th></tr></thead><tbody id="history-body"></tbody></table></div>
-            </div>
+            <div class="card p-10"><h3 class="text-2xl font-black mb-8 uppercase text-slate-800 text-center">Registros de Simulados</h3><div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead class="bg-slate-50 text-[10px] font-black uppercase text-slate-400 tracking-widest"><tr><th class="p-4">Data</th><th class="p-4">Agente</th><th class="p-4">Tópico</th><th class="p-4 text-center">Acertos</th><th class="p-4 text-right">Nota</th></tr></thead><tbody id="history-body"></tbody></table></div></div>
         </div>
 
         <div id="admin" class="tab-content">
-            <div class="card p-10"><h3 class="text-2xl font-black mb-8 uppercase text-slate-800">Agentes Ativos</h3><div class="overflow-x-auto"><table class="w-full text-left text-xs"><tbody id="admin-users"></tbody></table></div></div>
+            <div class="card p-10"><h3 class="text-2xl font-black mb-8 uppercase text-slate-800 tracking-tight text-center">Gestão de Alunos</h3><div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="bg-slate-50 uppercase text-[10px] font-black text-slate-400"> <th class="p-4">E-mail</th> <th class="p-4">Edital</th> <th class="p-4 text-center">Estado</th> <th class="p-4 text-right">Acções</th> </tr></thead><tbody id="admin-users"></tbody></table></div></div>
         </div>
     </div>
 
@@ -182,29 +191,53 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = "pcap-elite-v9-stable";
-        const apiKey = "AIzaSyBAZ0eGwPifAlpghkehd6Ze1BixhvA-t-Q";
+        const appId = "pcap-elite-v14-final-fix"; // ID Estável
+        const ADMIN_EMAIL = "alexssandro.m.g@gmail.com";
 
-        let user = null; let userData = null; let currentSubjectIdx = null; let currentTopicIdx = null;
+        let user = null; let userData = null; let userProfile = null; let curS = null; let curT = null;
         let isLoginMode = true;
 
-        // --- AUTH ---
+        const updateRoleUI = () => {
+            if(user && user.email === ADMIN_EMAIL) document.body.classList.add('is-admin');
+            else document.body.classList.remove('is-admin');
+        };
+
         window.toggleAuthMode = () => {
             isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Novo Cadastro";
-            document.getElementById('auth-btn').innerText = isLoginMode ? "Acessar" : "Criar Conta";
+            document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Criar Cadastro";
+            document.getElementById('auth-btn').innerText = isLoginMode ? "Acessar" : "Confirmar Cadastro";
             document.getElementById('auth-toggle').innerText = isLoginMode ? "Não tenho conta? Cadastrar" : "Já tenho conta? Login";
+            document.getElementById('edict-selection-container').classList.toggle('hidden', isLoginMode);
         };
 
         window.handleAuth = async () => {
             const e = document.getElementById('auth-email').value.trim();
             const p = document.getElementById('auth-password').value;
-            if(!e || !p) return alert("Preencha os campos!");
+            const edict = document.getElementById('auth-edict-choice').value;
+            const btn = document.getElementById('auth-btn');
+
+            if(!e || !p) return alert("Preencha e-mail e senha!");
             
+            btn.innerText = "A processar...";
+            btn.disabled = true;
+
             try {
-                if(isLoginMode) await signInWithEmailAndPassword(auth, e, p);
-                else await createUserWithEmailAndPassword(auth, e, p);
-            } catch(err) { alert("Erro: " + err.message); }
+                if(isLoginMode) {
+                    await signInWithEmailAndPassword(auth, e, p);
+                } else {
+                    const cred = await createUserWithEmailAndPassword(auth, e, p);
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', cred.user.uid), {
+                        email: e, 
+                        status: 'active',
+                        edict: edict,
+                        lastSeen: new Date().toISOString()
+                    });
+                }
+            } catch(err) { 
+                alert("Erro: " + err.message); 
+                btn.innerText = isLoginMode ? "Acessar" : "Confirmar Cadastro";
+                btn.disabled = false;
+            }
         };
 
         window.handleLogout = () => signOut(auth).then(() => location.reload());
@@ -212,33 +245,93 @@
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 user = u;
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                if(user.email === "alexssandro.m.g@gmail.com") document.getElementById('btn-admin').classList.remove('hidden');
+                updateRoleUI();
                 
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid), { email: user.email, lastSeen: new Date().toISOString() }, { merge: true });
-
-                const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
-                const snap = await getDoc(userRef);
-                if (!snap.exists()) {
-                    userData = { subjects: [{ name: "DIREITO PENAL", topics: [{id: "t1", text: "Teoria do Crime", status: [false,false,false,false], files: []}] }], quizHistory: [] };
-                    await setDoc(userRef, userData);
+                const profileRef = doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', user.uid);
+                
+                // Força criação de perfil se não existir (essencial para quem já tinha conta mas mudou o appId)
+                const checkProfile = await getDoc(profileRef);
+                if(!checkProfile.exists()){
+                    await setDoc(profileRef, {
+                        email: user.email,
+                        status: 'active',
+                        edict: 'pcap_agente',
+                        lastSeen: new Date().toISOString()
+                    });
                 }
-                onSnapshot(userRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderPlanner(); renderHistory(); if(currentTopicIdx !== null) renderFiles(); } });
+
+                // Monitora Perfil
+                onSnapshot(profileRef, (snap) => {
+                    if(snap.exists()) {
+                        userProfile = snap.data();
+                        document.getElementById('user-edict-badge').innerText = (userProfile.edict || 'pcap_agente').replace('_', ' ').toUpperCase();
+                        
+                        if(userProfile.status === 'blocked' && user.email !== ADMIN_EMAIL) {
+                            document.getElementById('blocked-screen').classList.remove('hidden');
+                            document.getElementById('main-app').classList.add('hidden');
+                            document.getElementById('auth-screen').classList.add('hidden');
+                        } else {
+                            document.getElementById('blocked-screen').classList.add('hidden');
+                            document.getElementById('auth-screen').classList.add('hidden');
+                            document.getElementById('main-app').classList.remove('hidden');
+                        }
+                    }
+                });
+
+                // Monitora Edital
+                const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital');
+                const userSnap = await getDoc(userRef);
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, { 
+                        subjects: [{ name: "DIREITO PENAL", topics: [{id: "t1", text: "Teoria do Crime", status: [false,false,false,false], files: [], theoryDate: null, totalParts: 1, partsDone: 0}] }], 
+                        quizHistory: [] 
+                    });
+                }
+                onSnapshot(userRef, (doc) => { if (doc.exists()) { userData = doc.data(); renderPlanner(); renderHistory(); if(curT !== null) { renderFiles(); renderParts(); } } });
+                
+                if(user.email === ADMIN_EMAIL) document.getElementById('btn-admin').classList.remove('hidden');
             }
         });
 
-        // --- HUB LOGIC ---
-        window.openHub = (sIdx, tIdx) => {
-            currentSubjectIdx = sIdx; currentTopicIdx = tIdx;
-            document.getElementById('hub-topic-title').innerText = userData.subjects[sIdx].topics[tIdx].text;
-            document.getElementById('study-hub-overlay').style.display = 'block';
-            window.switchHubTab('theory');
-            renderFiles();
+        // --- ADMIN ---
+        window.toggleUserStatus = async (uid, currentStatus) => {
+            const newStatus = currentStatus === 'active' ? 'blocked' : 'active';
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'userProfiles', uid), { status: newStatus });
+            window.loadAdmin();
         };
 
-        window.closeHub = () => { document.getElementById('study-hub-overlay').style.display = 'none'; currentSubjectIdx = null; currentTopicIdx = null; };
+        window.loadAdmin = async () => {
+            const body = document.getElementById('admin-users'); if(!body) return;
+            const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
+            body.innerHTML = snap.docs.map(d => {
+                const p = d.data();
+                const isBlocked = p.status === 'blocked';
+                return `<tr class="border-b">
+                    <td class="p-4 font-bold text-slate-700">${p.email}</td>
+                    <td class="p-4 text-[10px] font-black text-indigo-500 uppercase">${p.edict || 'Agente'}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${isBlocked?'bg-rose-100 text-rose-600':'bg-emerald-100 text-emerald-600'}">
+                            ${isBlocked ? 'Bloqueado' : 'Activo'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <button onclick="window.toggleUserStatus('${d.id}', '${p.status}')" class="bg-slate-900 text-white px-4 py-1.5 rounded-lg text-[9px] font-black uppercase">
+                            ${isBlocked ? 'Liberar' : 'Bloquear'}
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        };
 
+        // --- HUB ---
+        window.openHub = (sIdx, tIdx) => {
+            curS = sIdx; curT = tIdx;
+            document.getElementById('hub-topic-title').innerText = userData.subjects[sIdx].topics[tIdx].text;
+            document.getElementById('study-hub-overlay').style.display = 'block';
+            window.switchHubTab('theory-split');
+            renderParts(); renderFiles();
+        };
+        window.closeHub = () => { document.getElementById('study-hub-overlay').style.display = 'none'; curS = null; curT = null; };
         window.switchHubTab = (id) => {
             document.querySelectorAll('#study-hub-overlay .tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('#study-hub-overlay nav button').forEach(b => b.classList.remove('active-tab'));
@@ -246,110 +339,123 @@
             document.getElementById('btn-hub-' + id).classList.add('active-tab');
         };
 
-        // --- FILES ---
-        window.addFileLink = async () => {
-            const name = prompt("Nome do PDF/Resumo:"); if(!name) return;
-            const url = prompt("Link do Arquivo (ou digite #):", "#");
-            if(!userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files) userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files = [];
-            userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files.push({ name, url });
+        // --- PROGRESS ---
+        window.setTheoryParts = async (num) => {
+            if(user.email !== ADMIN_EMAIL) return alert("Apenas ADM altera a estrutura.");
+            userData.subjects[curS].topics[curT].totalParts = num; await sync();
+        };
+        window.togglePart = async (idx) => {
+            const t = userData.subjects[curS].topics[curT];
+            t.partsDone = (idx + 1 > t.partsDone) ? idx + 1 : idx;
+            if(t.partsDone === t.totalParts) { t.status[0] = true; t.theoryDate = new Date().toISOString(); }
+            else { t.status[0] = false; t.theoryDate = null; }
             await sync();
         };
-
-        const renderFiles = () => {
-            const list = document.getElementById('files-list');
-            const files = userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files || [];
-            const addBtn = `<button onclick="window.addFileLink()" class="border-2 border-dashed border-slate-200 p-8 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 hover:border-indigo-400 transition-all shadow-sm"><span class="text-4xl mb-2">+</span><span class="font-black uppercase text-[10px]">Novo Material</span></button>`;
-            list.innerHTML = files.map((f, idx) => `
-                <div class="material-item p-6 flex items-center justify-between shadow-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="text-2xl">📄</div>
-                        <div><p class="font-black uppercase text-[11px] text-slate-800">${f.name}</p><a href="${f.url}" target="_blank" class="text-indigo-500 font-bold text-[9px] uppercase hover:underline">Abrir Link</a></div>
-                    </div>
-                    <button onclick="window.deleteFile(${idx})" class="text-rose-300 hover:text-rose-500 p-2 text-xl">✕</button>
-                </div>
-            `).join('') + addBtn;
+        const renderParts = () => {
+            const t = userData.subjects[curS].topics[curT];
+            [1,2,3,4].forEach(n => {
+                const b = document.getElementById('parts-'+n);
+                if(b) b.className = (t.totalParts === n) ? 'part-btn active px-6' : 'part-btn px-6 text-slate-500';
+            });
+            let html = "";
+            for(let i=0; i < t.totalParts; i++) {
+                const done = i < t.partsDone;
+                html += `<button onclick="window.togglePart(${i})" class="flex items-center justify-between p-5 bg-white/5 border-2 ${done?'border-emerald-500':'border-white/10'} rounded-2xl transition-all"><span class="font-black text-[10px] uppercase ${done?'text-emerald-400':'text-slate-500'}">Tarefa Parte ${i+1}</span><div class="w-6 h-6 rounded-full border-2 ${done?'bg-emerald-500 border-emerald-500':'border-white/20'} flex items-center justify-center text-[10px] text-white">${done?'✓':''}</div></button>`;
+            }
+            document.getElementById('parts-checklist').innerHTML = html;
         };
 
-        window.deleteFile = async (idx) => { if(confirm("Apagar material?")) { userData.subjects[currentSubjectIdx].topics[currentTopicIdx].files.splice(idx, 1); await sync(); } };
+        // --- FILES ---
+        window.addFileLink = async () => {
+            if(user.email !== ADMIN_EMAIL) return alert("Apenas ADM.");
+            const n = prompt("Nome PDF:"); const u = prompt("Link:"); if(n) { 
+                if(!userData.subjects[curS].topics[curT].files) userData.subjects[curS].topics[curT].files = [];
+                userData.subjects[curS].topics[curT].files.push({name: n, url: u || "#"}); await sync(); 
+            }
+        };
+        const renderFiles = () => {
+            const files = userData.subjects[curS].topics[curT].files || [];
+            const isAdm = user.email === ADMIN_EMAIL;
+            const addBtn = isAdm ? `<button onclick="window.addFileLink()" class="border-2 border-dashed border-slate-200 p-8 rounded-[2rem] flex flex-col items-center justify-center text-slate-400 hover:border-indigo-400 shadow-sm"><span class="text-4xl mb-2">+</span><span class="font-black uppercase text-[10px]">Novo Material</span></button>` : '';
+            document.getElementById('files-list').innerHTML = files.map((f, idx) => `
+                <div class="material-item p-6 flex items-center justify-between shadow-sm">
+                    <div class="flex items-center gap-4 text-left">
+                        <div class="text-2xl">📄</div>
+                        <div><p class="font-black uppercase text-[11px] text-slate-800">${f.name}</p><a href="${f.url}" target="_blank" class="text-indigo-500 font-bold text-[9px] uppercase hover:underline">Aceder</a></div>
+                    </div>
+                    ${isAdm ? `<button onclick="window.deleteFile(${idx})" class="text-rose-300 hover:text-rose-500 p-2">✕</button>` : ''}
+                </div>`).join('') + addBtn;
+        };
+        window.deleteFile = async (i) => { if(confirm("Apagar?")) { userData.subjects[curS].topics[curT].files.splice(i, 1); await sync(); } };
 
-        // --- MANUAL SAVE ---
+        // --- REGISTER ---
         window.saveQuestaoManual = async () => {
             const nick = document.getElementById('reg-nickname').value.trim();
             const hits = parseInt(document.getElementById('reg-hits').value) || 0;
             const miss = parseInt(document.getElementById('reg-miss').value) || 0;
-            if(!nick) return alert("Insira o seu apelido!");
-            const total = hits + miss;
-            const grade = total > 0 ? ((hits/total)*10).toFixed(1) : "0.0";
+            if(!nick) return alert("Nickname?");
             if(!userData.quizHistory) userData.quizHistory = [];
-            userData.quizHistory.push({ date: new Date().toISOString(), nickname: nick, subject: userData.subjects[currentSubjectIdx].name, topic: userData.subjects[currentSubjectIdx].topics[currentTopicIdx].text, hits, total, grade });
-            await sync();
-            alert("Desempenho Registrado!");
-            window.closeHub();
+            userData.quizHistory.push({ date: new Date().toISOString(), nickname: nick, subject: userData.subjects[curS].name, topic: userData.subjects[curS].topics[curT].text, hits, total: hits+miss, grade: (hits+miss)>0 ? ((hits/(hits+miss))*10).toFixed(1) : "0.0" });
+            await sync(); alert("Salvo!"); window.closeHub();
         };
 
-        // --- CORE SYNC & RENDER ---
         const sync = async () => { await updateDoc(doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'edital'), userData); };
-        window.editSubject = async (i) => { const n = prompt("Novo nome:", userData.subjects[i].name); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); } };
-        window.removeSubject = async (i) => { if(confirm("Apagar matéria?")) { userData.subjects.splice(i, 1); await sync(); } };
-        window.editTopic = async (s, t) => { const n = prompt("Novo nome:", userData.subjects[s].topics[t].text); if(n) { userData.subjects[s].topics[t].text = n; await sync(); } };
-        window.removeTopic = async (s, t) => { if(confirm("Remover tópico?")) { userData.subjects[s].topics.splice(t, 1); await sync(); } };
-        window.addSubject = async () => { const n = prompt("Matéria:"); if(n) { userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); } };
-        window.addTopic = async (i) => { const t = prompt("Assunto:"); if(t) { userData.subjects[i].topics.push({id:Math.random().toString(36).substr(2,9), text:t, status:[false,false,false,false], files: []}); await sync(); } };
-        window.toggleCheck = async (s, t, c) => { userData.subjects[s].topics[t].status[c] = !userData.subjects[s].topics[t].status[c]; await sync(); };
-
-        window.generateIA = async () => {
-            const btn = document.getElementById('gen-ia-btn'); btn.disabled = true; btn.innerText = "IA PROCESSANDO...";
-            const area = document.getElementById('ia-content');
-            area.innerHTML = `<div class="flex flex-col items-center py-40"><div class="w-16 h-16 border-8 border-indigo-600 border-t-transparent rounded-full animate-spin"></div><p class="mt-8 font-black uppercase text-xs tracking-widest text-slate-400">IA Gerando Teoria Completa...</p></div>`;
-            const prompt = `Apostila para PC-AP: ${userData.subjects[currentSubjectIdx].topics[currentTopicIdx].text}. Use marca-texto <span class="hl-yellow">...</span>. Estrutura profissional.`;
-            try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const data = await res.json();
-                area.innerHTML = marked.parse(data.candidates?.[0]?.content?.parts?.[0]?.text || "Erro na geração.");
-                btn.innerText = "Finalizado!";
-            } catch(e) { area.innerHTML = "Falha na IA."; btn.disabled = false; }
+        
+        window.editSubject = async (i) => { if(user.email!==ADMIN_EMAIL) return; const n = prompt("Novo nome:", userData.subjects[i].name); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); } };
+        window.removeSubject = async (i) => { if(user.email!==ADMIN_EMAIL) return; if(confirm("Apagar?")) { userData.subjects.splice(i, 1); await sync(); } };
+        window.editTopic = async (s, t) => { if(user.email!==ADMIN_EMAIL) return; const n = prompt("Novo nome:", userData.subjects[s].topics[t].text); if(n) { userData.subjects[s].topics[t].text = n; await sync(); } };
+        window.removeTopic = async (s, t) => { if(user.email!==ADMIN_EMAIL) return; if(confirm("Remover?")) { userData.subjects[s].topics.splice(t, 1); await sync(); } };
+        window.addSubject = async () => { if(user.email!==ADMIN_EMAIL) return; const n = prompt("Matéria:"); if(n) { userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); } };
+        window.addTopic = async (i) => { if(user.email!==ADMIN_EMAIL) return; const t = prompt("Assunto:"); if(t) { userData.subjects[i].topics.push({id:Math.random().toString(36).substr(2,9), text:t, status:[false,false,false,false], files: [], theoryDate: null, totalParts: 1, partsDone: 0}); await sync(); } };
+        
+        window.toggleCheck = async (s, t, c) => { 
+            const topic = userData.subjects[s].topics[t];
+            topic.status[c] = !topic.status[c];
+            if(c === 0) {
+                if(topic.status[0]) { topic.theoryDate = new Date().toISOString(); topic.partsDone = topic.totalParts; }
+                else { topic.theoryDate = null; topic.partsDone = 0; }
+            }
+            await sync(); 
         };
 
         const renderPlanner = () => {
             const list = document.getElementById('edital-list'); if(!list) return;
             list.innerHTML = ''; let t=0, d=0;
+            const isAdm = user.email === ADMIN_EMAIL;
+            
             userData.subjects.forEach((sub, sIdx) => {
                 const rows = (sub.topics || []).map((top, tIdx) => {
                     t += 4; d += top.status.filter(x=>x).length;
-                    const checks = top.status.map((s, cIdx) => `<td class="p-4 text-center"><div class="flex justify-center"><input type="checkbox" ${s?'checked':''} ${cIdx>0 && !top.status[cIdx-1]?'disabled':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})"></div></td>`).join('');
-                    return `<tr class="border-b border-slate-50 hover:bg-slate-50 transition-all group"><td class="p-4"><div class="flex items-center justify-between"><button onclick="window.openHub(${sIdx}, ${tIdx})" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-3"><span class="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</span> ${top.text}</button><div class="flex gap-2 btn-action"><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-indigo-500">✎</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-rose-500">✕</button></div></div></td>${checks}</tr>`;
+                    const r7 = top.theoryDate ? new Date(new Date(top.theoryDate).setDate(new Date(top.theoryDate).getDate()+7)).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) : null;
+                    const r28 = top.theoryDate ? new Date(new Date(top.theoryDate).setDate(new Date(top.theoryDate).getDate()+28)).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}) : null;
+                    const progPct = (top.partsDone / top.totalParts) * 100;
+                    const checks = top.status.map((s, cIdx) => {
+                        const disabled = (cIdx > 0 && !top.status[cIdx-1]) ? 'disabled' : '';
+                        let extra = (cIdx === 0 && top.totalParts > 1) ? `<div class="progress-mini-bar"><div class="progress-mini-fill" style="width:${progPct}%"></div></div>` : "";
+                        if(cIdx === 2 && r7) extra = `<div class="review-badge badge-r7 mt-1">⏳ ${r7}</div>`;
+                        if(cIdx === 3 && r28) extra = `<div class="review-badge badge-r28 mt-1">⏳ ${r28}</div>`;
+                        return `<td class="p-4 text-center"><div class="flex flex-col items-center"><input type="checkbox" ${s?'checked':''} ${disabled} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})">${extra}</div></td>`;
+                    }).join('');
+                    return `<tr class="border-b border-slate-50 transition-all group"><td class="p-4"><div class="flex items-center justify-between"><button onclick="window.openHub(${sIdx}, ${tIdx})" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-3 transition-all"><span class="bg-indigo-600 text-white w-8 h-8 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</span> ${top.text}</button><div class="flex gap-2 ${isAdm ? 'btn-action' : 'hidden'}"><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-indigo-500">✎</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="text-slate-300 hover:text-rose-500">✕</button></div></div></td>${checks}</tr>`;
                 }).join('');
-                list.innerHTML += `<div class="card shadow-xl group"><div class="p-8 bg-white border-b flex justify-between items-center px-10"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter">${sub.name}</h4><div class="flex gap-2 btn-action"><button onclick="window.editSubject(${sIdx})" class="text-slate-400 hover:text-indigo-500 text-xs font-bold uppercase tracking-widest">Editar</button><button onclick="window.removeSubject(${sIdx})" class="text-slate-400 hover:text-rose-500 text-xs font-bold uppercase tracking-widest">Apagar</button></div></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/50 border-b border-slate-100"><th class="p-5 text-left text-slate-400">Missão Operacional</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo</button></div></div>`;
+                list.innerHTML += `<div class="card shadow-xl group"><div class="p-8 bg-white border-b flex justify-between items-center px-10 text-left"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter">${sub.name}</h4><div class="flex gap-2 ${isAdm ? 'btn-action' : 'hidden'}"><button onclick="window.editSubject(${sIdx})" class="text-slate-400 hover:text-indigo-500 text-xs font-bold uppercase">Editar</button><button onclick="window.removeSubject(${sIdx})" class="text-slate-400 hover:text-rose-500 text-xs font-bold uppercase">Apagar</button></div></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/50 border-b border-slate-100"><th class="p-5 text-left tracking-widest">Missão</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center ${isAdm ? '' : 'hidden'}"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo (ADM)</button></div></div>`;
             });
             const p = document.getElementById('progress-pct'); if(p) p.innerText = t?Math.round((d/t)*100)+'%':'0%';
         };
 
         const renderHistory = () => {
             const body = document.getElementById('history-body'); if(!body) return;
-            body.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-100"><td class="p-4 text-slate-400 font-bold text-[10px]">${new Date(h.date).toLocaleDateString()}</td><td class="p-4 font-black text-indigo-600 uppercase text-[10px]">${h.nickname}</td><td class="p-4 text-[10px] font-black uppercase text-slate-700">${h.topic}</td><td class="p-4 text-center"><span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black">${h.hits}/${h.total}</span></td><td class="p-4 text-right"><span class="text-lg font-black ${h.grade >= 7 ? 'text-emerald-500' : 'text-rose-500'}">${h.grade}</span></td></tr>`).join('');
-        };
-
-        window.loadAdmin = async () => {
-            const body = document.getElementById('admin-users'); if(!body) return;
-            try {
-                const snap = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'userProfiles'));
-                body.innerHTML = snap.docs.map(d => `<tr class="border-b"><td class="p-4 font-bold text-slate-700">${d.data().email}</td><td class="p-4 text-center text-emerald-500 font-black uppercase text-[10px]">Ativo</td><td class="p-4 text-right text-slate-400">${new Date(d.data().lastSeen).toLocaleDateString()}</td></tr>`).join('');
-            } catch (e) { body.innerHTML = '<tr><td colspan="3" class="p-4">Erro.</td></tr>'; }
+            body.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-100 transition-all text-left"><td class="p-4 text-slate-400 font-bold text-[10px]">${new Date(h.date).toLocaleDateString()}</td><td class="p-4 font-black text-indigo-600 uppercase text-[10px]">${h.nickname}</td><td class="p-4 text-[10px] font-black uppercase text-slate-700">${h.topic}</td><td class="p-4 text-center"><span class="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full font-black">${h.hits}/${h.total}</span></td><td class="p-4 text-right"><span class="text-lg font-black ${h.grade >= 7 ? 'text-emerald-500' : 'text-rose-500'}">${h.grade}</span></td></tr>`).join('');
         };
 
         window.showTab = (id) => { 
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); 
-            document.getElementById(id).classList.add('active'); 
-            document.getElementById('btn-'+id).classList.add('active-tab'); 
-            if(id === 'admin') window.loadAdmin(); 
-            if(id === 'history') renderHistory();
+            const target = document.getElementById(id);
+            const btn = document.getElementById('btn-'+id);
+            if(target) target.classList.add('active'); if(btn) btn.classList.add('active-tab'); 
+            if(id === 'admin') window.loadAdmin(); if(id === 'history') renderHistory();
         };
-
-        window.printContent = () => window.print();
     </script>
 </body>
 </html>
