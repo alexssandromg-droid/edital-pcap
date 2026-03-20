@@ -45,12 +45,18 @@
         .cyc-1 { background: #3b82f6; }
         .cyc-elite { background: #10b981; animation: blink-elite 1s infinite; }
 
-        .score-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; border: 1.5px solid transparent; transition: 0.3s; margin-left: 10px; }
+        .score-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; border: 1.5px solid transparent; transition: 0.3s; margin-left: 10px; }
         .badge-perfect { background-color: #eff6ff; color: #1d4ed8; border-color: #3b82f6; }
         .badge-good { background-color: #ecfdf5; color: #059669; border-color: #10b981; }
         .badge-med { background-color: #fffbeb; color: #d97706; border-color: #f59e0b; }
         .badge-bad { background-color: #fef2f2; color: #dc2626; border-color: #ef4444; }
         .badge-neutral { background-color: #f8fafc; color: #94a3b8; border-color: #e2e8f0; }
+
+        .mural-note { padding: 1rem; border-radius: 1.25rem; box-shadow: 2px 2px 10px rgba(0,0,0,0.04); border: 1.5px solid rgba(0,0,0,0.05); margin-bottom: 10px; transition: 0.3s; }
+        .mural-yellow { background-color: #fef9c3 !important; border-color: #fde047 !important; } 
+        .mural-pink { background-color: #fce7f3 !important; border-color: #f9a8d4 !important; } 
+        .mural-blue { background-color: #dbeafe !important; border-color: #93c5fd !important; } 
+        .mural-green { background-color: #d1fae5 !important; border-color: #6ee7b7 !important; }
 
         .section-header { font-size: 0.65rem; font-weight: 900; text-transform: uppercase; color: #64748b; letter-spacing: 0.15em; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; border-left: 3px solid #4f46e5; padding-left: 0.75rem; }
         .input-elite { width: 100%; padding: 0.7rem 0.9rem; border-radius: 0.85rem; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 700; color: #1e293b; outline: none; transition: 0.2s; }
@@ -63,12 +69,11 @@
         .step-label { font-size: 10px; font-weight: 900; text-transform: uppercase; color: #4f46e5; letter-spacing: 0.1em; margin-bottom: 1rem; display: block; border-bottom: 1px solid #f1f5f9; padding-bottom: 0.5rem; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .timer-btn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; color: white; border: none; cursor: pointer; }
-
-        .mural-note { padding: 1rem; border-radius: 1.25rem; box-shadow: 2px 2px 10px rgba(0,0,0,0.04); border: 1.5px solid rgba(0,0,0,0.05); margin-bottom: 10px; }
-        .mural-yellow { background-color: #fef9c3 !important; border-color: #fde047 !important; } 
-        .mural-pink { background-color: #fce7f3 !important; border-color: #f9a8d4 !important; } 
-        .mural-blue { background-color: #dbeafe !important; border-color: #93c5fd !important; } 
-        .mural-green { background-color: #d1fae5 !important; border-color: #6ee7b7 !important; }
+        
+        .action-icon-btn { opacity: 0.3; transition: 0.2s; cursor: pointer; padding: 4px; }
+        .action-icon-btn:hover { opacity: 1; }
+        
+        tr:hover .action-icon-btn { opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -112,9 +117,9 @@
                     <div class="card p-6 border-l-4 border-l-indigo-600 shadow-lg text-left">
                         <span class="step-label">PASSO 1: AQUISIÇÃO DE TEORIA</span>
                         <div class="mb-6">
-                            <h5 class="text-[9px] font-black uppercase text-slate-400 mb-3 italic">Material de Apoio (ADM):</h5>
+                            <h5 class="text-[9px] font-black uppercase text-slate-400 mb-3 italic">Material de Apoio (Pasta 📂):</h5>
                             <div id="files-list" class="space-y-2 mb-3 text-left"></div>
-                            <button onclick="window.addFileLink('theory')" class="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-100 text-slate-300 font-black text-[9px] uppercase admin-only hover:border-indigo-400">+ Add Material</button>
+                            <button onclick="window.addFileLink('theory')" class="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-100 text-slate-300 font-black text-[9px] uppercase hover:border-indigo-400">+ Add Material</button>
                         </div>
                         <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex flex-col items-center">
                             <button id="btn-toggle-theory" onclick="window.toggleStatusHub(0)" class="w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md">Neutralizar Passo 1 ✅</button>
@@ -125,7 +130,7 @@
                     <!-- PASSO 2 -->
                     <div class="card p-6 border-l-4 border-l-emerald-500 shadow-lg text-left">
                         <span class="step-label text-emerald-600">PASSO 2: PERFORMANCE EM QUESTÕES (META 7.0)</span>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-left">
                             <div><label class="text-[8px] font-black text-slate-400 uppercase ml-2 mb-1 block">Data da Sessão</label><input type="date" id="p2-date" class="input-elite"></div>
                             <div class="grid grid-cols-2 gap-3 text-left">
                                 <div><label class="text-[8px] font-black text-emerald-600 uppercase ml-2 mb-1 block">Acertos</label><input type="number" id="p2-hits" class="input-elite !bg-emerald-50" placeholder="0"></div>
@@ -133,7 +138,7 @@
                             </div>
                         </div>
                         <button onclick="window.savePerformanceHub()" class="w-full bg-emerald-600 text-white py-4 rounded-2xl font-black uppercase text-[10px] shadow-lg hover:bg-emerald-700 transition-all mb-6">Neutralizar Passo 2 🚀</button>
-                        <div class="h-44 flex items-center justify-center bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-left text-left"><canvas id="evolutionChart"></canvas></div>
+                        <div class="h-44 flex items-center justify-center bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-left"><canvas id="evolutionChart"></canvas></div>
                     </div>
                 </div>
 
@@ -142,9 +147,9 @@
                     <div class="card p-6 border-l-4 border-l-amber-500 shadow-lg text-left text-left">
                         <span class="step-label text-amber-600 text-left text-left">PASSO 3: REVISÃO DE 7 DIAS (ESTRATÉGICA)</span>
                         <div class="mb-6 text-left text-left">
-                            <h5 class="text-[9px] font-black uppercase text-slate-400 mb-3 italic text-left">Material de Revisão (Links):</h5>
+                            <h5 class="text-[9px] font-black uppercase text-slate-400 mb-3 italic text-left">Material de Revisão (Pasta 📂):</h5>
                             <div id="r7-files-list" class="space-y-2 mb-3"></div>
-                            <button onclick="window.addFileLink('r7')" class="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-100 text-slate-300 font-black text-[9px] uppercase admin-only hover:border-amber-400">+ Add Material (ADM)</button>
+                            <button onclick="window.addFileLink('r7')" class="w-full py-2.5 rounded-xl border-2 border-dashed border-slate-100 text-slate-300 font-black text-[9px] uppercase hover:border-amber-400">+ Add Material (ADM)</button>
                         </div>
                         <div class="bg-amber-50 p-6 rounded-2xl border border-amber-100 flex flex-col items-center text-left">
                             <button id="btn-toggle-r7" onclick="window.toggleStatusHub(2)" class="w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md">Neutralizar Passo 3 ✅</button>
@@ -154,10 +159,10 @@
 
                     <!-- PASSO 4 -->
                     <div class="card p-6 border-l-4 border-l-rose-500 shadow-lg text-left text-left text-left">
-                        <span class="step-label text-rose-600 text-left text-left text-left">PASSO 4: MANUTENÇÃO R28 (SIMULADO EXTERNO)</span>
+                        <span class="step-label text-rose-600 text-left text-left text-left text-left">PASSO 4: MANUTENÇÃO R28 (SIMULADO EXTERNO)</span>
                         <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 mb-6 text-left">
                             <p class="text-[10px] font-black uppercase text-rose-700 mb-1 text-left">📢 Protocolo tático:</p>
-                            <p class="text-[11px] font-bold text-slate-600 leading-relaxed text-left">Realize o simulado e registre a performance no Passo 2 acima. Use o mural para gatilhos de falha.</p>
+                            <p class="text-[11px] font-bold text-slate-600 leading-relaxed">Realize o simulado e registre a performance no Passo 2 acima. Use o mural para gatilhos de falha.</p>
                         </div>
                         <div class="mb-6 text-left">
                             <div class="flex justify-between items-center mb-3">
@@ -167,15 +172,15 @@
                                     <button onclick="window.addMuralNote()" class="bg-rose-100 text-rose-600 px-3 py-1.5 rounded-lg font-black text-[9px] uppercase hover:bg-rose-200 transition-all">+ Novo</button>
                                 </div>
                             </div>
-                            <div id="mural-container" class="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto no-scrollbar"></div>
+                            <div id="mural-container" class="grid grid-cols-1 gap-3 max-h-48 overflow-y-auto no-scrollbar text-left"></div>
                         </div>
                         <button id="btn-toggle-r28" onclick="window.toggleStatusHub(3)" class="w-full bg-rose-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg hover:bg-rose-700 transition-all">Neutralizar Passo 4 ✅</button>
                         <p id="r28-date-label" class="text-[9px] font-bold text-rose-600 mt-2 italic text-center"></p>
                     </div>
 
                     <div class="card p-6 text-left text-left">
-                        <h4 class="section-header">⏰ Histórico de Tempo (Sessões)</h4>
-                        <div class="mt-2 max-h-32 overflow-y-auto no-scrollbar border-t pt-3 text-[10px] font-bold text-slate-400" id="agenda-list"></div>
+                        <h4 class="section-header">⏰ Histórico de Tempo (Tópico)</h4>
+                        <div class="mt-4 max-h-32 overflow-y-auto no-scrollbar border-t pt-3 text-[10px] font-bold text-slate-400" id="agenda-list"></div>
                     </div>
                 </div>
             </div>
@@ -185,29 +190,11 @@
     <!-- MAIN APP STRUCTURE -->
     <div id="main-app" class="max-w-6xl mx-auto hidden py-10 px-4 text-left">
         <header class="mb-10 flex flex-col xl:flex-row justify-between items-start gap-8">
-            <div class="flex-1 text-left">
-                <span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic text-left">PC-AP Elite • Inteligência Operacional</span>
-                <h1 class="text-6xl font-black text-slate-900 tracking-tighter uppercase text-left">MEU EDITAL</h1>
-            </div>
-            
+            <div class="flex-1 text-left"><span class="inline-block px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase border border-indigo-100 mb-3 tracking-widest italic text-left">PC-AP Elite • Dashboard Operacional</span><h1 class="text-6xl font-black text-slate-900 tracking-tighter uppercase text-left">MEU EDITAL</h1></div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full xl:w-auto text-left">
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]">
-                    <div id="approval-score" class="text-3xl font-black text-slate-900 leading-none">0.0</div>
-                    <div id="approval-status" class="text-[8px] uppercase font-black tracking-widest mt-2">Classificação</div>
-                    <div class="text-[7px] text-slate-400 mt-1 uppercase font-bold italic text-center">Score Operacional</div>
-                </div>
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]">
-                    <div class="flex justify-center items-center gap-2">
-                        <span class="text-3xl font-black text-orange-500 streak-fire" id="streak-count">0</span>
-                        <span class="text-xl">🔥</span>
-                    </div>
-                    <div class="text-[8px] uppercase font-black text-orange-600 tracking-widest mt-2 text-center">Ofensiva</div>
-                </div>
-                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]">
-                    <div id="progress-pct" class="text-3xl font-black text-indigo-600">0%</div>
-                    <div class="text-[8px] uppercase font-black text-slate-400 tracking-widest mt-2 text-center">Conclusão</div>
-                    <button onclick="window.handleLogout()" class="mt-2 text-rose-400 font-black text-[8px] uppercase block w-full text-center hover:underline">Sair</button>
-                </div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]"><div id="approval-score" class="text-3xl font-black text-slate-900 leading-none">0.0</div><div id="approval-status" class="text-[8px] uppercase font-black tracking-widest mt-2">Classificação</div><div class="text-[7px] text-slate-400 mt-1 uppercase font-bold italic text-center">Score Operacional</div></div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]"><div class="flex justify-center items-center gap-2"><span class="text-3xl font-black text-orange-500 streak-fire" id="streak-count">0</span><span class="text-xl">🔥</span></div><div class="text-[8px] uppercase font-black text-orange-600 tracking-widest mt-2 text-center">Ofensiva</div></div>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-xl text-center min-w-[140px]"><div id="progress-pct" class="text-3xl font-black text-indigo-600">0%</div><div class="text-[8px] uppercase font-black text-slate-400 tracking-widest mt-2 text-center">Conclusão</div><button onclick="window.handleLogout()" class="mt-2 text-rose-400 font-black text-[8px] uppercase block w-full text-center hover:underline">Sair</button></div>
             </div>
         </header>
 
@@ -221,51 +208,39 @@
         <div id="planner" class="tab-content active text-left">
             <div class="mb-10 text-left">
                 <button onclick="window.addSubject()" class="bg-slate-900 text-white px-10 py-5 rounded-3xl font-black uppercase text-xs shadow-2xl hover:bg-indigo-600 transition-all flex items-center gap-4">
-                    <span class="text-xl">+</span> Novo Comando (Adicionar Matéria)
+                    <span class="text-xl">+</span> 📂 Novo Comando (Matéria)
                 </button>
             </div>
-            <div id="edital-list" class="space-y-12"></div>
+            <div id="edital-list" class="space-y-12 text-left"></div>
         </div>
-
-        <div id="priority" class="tab-content text-left text-left"><div class="card p-10 text-left"><h3 class="text-3xl font-black uppercase text-slate-900 tracking-tighter text-left">Prioridade Estratégica Recente</h3><p class="text-slate-500 font-bold italic text-sm mb-10 text-left">A IA analisa o teu rendimento mais recente para indicar os tópicos que precisam de intervenção imediata.</p><div id="priority-list" class="space-y-4"></div></div></div>
-        
-        <div id="history" class="tab-content text-left text-left"><div class="card p-10"><h3 class="text-2xl font-black mb-8 text-center uppercase tracking-tighter">Histórico de Performance</h3><div class="overflow-x-auto"><table class="history-table w-full"><thead><tr><th>Data</th><th>Tópico</th><th class="text-center">Resultado</th><th class="text-right">Nota</th></tr></thead><tbody id="global-history-body"></tbody></table></div></div></div>
-
-        <div id="time" class="tab-content text-left text-left text-left">
-            <div class="card p-10">
-                <div class="flex justify-between items-center mb-10 text-left">
-                    <h3 class="text-3xl font-black uppercase text-slate-900 tracking-tighter">Tempo Líquido Automático</h3>
-                    <div class="bg-indigo-600 text-white p-6 rounded-3xl text-center shadow-xl text-center">
-                        <div class="text-[10px] font-black uppercase opacity-70 mb-1">Acumulado Total</div>
-                        <div id="total-study-time" class="text-4xl font-black">00:00:00</div>
-                    </div>
-                </div>
-                <div class="overflow-x-auto text-left">
-                    <table class="history-table w-full">
-                        <thead><tr><th>Data</th><th>Tópico</th><th class="text-right">Duração</th></tr></thead>
-                        <tbody id="time-history-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        <div id="priority" class="tab-content text-left text-left"><div class="card p-10"><h3 class="text-3xl font-black uppercase text-slate-900 tracking-tighter text-left">Prioridade Estratégica IA</h3><p class="text-slate-500 font-bold italic text-sm mb-10 text-left">Analisa o rendimento do teu simulado mais recente.</p><div id="priority-list" class="space-y-4 text-left"></div></div></div>
+        <div id="history" class="tab-content text-left text-left"><div class="card p-10 text-left text-left"><h3 class="text-2xl font-black mb-8 text-center uppercase tracking-tighter text-left">Histórico de Performance</h3><div class="overflow-x-auto"><table class="history-table w-full"><thead><tr><th>Data</th><th>Tópico</th><th class="text-center">Resultado</th><th class="text-right">Nota</th></tr></thead><tbody id="global-history-body"></tbody></table></div></div></div>
+        <div id="time" class="tab-content text-left text-left"><div class="card p-10 text-left text-left"><div class="flex justify-between items-center mb-10 text-left"><h3 class="text-3xl font-black uppercase text-slate-900 tracking-tighter text-left">Tempo Líquido Automático</h3><div class="bg-indigo-600 text-white p-6 rounded-3xl text-center shadow-xl text-center"><div class="text-[10px] font-black uppercase opacity-70 mb-1">Acumulado Total</div><div id="total-study-time" class="text-4xl font-black">00:00:00</div></div></div><div class="overflow-x-auto"><table class="history-table w-full"><thead><tr><th>Data</th><th>Tópico</th><th class="text-right">Duração</th></tr></thead><tbody id="time-history-body"></tbody></table></div></div></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyCcHcryUJhFfKlh22-opI4cmgxazrU_Lkw", authDomain: "edital-pcap.firebaseapp.com", projectId: "edital-pcap", storageBucket: "edital-pcap.firebasestorage.app", messagingSenderId: "711033539612", appId: "1:711033539612:web:c970909cb11d69bbb123d9" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const APP_ID = "pcap-elite-v78-subject-add";
+        const APP_ID = "pcap-elite-v80-full-management";
         const ADMIN_EMAIL = "alexssandro.m.g@gmail.com";
 
         let user = null; let userData = null; let curS = null; let curT = null;
         let isLoginMode = true; let myChart = null;
         let timerInterval = null; let timerSeconds = 0; let isTimerRunning = false;
 
+        // SVGs
+        const iconFolder = `<svg class="w-4 h-4 inline-block mr-1 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>`;
+        const iconEdit = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`;
+        const iconDel = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>`;
+        const iconReset = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>`;
+
+        // --- EXPORTS GLOBAIS IMEDIATOS ---
         const cleanData = (obj) => { if (!obj) return obj; const newObj = Array.isArray(obj) ? [] : {}; for (const key in obj) { if (obj[key] === undefined) continue; if (obj[key] && typeof obj[key] === 'object') { newObj[key] = cleanData(obj[key]); } else { newObj[key] = obj[key]; } } return newObj; };
         const sync = async () => { if(!user) return; await updateDoc(doc(db, 'artifacts', APP_ID, 'users', user.uid, 'settings', 'edital'), cleanData(userData)); };
         const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'}) : '';
@@ -277,45 +252,73 @@
             const hist = (userData.quizHistory || []).filter(h => h.topic.trim() === t.text.trim()).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
             if(hist.length < 1) { ctx.classList.add('hidden'); return; }
             ctx.classList.remove('hidden'); if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'line', data: { labels: hist.map(h => formatDate(h.date)), datasets: [{ label: 'Rendimento', data: hist.map(h => parseFloat(h.grade)), borderColor: '#4f46e5', tension: 0.4, borderWidth: 3 }, { label: 'Meta 7.0', data: Array(hist.length).fill(7.0), borderColor: '#ef4444', borderDash: [5,5], pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
+            myChart = new Chart(ctx, { type: 'line', data: { labels: hist.map(h => formatDate(h.date)), datasets: [{ label: 'Performance', data: hist.map(h => parseFloat(h.grade)), borderColor: '#4f46e5', tension: 0.4, borderWidth: 3 }, { label: 'Meta 7.0', data: Array(hist.length).fill(7.0), borderColor: '#ef4444', borderDash: [5,5], pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
         };
 
         window.renderHubViews = () => {
             if(curT === null) return;
             const t = userData.subjects[curS].topics[curT];
-            document.getElementById('files-list').innerHTML = (t.files || []).map((f, i) => `<div class="bg-white border p-3 rounded-xl flex items-center gap-3 shadow-sm text-left"><input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, 'theory')"><div class="text-left text-left"><p class="text-[9px] font-black uppercase ${f.done?'text-slate-300 line-through':'text-slate-800'} mb-1">${f.name}</p><a href="${f.url}" target="_blank" class="text-indigo-600 font-bold text-[8px] uppercase">Aceder</a></div></div>`).join('');
-            document.getElementById('r7-files-list').innerHTML = (t.r7Files || []).map((f, i) => `<div class="bg-white border p-3 rounded-xl flex items-center gap-3 shadow-sm text-left"><input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, 'r7')"><div class="text-left text-left"><p class="text-[9px] font-black uppercase ${f.done?'text-slate-300 line-through':'text-slate-800'} mb-1 text-left">${f.name}</p><a href="${f.url}" target="_blank" class="text-amber-600 font-bold text-[8px] uppercase text-left">Revisar</a></div></div>`).join('');
             
-            const btnT = document.getElementById('btn-toggle-theory'); btnT.innerText = t.status[0] ? "Passo 1 Neutralizado ✅" : "Neutralizar Passo 1"; btnT.className = `w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md ${t.status[0] ? 'bg-indigo-600 text-white shadow-indigo-100' : 'bg-white border-2 border-indigo-100 text-indigo-600'}`;
-            const btnR7 = document.getElementById('btn-toggle-r7'); btnR7.innerText = t.status[2] ? "Passo 3 Neutralizado ✅" : "Neutralizar Passo 3"; btnR7.className = `w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md ${t.status[2] ? 'bg-amber-600 text-white shadow-amber-100' : 'bg-white border-2 border-amber-100 text-amber-600'}`;
-            const btnR28 = document.getElementById('btn-toggle-r28'); btnR28.innerText = t.status[3] ? "Manutenção Neutralizada ✅" : "Neutralizar Passo 4"; btnR28.className = `w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md ${t.status[3] ? 'bg-rose-600 text-white shadow-rose-100' : 'bg-white border-2 border-rose-100 text-rose-600'}`;
+            // Files Lists
+            const fRender = (f, i, type) => `
+                <div class="bg-white border p-3 rounded-xl flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, '${type}')">
+                        ${iconFolder} <span class="text-[9px] font-black uppercase ${f.done?'text-slate-300 line-through':'text-slate-800'}">${f.name}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <a href="${f.url}" target="_blank" class="text-indigo-600 font-bold text-[8px] uppercase px-2">Ver</a>
+                        <button onclick="window.editFileLink(${i}, '${type}')" class="action-icon-btn text-indigo-400">${iconEdit}</button>
+                        <button onclick="window.removeFileLink(${i}, '${type}')" class="action-icon-btn text-rose-400">${iconDel}</button>
+                    </div>
+                </div>`;
 
-            document.getElementById('teoria-date-label').innerText = t.status[0] ? `Neutralizada em ${formatDate(t.theoryDate)}` : "";
-            document.getElementById('r7-date-label').innerText = t.status[2] ? `Neutralizada em ${formatDate(t.r7DoneDate)}` : "";
-            document.getElementById('r28-date-label').innerText = t.status[3] ? `Finalizada em ${formatDate(t.r28DoneDate)}` : "";
+            document.getElementById('files-list').innerHTML = (t.files || []).map((f, i) => fRender(f, i, 'theory')).join('');
+            document.getElementById('r7-files-list').innerHTML = (t.r7Files || []).map((f, i) => fRender(f, i, 'r7')).join('');
 
-            document.getElementById('mural-container').innerHTML = (t.mural || []).map(n => `<div class="mural-note mural-${n.color} flex items-center gap-3 text-left"><input type="checkbox" ${n.done?'checked':''} onchange="window.toggleMuralCheck(${n.id})"><textarea class="flex-1 bg-transparent border-none text-[10px] font-bold text-slate-800 resize-none outline-none ${n.done?'line-through opacity-50':''}" onblur="window.updateMuralText(${n.id}, this.value)">${n.text}</textarea><button onclick="window.deleteMuralNote(${n.id})" class="text-slate-400">✕</button></div>`).join('');
-            document.getElementById('agenda-list').innerHTML = (userData.timeHistory || []).filter(h => h.topic === t.text).slice(-3).reverse().map(a => `<div class="py-2 border-b flex justify-between text-left"><span>${formatDate(a.date)}</span><span class="font-black text-indigo-600 text-right">${formatLongTime(a.durationSeconds)}</span></div>`).join('');
+            const btnT = document.getElementById('btn-toggle-theory'); 
+            btnT.innerText = t.status[0] ? "Neutralizado ✅" : "Neutralizar Passo 1";
+            btnT.className = `w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md ${t.status[0] ? 'bg-indigo-600 text-white' : 'bg-white border-2 border-indigo-100 text-indigo-600'}`;
+            
+            const btnR7 = document.getElementById('btn-toggle-r7'); 
+            btnR7.innerText = t.status[2] ? "Neutralizado ✅" : "Neutralizar Passo 3";
+            btnR7.className = `w-full py-4 rounded-2xl font-black uppercase text-xs transition-all shadow-md ${t.status[2] ? 'bg-amber-600 text-white' : 'bg-white border-2 border-amber-100 text-amber-600'}`;
+
+            document.getElementById('teoria-date-label').innerText = t.status[0] ? `Missão 1 em ${formatDate(t.theoryDate)}` : "";
+            document.getElementById('r7-date-label').innerText = t.status[2] ? `Missão 3 em ${formatDate(t.r7DoneDate)}` : "";
+            document.getElementById('r28-date-label').innerText = t.status[3] ? `Missão 4 Finalizada em ${formatDate(t.r28DoneDate)}` : "";
+
+            document.getElementById('mural-container').innerHTML = (t.mural || []).map(n => `
+                <div class="mural-note mural-${n.color} flex items-center gap-3">
+                    <input type="checkbox" ${n.done?'checked':''} onchange="window.toggleMuralCheck(${n.id})">
+                    <textarea class="flex-1 bg-transparent border-none text-[10px] font-bold text-slate-800 resize-none outline-none ${n.done?'line-through opacity-50':''}" onblur="window.updateMuralText(${n.id}, this.value)">${n.text}</textarea>
+                    <button onclick="window.deleteMuralNote(${n.id})" class="text-slate-400">${iconDel}</button>
+                </div>`).join('');
+            
+            document.getElementById('agenda-list').innerHTML = (userData.timeHistory || []).filter(h => h.topic.trim() === t.text.trim()).slice(-3).reverse().map(a => `<div class="py-2 border-b flex justify-between"><span>${formatDate(a.date)}</span><span class="font-black text-indigo-600">${formatLongTime(a.durationSeconds)}</span></div>`).join('');
             window.renderEvolutionChart();
         };
 
         window.openHub = (s, t) => { curS = s; curT = t; const topic = userData.subjects[s].topics[t]; document.getElementById('hub-topic-title').innerText = topic.text; document.getElementById('study-hub-overlay').style.display = 'block'; window.renderHubViews(); };
         window.closeHub = () => { document.getElementById('study-hub-overlay').style.display='none'; curS=null; curT=null; window.resetTimer(); };
 
+        window.savePerformanceHub = async () => {
+            const hits = parseInt(document.getElementById(`p2-hits`).value) || 0;
+            const miss = parseInt(document.getElementById(`p2-miss`).value) || 0;
+            const dateInput = document.getElementById(`p2-date`).value;
+            const date = dateInput || new Date().toISOString().split('T')[0];
+            const t = userData.subjects[curS].topics[curT];
+            if(!userData.quizHistory) userData.quizHistory = [];
+            userData.quizHistory.push({ createdAt: Date.now(), date, topic: t.text, hits, total: hits+miss, grade: (hits+miss)>0?((hits/(hits+miss))*10).toFixed(1):"0.0" });
+            t.status[1] = true; t.questionsDate = new Date().toISOString(); t.lastActivityDate = new Date().toISOString();
+            await sync(); window.renderHubViews(); window.renderPlanner(); alert("Neutralizado!");
+        };
+
         window.toggleStatusHub = async (idx) => {
             const t = userData.subjects[curS].topics[curT]; t.status[idx] = !t.status[idx];
             const dateKeys = ['theoryDate', 'questionsDate', 'r7DoneDate', 'r28DoneDate'];
             t[dateKeys[idx]] = t.status[idx] ? new Date().toISOString() : null;
             t.lastActivityDate = new Date().toISOString(); await sync(); window.renderHubViews(); window.renderPlanner();
-        };
-
-        window.savePerformanceHub = async () => {
-            const hits = parseInt(document.getElementById(`p2-hits`).value) || 0; const miss = parseInt(document.getElementById(`p2-miss`).value) || 0;
-            const dateInput = document.getElementById(`p2-date`).value; const date = dateInput || new Date().toISOString().split('T')[0];
-            const t = userData.subjects[curS].topics[curT]; if(!userData.quizHistory) userData.quizHistory = [];
-            userData.quizHistory.push({ createdAt: Date.now(), date, topic: t.text, hits, total: hits+miss, grade: (hits+miss)>0?((hits/(hits+miss))*10).toFixed(1):"0.0" });
-            t.status[1] = true; t.questionsDate = new Date().toISOString(); t.lastActivityDate = new Date().toISOString();
-            await sync(); window.renderHubViews(); window.renderPlanner(); alert("Neutralizado!");
         };
 
         window.finishTimerSession = async () => {
@@ -328,20 +331,51 @@
             await sync(); window.resetTimer(); window.renderPlanner(); alert("Tempo capturado!");
         };
 
-        window.toggleFileCheck = async (idx, type) => { const t = userData.subjects[curS].topics[curT]; const list = type === 'theory' ? t.files : t.r7Files; list[idx].done = !list[idx].done; await sync(); window.renderHubViews(); };
-        window.addFileLink = async (type) => { if(user.email!==ADMIN_EMAIL) return; const n = prompt("Nome:"); const u = prompt("URL:"); if(!n || !u) return; const t = userData.subjects[curS].topics[curT]; if(type === 'theory') { if(!t.files) t.files = []; t.files.push({ name: n, url: u, done: false }); } else { if(!t.r7Files) t.r7Files = []; t.r7Files.push({ name: n, url: u, done: false }); } await sync(); window.renderHubViews(); };
+        // GESTÃO DE ARQUIVOS
+        window.editFileLink = async (i, type) => {
+            const t = userData.subjects[curS].topics[curT];
+            const list = type === 'theory' ? t.files : t.r7Files;
+            const n = prompt("Novo nome:", list[i].name);
+            const u = prompt("Nova URL:", list[i].url);
+            if(n) { list[i].name = n; list[i].url = u || list[i].url; await sync(); window.renderHubViews(); }
+        };
+        window.removeFileLink = async (i, type) => {
+            if(!confirm("Excluir material?")) return;
+            const t = userData.subjects[curS].topics[curT];
+            if(type === 'theory') t.files.splice(i, 1); else t.r7Files.splice(i, 1);
+            await sync(); window.renderHubViews();
+        };
+        window.addFileLink = async (type) => {
+            const n = prompt("Nome:"); const u = prompt("URL:"); if(!n || !u) return;
+            const t = userData.subjects[curS].topics[curT];
+            if(type === 'theory') { if(!t.files) t.files = []; t.files.push({ name: n, url: u, done: false }); }
+            else { if(!t.r7Files) t.r7Files = []; t.r7Files.push({ name: n, url: u, done: false }); }
+            await sync(); window.renderHubViews();
+        };
+
+        // GESTÃO DE EDITAL
+        window.addSubject = async () => { const n = prompt("Nome da Matéria:"); if(n) { if(!userData.subjects) userData.subjects = []; userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); window.renderPlanner(); } };
+        window.addTopic = async (i) => { const t = prompt("Nome do Tópico:"); if(t) { userData.subjects[i].topics.push({id:Date.now(), text:t, status:[false,false,false,false], files: [], r7Files: [], reviewCount: 0, agenda:[], mural:[], notes:"", theoryDate: null}); await sync(); window.renderPlanner(); } };
+        window.editSubject = async (i) => { const n = prompt("Editar Matéria:", userData.subjects[i].name); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); window.renderPlanner(); } };
+        window.removeSubject = async (i) => { if(confirm("Apagar matéria e todos os tópicos?")) { userData.subjects.splice(i, 1); await sync(); window.renderPlanner(); } };
+        window.editTopic = async (s, t) => { const n = prompt("Editar Tópico:", userData.subjects[s].topics[t].text); if(n) { userData.subjects[s].topics[t].text = n; await sync(); window.renderPlanner(); } };
+        window.removeTopic = async (s, t) => { if(confirm("Remover tópico?")) { userData.subjects[s].topics.splice(t, 1); await sync(); window.renderPlanner(); } };
         window.incrementReview = async (s, t) => { userData.subjects[s].topics[t].reviewCount = (userData.subjects[s].topics[t].reviewCount || 0) + 1; await sync(); window.renderPlanner(); };
-        window.toggleCheck = async (s, t, c) => { const topic = userData.subjects[s].topics[t]; topic.status[c] = !topic.status[c]; const date = topic.status[c] ? new Date().toISOString() : null; if(c === 0) topic.theoryDate = date; if(c === 1) topic.questionsDate = date; if(c === 2) topic.r7DoneDate = date; if(c === 3) topic.r28DoneDate = date; topic.lastActivityDate = new Date().toISOString(); await sync(); window.renderPlanner(); };
-        window.addMuralNote = async () => { const col = document.getElementById('note-color-hub').value; const t = userData.subjects[curS].topics[curT]; if(!t.mural) t.mural = []; t.mural.push({ id: Date.now(), text: "", color: col, done: false }); window.renderHubViews(); await sync(); };
-        window.updateMuralText = async (id, text) => { const t = userData.subjects[curS].topics[curT]; const note = t.mural.find(n => n.id === id); if(note) note.text = text; await sync(); };
-        window.toggleMuralCheck = async (id) => { const t = userData.subjects[curS].topics[curT]; const note = t.mural.find(n => n.id === id); if(note) note.done = !note.done; window.renderHubViews(); await sync(); };
-        window.deleteMuralNote = async (id) => { if(!confirm("Apagar?")) return; const t = userData.subjects[curS].topics[curT]; t.mural = t.mural.filter(n => n.id !== id); window.renderHubViews(); await sync(); };
-        window.handleAuth = async () => { const e = document.getElementById('auth-email').value.trim(); const p = document.getElementById('auth-password').value; const btn = document.getElementById('auth-btn'); if(!e || !p) return; btn.innerText = "Acedendo..."; btn.disabled = true; try { if(isLoginMode) await signInWithEmailAndPassword(auth, e, p); else await createUserWithEmailAndPassword(auth, e, p); } catch(err) { btn.innerText = "Aceder"; btn.disabled = false; } };
+        window.resetReviewCount = async (s, t) => { if(confirm("Zerar ciclos?")) { userData.subjects[s].topics[t].reviewCount = 0; await sync(); window.renderPlanner(); } };
+
+        // MISC
+        window.handleAuth = async () => { const e = document.getElementById('auth-email').value.trim(); const p = document.getElementById('auth-password').value; const btn = document.getElementById('auth-btn'); if(!e || !p) return; btn.innerText = "Operando..."; btn.disabled = true; try { if(isLoginMode) await signInWithEmailAndPassword(auth, e, p); else await createUserWithEmailAndPassword(auth, e, p); } catch(err) { btn.innerText = "Aceder"; btn.disabled = false; } };
         window.toggleAuthMode = () => { isLoginMode = !isLoginMode; document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Novo Cadastro"; document.getElementById('auth-btn').innerText = isLoginMode ? "Entrar" : "Cadastrar"; };
         window.handleLogout = () => signOut(auth).then(() => location.reload());
         window.toggleTimer = () => { const btn = document.getElementById('timer-btn-start'); if(!isTimerRunning) { isTimerRunning = true; btn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; timerInterval = setInterval(() => { timerSeconds++; document.getElementById('stopwatch-display').innerText = formatLongTime(timerSeconds); }, 1000); } else { clearInterval(timerInterval); isTimerRunning = false; btn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; } };
         window.resetTimer = () => { clearInterval(timerInterval); isTimerRunning = false; timerSeconds = 0; document.getElementById('stopwatch-display').innerText = "00:00:00"; };
+        window.toggleMuralCheck = async (id) => { const t = userData.subjects[curS].topics[curT]; const note = t.mural.find(n => n.id === id); if(note) note.done = !note.done; window.renderHubViews(); await sync(); };
+        window.updateMuralText = async (id, text) => { const t = userData.subjects[curS].topics[curT]; const note = t.mural.find(n => n.id === id); if(note) note.text = text; await sync(); };
+        window.deleteMuralNote = async (id) => { if(!confirm("Apagar?")) return; const t = userData.subjects[curS].topics[curT]; t.mural = t.mural.filter(n => n.id !== id); window.renderHubViews(); await sync(); };
+        window.addMuralNote = async () => { const col = document.getElementById('note-color-hub').value; const t = userData.subjects[curS].topics[curT]; if(!t.mural) t.mural = []; t.mural.push({ id: Date.now(), text: "", color: col, done: false }); window.renderHubViews(); await sync(); };
+        window.toggleFileCheck = async (idx, type) => { const t = userData.subjects[curS].topics[curT]; const list = type === 'theory' ? t.files : t.r7Files; list[idx].done = !list[idx].done; await sync(); window.renderHubViews(); };
         window.showTab = (id) => { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); const t = document.getElementById(id); if(t) t.classList.add('active'); const b = document.getElementById('btn-'+id); if(b) b.classList.add('active-tab'); if(id === 'priority') window.renderPriorityList(); if(id === 'history') window.renderHistoryPage(); if(id === 'time') window.renderTimeHistory(); };
+        window.toggleCheck = async (s, t, c) => { const topic = userData.subjects[s].topics[t]; topic.status[c] = !topic.status[c]; const date = topic.status[c] ? new Date().toISOString() : null; if(c === 0) topic.theoryDate = date; if(c === 1) topic.questionsDate = date; if(c === 2) topic.r7DoneDate = date; if(c === 3) topic.r28DoneDate = date; topic.lastActivityDate = new Date().toISOString(); await sync(); window.renderPlanner(); };
 
         window.renderPriorityList = () => {
             if(!userData) return;
@@ -353,12 +387,12 @@
                 list.push({sIdx, tIdx, text: top.text, subName: sub.name, score, latestGrade});
             });});
             const el = document.getElementById('priority-list');
-            if(el) el.innerHTML = list.sort((a,b) => b.score - a.score).slice(0,10).map((p, i) => `<div onclick="window.openHub(${p.sIdx}, ${p.tIdx})" class="bg-white p-6 rounded-2xl border border-slate-100 flex items-center gap-6 cursor-pointer text-left"><div class="text-2xl font-black text-slate-100">#${i+1}</div><div class="flex-1 text-left"><div class="text-[9px] font-black text-indigo-500 uppercase mb-1 text-left">${p.subName}</div><div class="text-sm font-black text-slate-800 uppercase group-hover:text-indigo-600 transition-colors text-left text-left text-left text-left text-left">${p.text}</div></div><div class="text-right"><div><div class="text-[8px] font-black text-slate-400 uppercase text-right">Nota Recente</div><div class="text-xs font-black ${p.latestGrade === 0 ? 'text-slate-400' : (p.latestGrade < 5.0 ? 'text-rose-500' : (p.latestGrade < 7.0 ? 'text-rose-500' : 'text-emerald-500'))}">${p.latestGrade.toFixed(1)}</div></div></div></div>`).join('');
+            if(el) el.innerHTML = list.sort((a,b) => b.score - a.score).slice(0,10).map((p, i) => `<div onclick="window.openHub(${p.sIdx}, ${p.tIdx})" class="bg-white p-6 rounded-2xl border border-slate-100 flex items-center gap-6 cursor-pointer"><div class="text-2xl font-black text-slate-100">#${i+1}</div><div class="flex-1"><div class="text-[9px] font-black text-indigo-500 uppercase mb-1">${p.subName}</div><div class="text-sm font-black text-slate-800 uppercase group-hover:text-indigo-600 transition-colors">${iconFolder} ${p.text}</div></div><div class="text-right"><div><div class="text-[8px] font-black text-slate-400 uppercase">Nota Recente</div><div class="text-xs font-black ${p.latestGrade === 0 ? 'text-slate-400' : (p.latestGrade < 7.0 ? 'text-rose-500' : 'text-emerald-500')}">${p.latestGrade.toFixed(1)}</div></div></div></div>`).join('');
         };
 
         window.renderHistoryPage = () => {
             const el = document.getElementById('global-history-body');
-            if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b text-left text-xs"><td class="p-4 font-bold text-slate-400 text-left text-left text-left">${formatDate(h.date)}</td><td class="p-4 font-black text-slate-800 text-left text-left text-left">${h.topic}</td><td class="p-4 text-center font-black text-slate-500 text-center text-center text-center">${h.hits}/${h.total}</td><td class="p-4 text-right text-right text-right text-right"><span class="font-black ${parseFloat(h.grade) === 0 ? 'text-slate-400' : (parseFloat(h.grade) >= 7.0 ? 'text-emerald-500' : 'text-rose-500')}">${h.grade}</span></td></tr>`).join('');
+            if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b text-left text-xs"><td class="p-4 font-bold text-slate-400">${formatDate(h.date)}</td><td class="p-4 font-black text-slate-800">${h.topic}</td><td class="p-4 text-center font-black text-slate-500">${h.hits}/${h.total}</td><td class="p-4 text-right"><span class="font-black ${parseFloat(h.grade) === 0 ? 'text-slate-400' : (parseFloat(h.grade) >= 7.0 ? 'text-emerald-500' : 'text-rose-500')}">${h.grade}</span></td></tr>`).join('');
         };
 
         window.renderTimeHistory = () => {
@@ -368,7 +402,7 @@
             const history = (userData.timeHistory || []).slice().reverse();
             const totalSeconds = history.reduce((a, b) => a + b.durationSeconds, 0);
             if(totalEl) totalEl.innerText = formatLongTime(totalSeconds);
-            if(el) el.innerHTML = history.map(h => `<tr class="border-b text-left text-xs text-left text-left text-left text-left"><td class="p-4 font-bold text-slate-400 text-left text-left text-left">${formatDate(h.date)}</td><td class="p-4 font-black text-slate-800 text-left text-left text-left">${h.topic}</td><td class="p-4 text-right font-black text-indigo-600 text-right text-right text-right">${formatLongTime(h.durationSeconds)}</td></tr>`).join('');
+            if(el) el.innerHTML = history.map(h => `<tr class="border-b text-left text-xs text-left"><td class="p-4 font-bold text-slate-400">${formatDate(h.date)}</td><td class="p-4 font-black text-slate-800">${h.topic}</td><td class="p-4 text-right font-black text-indigo-600 text-right">${formatLongTime(h.durationSeconds)}</td></tr>`).join('');
         };
 
         window.renderPlanner = () => {
@@ -376,20 +410,19 @@
             const list = document.getElementById('edital-list'); if(!list) return;
             list.innerHTML = ''; let totC = 0, donC = 0; const isAdm = user && user.email === ADMIN_EMAIL;
             
-            // SCORE GERAL (MEDIA ÚLTIMOS RESULTADOS)
-            const latestGradesPerTopic = [];
+            const topicScores = [];
             userData.subjects.forEach(s => s.topics.forEach(t => {
-                const topicHist = (userData.quizHistory || []).filter(h => h.topic.trim() === t.text.trim()).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                if(topicHist.length > 0) latestGradesPerTopic.push(parseFloat(topicHist[0].grade));
+                const hist = (userData.quizHistory || []).filter(h => h.topic.trim() === t.text.trim()).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                if(hist.length > 0) topicScores.push(parseFloat(hist[0].grade));
             }));
-            const avgGlobal = latestGradesPerTopic.length ? (latestGradesPerTopic.reduce((a,b)=>a+b,0)/latestGradesPerTopic.length).toFixed(1) : "0.0";
-            if(document.getElementById('approval-score')) { 
-                document.getElementById('approval-score').innerText = avgGlobal;
+            const globalScore = topicScores.length ? (topicScores.reduce((a,b)=>a+b,0)/topicScores.length).toFixed(1) : "0.0";
+            if(document.getElementById('approval-score')) {
+                document.getElementById('approval-score').innerText = globalScore;
                 const statusEl = document.getElementById('approval-status');
-                const val = parseFloat(avgGlobal);
-                if(latestGradesPerTopic.length === 0) { statusEl.innerText = "⚪ Sem Alvos"; statusEl.style.color = "#94a3b8"; }
-                else if(val < 5.0) { statusEl.innerText = "🔴 Reprovado"; statusEl.style.color = "#ef4444"; }
-                else if(val < 7.0) { statusEl.innerText = "🟡 Em risco"; statusEl.style.color = "#f59e0b"; }
+                const v = parseFloat(globalScore);
+                if(topicScores.length === 0) { statusEl.innerText = "⚪ Sem Alvos"; statusEl.style.color = "#94a3b8"; }
+                else if(v < 5.0) { statusEl.innerText = "🔴 Reprovado"; statusEl.style.color = "#ef4444"; }
+                else if(v < 7.0) { statusEl.innerText = "🟡 Em Risco"; statusEl.style.color = "#f59e0b"; }
                 else { statusEl.innerText = "🟢 Aprovado"; statusEl.style.color = "#10b981"; }
             }
 
@@ -397,34 +430,27 @@
                 const rows = sub.topics.map((top, tIdx) => {
                     totC += 4; donC += (top.status || [false,false,false,false]).filter(x=>x).length;
                     const topHist = (userData.quizHistory || []).filter(h => h.topic.trim() === top.text.trim()).sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                    const latestResult = topHist.length ? topHist[0] : null;
-                    let pulseClass = ""; let badgeClass = "badge-neutral"; 
-                    if(latestResult) {
-                        const grade = parseFloat(latestResult.grade);
-                        const errors = parseInt(latestResult.total) - parseInt(latestResult.hits);
-                        if(grade === 0) { pulseClass = ""; badgeClass = "badge-neutral"; }
-                        else if(errors === 0) { pulseClass = "pulse-perfect"; badgeClass = "badge-perfect"; }
-                        else if(grade >= 7.0) { pulseClass = "pulse-good"; badgeClass = "badge-good"; }
-                        else if(grade >= 5.0) { pulseClass = "pulse-med"; badgeClass = "badge-med"; }
-                        else { pulseClass = "pulse-bad"; badgeClass = "badge-bad"; }
+                    const latest = topHist.length ? topHist[0] : null;
+                    let pCls = ""; let bCls = "badge-neutral";
+                    if(latest) {
+                        const grade = parseFloat(latest.grade); const err = parseInt(latest.total) - parseInt(latest.hits);
+                        if(grade === 0) { pCls = ""; bCls = "badge-neutral"; }
+                        else if(err === 0) { pCls = "pulse-perfect"; bCls = "badge-perfect"; }
+                        else if(grade >= 7.0) { pCls = "pulse-good"; bCls = "badge-good"; }
+                        else if(grade >= 5.0) { pCls = "pulse-med"; bCls = "badge-med"; }
+                        else { pCls = "pulse-bad"; bCls = "badge-bad"; }
                     }
                     const checks = (top.status || [false,false,false,false]).map((s, cIdx) => {
-                        let extra = ""; const dateText = formatDate([top.theoryDate, top.questionsDate, top.r7DoneDate, top.r28DoneDate][cIdx]);
-                        if (s && dateText) extra = `<div class="text-[9px] font-black text-indigo-500 mt-1 text-center">${dateText}</div>`;
-                        return `<td class="p-4 text-center"><div class="flex flex-col items-center"><input type="checkbox" ${s?'checked':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})">${extra}</div></td>`;
+                        const date = formatDate([top.theoryDate, top.questionsDate, top.r7DoneDate, top.r28DoneDate][cIdx]);
+                        return `<td class="p-4 text-center"><div class="flex flex-col items-center"><input type="checkbox" ${s?'checked':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})">${s&&date?`<div class="text-[9px] font-black text-indigo-500 mt-1">${date}</div>`:''}</div></td>`;
                     }).join('');
-                    const scoreBadge = latestResult ? `<span class="score-badge ${badgeClass} ${pulseClass}">🎯 ${latestResult.grade}</span>` : "";
-                    return `<tr class="border-b border-slate-50 group text-left text-left"><td class="p-4 text-left text-left text-left"><div class="flex items-center justify-between text-left text-left text-left"><div class="flex items-center gap-3 text-left text-left text-left text-left shrink-0 text-left"><div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${Math.min(top.reviewCount||0, 1)} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div><button onclick="window.openHub(${sIdx}, ${tIdx})" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-2 text-left text-left text-left text-left shrink-0 text-left text-left text-left"><span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-lg text-[9px] shadow-lg shrink-0">GO</span> <span class="${pulseClass}">${top.text}</span> ${scoreBadge}</button></div><div class="flex gap-2 ${isAdm ? 'btn-action' : 'hidden'}"><button onclick="window.editSubject(${sIdx})" class="text-slate-300 hover:text-indigo-500">✎</button></div></div></td>${checks}</tr>`;
+                    const scoreBadge = latest ? `<span class="score-badge ${bCls} ${pCls}">🎯 ${latest.grade}</span>` : "";
+                    return `<tr class="border-b border-slate-50 group"><td class="p-4"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${Math.min(top.reviewCount||0, 1)} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div><button onclick="window.openHub(${sIdx}, ${tIdx})" class="text-xs font-black text-slate-700 uppercase hover:text-indigo-600 flex items-center gap-2"><span class="bg-indigo-600 text-white w-7 h-7 flex items-center justify-center rounded-lg text-[9px] shadow-lg shrink-0">GO</span> ${iconFolder} <span class="${pCls}">${top.text}</span> ${scoreBadge}</button></div><div class="flex gap-2"><button onclick="window.resetReviewCount(${sIdx}, ${tIdx})" class="action-icon-btn text-indigo-300 hover:text-indigo-600">${iconReset}</button><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-300 hover:text-indigo-500">${iconEdit}</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-300 hover:text-rose-500">${iconDel}</button></div></div></td>${checks}</tr>`;
                 }).join('');
-                list.innerHTML += `<div class="card shadow-xl group text-left text-left text-left text-left text-left text-left text-left"><div class="p-8 bg-white border-b flex justify-between items-center px-10 text-left text-left text-left text-left text-left text-left text-left text-left text-left"><div class="flex items-center gap-4 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">${sub.name}</h4></div><span class="text-4xl font-black text-indigo-600 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">${sub.topics.length?Math.round(((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0))/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400 text-left text-left text-left text-left text-left text-left text-left text-left text-left"><thead><tr class="bg-slate-50/50 border-b border-slate-100 text-left text-xs text-slate-400 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><th class="p-5 text-left tracking-widest text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Missão Operacional</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center ${isAdm ? '' : 'hidden'} text-center text-center text-center text-center text-center text-center text-center text-center text-center"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo</button></div></div>`;
+                list.innerHTML += `<div class="card shadow-xl group"><div class="p-8 bg-white border-b flex justify-between items-center px-10"><div class="flex items-center gap-4">${iconFolder}<h4 class="font-black uppercase text-xl text-slate-900 tracking-tighter">${sub.name}</h4><button onclick="window.editSubject(${sIdx})" class="action-icon-btn text-slate-300">${iconEdit}</button><button onclick="window.removeSubject(${sIdx})" class="action-icon-btn text-slate-300 hover:text-rose-500">${iconDel}</button></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round(((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0))/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[11px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/50 border-b border-slate-100 text-left text-xs text-slate-400"><th class="p-5 text-left tracking-widest">Missão Operacional</th><th class="text-center">T</th><th class="text-center">Q</th><th class="text-center">R7</th><th class="text-center">R28</th></tr></thead><tbody class="text-slate-800">${rows}</tbody></table><div class="p-6 bg-slate-50/30 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[10px] font-black text-indigo-500 uppercase tracking-widest">+ Novo Alvo em ${sub.name}</button></div></div>`;
             });
             const p = document.getElementById('progress-pct'); if(p) p.innerText = totC ? Math.round((donC/totC)*100)+'%' : '0%';
-            const streakEl = document.getElementById('streak-count'); if(streakEl) streakEl.innerText = userData.streak || 0;
         };
-
-        window.addSubject = async () => { if(!user) return; const n = prompt("Nome da Nova Matéria (ex: INFORMÁTICA):"); if(n) { if(!userData.subjects) userData.subjects = []; userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); window.renderPlanner(); } };
-        window.addTopic = async (i) => { if(!user) return; const t = prompt("Assunto/Tópico do Edital:"); if(t) { userData.subjects[i].topics.push({id:Date.now(), text:t, status:[false,false,false,false], files: [], r7Files: [], reviewCount: 0, agenda:[], mural:[], notes:"", theoryDate: null}); await sync(); window.renderPlanner(); } };
-        window.editSubject = async (i) => { if(!user) return; const n = prompt("Novo Nome:"); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); window.renderPlanner(); } };
 
         onAuthStateChanged(auth, async (u) => {
             if (u) {
