@@ -138,7 +138,7 @@
     <!-- AUTH SCREEN -->
     <div id="auth-screen" class="auth-screen">
         <div class="bg-white/95 backdrop-blur-xl w-full max-w-md rounded-[2.5rem] p-12 shadow-2xl text-center border border-white/20">
-            <div class="w-20 h-20 bg-indigo-600 rounded-3xl mx-auto mb-8 flex items-center justify-center text-white text-4xl font-black shadow-2xl rotate-3">P</div>
+            <div class="w-20 h-20 bg-indigo-600 rounded-3xl mx-auto mb-8 flex items-center justify-center text-white text-4xl font-black shadow-2xl rotate-3 text-center">P</div>
             <h2 id="auth-title" class="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2 text-center">PC-AP Elite</h2>
             <p id="auth-subtitle" class="text-slate-400 font-medium text-sm mb-10 text-center">Aceda à sua plataforma de alto rendimento</p>
             <div class="space-y-4 text-left">
@@ -174,7 +174,7 @@
                         <span class="text-[10px] font-black uppercase text-indigo-600 tracking-widest mb-6 block">Passo 1: Teoria</span>
                         <div class="mb-8 text-left">
                             <div id="files-list" class="space-y-3 mb-4"></div>
-                            <button onclick="window.addFileLink('theory')" class="w-full py-3.5 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-bold text-[10px] uppercase hover:border-indigo-200">+ Novo Link</button>
+                            <button onclick="window.addFileLink('theory')" class="w-full py-3.5 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-bold text-[10px] uppercase hover:border-indigo-200 text-center">+ Novo Link</button>
                         </div>
                         <div class="bg-indigo-50/50 p-8 rounded-[2rem] flex flex-col items-center">
                             <button id="btn-toggle-theory" onclick="window.toggleStatusHub(0)" class="w-full py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all">Neutralizar Passo 1</button>
@@ -183,14 +183,14 @@
                     </div>
                     <div class="card p-8 border-l-8 border-l-emerald-500 text-left">
                         <span class="text-[10px] font-black uppercase text-emerald-600 tracking-widest mb-6 block">Passo 2: Questões</span>
-                        <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div class="grid grid-cols-2 gap-6 mb-8 text-left">
                             <input type="date" id="p2-date" class="input-elite">
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-2 gap-4 text-left">
                                 <input type="number" id="p2-hits" class="input-elite border-emerald-100 bg-emerald-50/30" placeholder="Acertos">
                                 <input type="number" id="p2-miss" class="input-elite border-rose-100 bg-rose-50/30" placeholder="Erros">
                             </div>
                         </div>
-                        <button onclick="window.savePerformanceHub()" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg mb-8 transition-all hover:bg-emerald-700">Salvar Performance</button>
+                        <button onclick="window.savePerformanceHub()" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg mb-8 transition-all hover:bg-emerald-700 text-center">Salvar Performance</button>
                         <div class="h-48 bg-slate-50 rounded-[2rem] p-6 border border-slate-100">
                             <canvas id="evolutionChart"></canvas>
                         </div>
@@ -200,7 +200,7 @@
                     <div class="card p-8 border-l-8 border-l-amber-500 text-left">
                         <span class="text-[10px] font-black uppercase text-amber-600 tracking-widest mb-6 block">Passo 3: R7</span>
                         <div id="r7-files-list" class="space-y-3 mb-4"></div>
-                        <button onclick="window.addFileLink('r7')" class="w-full py-3.5 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-bold text-[10px] uppercase hover:border-amber-200">+ Adicionar Resumo</button>
+                        <button onclick="window.addFileLink('r7')" class="w-full py-3.5 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-bold text-[10px] uppercase hover:border-amber-200 text-center">+ Adicionar Resumo</button>
                         <button id="btn-toggle-r7" onclick="window.toggleStatusHub(2)" class="w-full mt-6 py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all">Neutralizar Passo 3</button>
                         <p id="r7-date-label" class="text-center text-[10px] font-bold text-amber-500 mt-4 italic"></p>
                     </div>
@@ -211,7 +211,7 @@
                             <select id="note-color-hub" class="text-[10px] font-black border border-slate-200 rounded-xl px-4 bg-white"><option value="yellow">Amarelo</option><option value="pink">Rosa</option><option value="blue">Azul</option></select>
                             <button onclick="window.addMuralNote()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase hover:bg-indigo-600 transition-all">+ Novo Gatilho</button>
                         </div>
-                        <button id="btn-toggle-r28" onclick="window.toggleStatusHub(3)" class="w-full bg-rose-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all hover:bg-rose-700">Neutralizar Passo 4</button>
+                        <button id="btn-toggle-r28" onclick="window.toggleStatusHub(3)" class="w-full bg-rose-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all hover:bg-rose-700 text-center">Neutralizar Passo 4</button>
                         <p id="r28-date-label" class="text-center text-[10px] font-bold text-rose-500 mt-4 italic"></p>
                     </div>
                 </div>
@@ -229,15 +229,15 @@
             
             <div class="flex gap-4 w-full xl:w-auto text-left">
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
-                    <div id="days-remaining" class="text-4xl font-black text-indigo-600 mb-2">30</div>
-                    <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Dias de Acesso</div>
+                    <div id="days-remaining" class="text-4xl font-black text-indigo-600 mb-2">--</div>
+                    <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Dias Restantes</div>
                 </div>
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
-                    <div id="approval-score" class="text-4xl font-black text-slate-900 mb-2">0.0</div>
+                    <div id="approval-score" class="text-4xl font-black text-slate-900 mb-2 text-center">0.0</div>
                     <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Score Op.</div>
                 </div>
                 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
-                    <div id="progress-pct" class="text-4xl font-black text-indigo-600 mb-2">0%</div>
+                    <div id="progress-pct" class="text-4xl font-black text-indigo-600 mb-2 text-center">0%</div>
                     <div class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Conclusão</div>
                 </div>
             </div>
@@ -251,14 +251,14 @@
             <button onclick="window.showTab('curve')" id="btn-curve" class="tab-btn px-8 py-4 rounded-3xl font-black text-[11px] uppercase tracking-wider text-cyan-600">📉 Curva</button>
             <button onclick="window.showTab('history')" id="btn-history" class="tab-btn px-8 py-4 rounded-3xl font-black text-[11px] uppercase tracking-wider">📈 Perf.</button>
             <button onclick="window.showTab('admin')" id="btn-admin" class="tab-btn admin-only px-8 py-4 rounded-3xl font-black text-[11px] uppercase tracking-wider text-rose-600 bg-rose-50">⚙️ Admin</button>
-            <button onclick="window.handleLogout()" class="px-6 py-4 rounded-3xl font-black text-[11px] uppercase text-slate-400 hover:text-rose-600">Sair</button>
+            <button onclick="window.handleLogout()" class="px-6 py-4 rounded-3xl font-black text-[11px] uppercase text-slate-400 hover:text-rose-600 text-center">Sair</button>
         </nav>
 
         <!-- TUTOR TAB -->
         <div id="tutor" class="tab-content text-left">
             <div class="max-w-4xl mx-auto text-left">
                 <div class="flex items-center gap-6 mb-12 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm text-left">
-                    <div class="w-16 h-16 rounded-3xl bg-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-xl">🎓</div>
+                    <div class="w-16 h-16 rounded-3xl bg-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-xl text-center">🎓</div>
                     <div class="text-left">
                         <h3 class="text-3xl font-black uppercase text-slate-900 tracking-tight">Mural do Tutor</h3>
                         <p class="text-slate-400 font-bold text-sm">Instruções operacionais baseadas no seu progresso real.</p>
@@ -269,24 +269,24 @@
         </div>
 
         <div id="planner" class="tab-content active text-left">
-            <div class="mb-12"><button onclick="window.addSubject()" class="bg-slate-900 text-white px-10 py-6 rounded-[2.5rem] font-black uppercase text-xs shadow-2xl hover:bg-indigo-600 transition-all">+ Nova Matéria</button></div>
+            <div class="mb-12"><button onclick="window.addSubject()" class="bg-slate-900 text-white px-10 py-6 rounded-[2.5rem] font-black uppercase text-xs shadow-2xl hover:bg-indigo-600 transition-all text-center">+ Nova Matéria</button></div>
             <div id="edital-list" class="grid grid-cols-1 gap-16 text-left"></div>
         </div>
 
         <div id="calendar" class="tab-content text-left">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-10">
                 <div class="xl:col-span-1 space-y-8">
-                    <div class="card p-10 bg-indigo-600 text-white text-left">
+                    <div class="card p-10 bg-indigo-600 text-white text-left text-left">
                         <div class="flex justify-between items-center mb-8">
                             <h4 class="text-xs font-black uppercase opacity-60">Missões Hoje</h4>
-                            <button onclick="window.clearAllTasks()" class="text-[9px] font-black uppercase bg-white/10 hover:bg-rose-500 px-3 py-1 rounded-lg transition-all">Limpar</button>
+                            <button onclick="window.clearAllTasks()" class="text-[9px] font-black uppercase bg-white/10 hover:bg-rose-500 px-3 py-1 rounded-lg transition-all text-center">Limpar</button>
                         </div>
                         <div id="today-timeline-container" class="space-y-4"></div>
                     </div>
                     <div class="card p-10 text-left">
                         <select id="manual-subject-select" onchange="window.updateManualTopicList()" class="input-elite mb-4"></select>
                         <select id="manual-topic-select" class="input-elite mb-4"></select>
-                        <button onclick="window.scheduleManualTask()" class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black uppercase text-[10px]">Agendar P1</button>
+                        <button onclick="window.scheduleManualTask()" class="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black uppercase text-[10px] text-center">Agendar P1</button>
                     </div>
                 </div>
                 <div class="xl:col-span-2">
@@ -306,29 +306,29 @@
         </div>
 
         <div id="priority" class="tab-content text-left">
-            <div class="card p-12 max-w-4xl mx-auto">
+            <div class="card p-12 max-w-4xl mx-auto text-left">
                 <h3 class="text-4xl font-black uppercase text-slate-900 mb-12">Zonas de Prioridade 🔥</h3>
                 <div id="priority-list" class="space-y-6"></div>
             </div>
         </div>
 
-        <div id="curve" class="tab-content text-left text-left">
-            <div class="card p-12 max-w-5xl mx-auto">
+        <div id="curve" class="tab-content text-left">
+            <div class="card p-12 max-w-5xl mx-auto text-left">
                 <h3 class="text-4xl font-black uppercase text-slate-900 mb-8">Curva do Esquecimento</h3>
                 <select id="curve-topic-select" onchange="window.renderRetentionCurve()" class="input-elite mb-10"></select>
-                <div class="flex justify-center mb-10 text-left"><div class="bg-indigo-50 px-10 py-6 rounded-[2.5rem] border border-indigo-100 text-center"><div id="retention-pct-label" class="text-5xl font-black text-indigo-600 text-left">--%</div><div class="text-[9px] font-black uppercase text-indigo-400 mt-2">Retenção Estimada</div></div></div>
+                <div class="flex justify-center mb-10 text-left"><div class="bg-indigo-50 px-10 py-6 rounded-[2.5rem] border border-indigo-100 text-center"><div id="retention-pct-label" class="text-5xl font-black text-indigo-600">--%</div><div class="text-[9px] font-black uppercase text-indigo-400 mt-2">Retenção Estimada</div></div></div>
                 <div class="h-[350px] w-full text-left"><canvas id="retentionCurveChart"></canvas></div>
             </div>
         </div>
 
-        <div id="history" class="tab-content text-left text-left">
+        <div id="history" class="tab-content text-left">
             <div class="card p-12 text-left">
                 <div class="flex justify-between items-center mb-12 text-left">
                     <h3 class="text-4xl font-black uppercase text-slate-900">Performance</h3>
-                    <button onclick="window.clearPerformanceHistory()" class="bg-rose-100 text-rose-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase">Limpar Histórico</button>
+                    <button onclick="window.clearPerformanceHistory()" class="bg-rose-100 text-rose-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase text-center">Limpar Histórico</button>
                 </div>
-                <table class="w-full text-left text-sm text-left">
-                    <thead class="bg-slate-50 text-left"><tr><th class="p-5 font-black uppercase text-slate-400">Data</th><th class="p-5 font-black uppercase text-slate-400">Tópico</th><th class="p-5 text-right font-black uppercase text-slate-400">Nota</th></tr></thead>
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50"><tr><th class="p-5 font-black uppercase text-slate-400">Data</th><th class="p-5 font-black uppercase text-slate-400">Tópico</th><th class="p-5 text-right font-black uppercase text-slate-400">Nota</th></tr></thead>
                     <tbody id="global-history-body"></tbody>
                 </table>
             </div>
@@ -337,20 +337,20 @@
         <div id="admin" class="tab-content admin-only text-left">
             <div class="card p-12 text-left">
                 <div class="flex justify-between items-center mb-12 text-left">
-                    <div>
+                    <div class="text-left">
                         <h3 class="text-4xl font-black uppercase text-slate-900 tracking-tighter mb-2">Painel de Comando Admin</h3>
-                        <p class="text-slate-400 font-bold text-sm text-left">Gestão de acessos e planos de agentes</p>
+                        <p class="text-slate-400 font-bold text-sm">Gestão de utilizadores e planos</p>
                     </div>
                     <div class="bg-rose-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">Acesso Master</div>
                 </div>
                 <div class="overflow-x-auto text-left">
                     <table class="w-full text-left">
-                        <thead class="bg-slate-50 text-left">
+                        <thead class="bg-slate-50">
                             <tr>
                                 <th class="p-5 text-[10px] font-black uppercase text-slate-400">Agente (E-mail)</th>
-                                <th class="p-5 text-[10px] font-black uppercase text-slate-400">Validade Acesso</th>
-                                <th class="p-5 text-center text-[10px] font-black uppercase text-slate-400">Estado</th>
-                                <th class="p-5 text-right text-[10px] font-black uppercase text-slate-400">Gestão Planos</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-400">Validade</th>
+                                <th class="p-5 text-center text-[10px] font-black uppercase text-slate-400 text-center">Estado</th>
+                                <th class="p-5 text-right text-[10px] font-black uppercase text-slate-400">Ações</th>
                             </tr>
                         </thead>
                         <tbody id="admin-user-list" class="text-sm"></tbody>
@@ -418,7 +418,7 @@
             const fRender = (f, i, type) => `<div class="bg-white border p-4 rounded-2xl flex justify-between shadow-sm text-left"><div class="flex items-center gap-3 text-left"><input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, '${type}')"> ${iconFolder} <span class="text-[10px] font-black uppercase ${f.done?'text-slate-300 line-through':''}">${f.name}</span></div><div class="flex gap-2"><a href="${f.url}" target="_blank" class="bg-indigo-50 text-indigo-600 text-[9px] font-black px-4 py-1 rounded-lg">Ver</a><button onclick="window.removeFileLink(${i},'${type}')">${iconDel}</button></div></div>`;
             document.getElementById('files-list').innerHTML = (t.files || []).map((f,i) => fRender(f,i,'theory')).join('');
             document.getElementById('r7-files-list').innerHTML = (t.r7Files || []).map((f,i) => fRender(f,i,'r7')).join('');
-            document.getElementById('mural-container').innerHTML = (t.mural || []).map(n => `<div class="mural-note mural-${n.color} flex gap-4 text-left"><input type="checkbox" ${n.done?'checked':''} onchange="window.toggleMuralCheck(${n.id})"><textarea class="flex-1 bg-transparent border-none text-[11px] font-bold outline-none" onblur="window.updateMuralText(${n.id}, this.value)">${n.text}</textarea><button onclick="window.deleteMuralNote(${n.id})">${iconDel}</button></div>`).join('');
+            document.getElementById('mural-container').innerHTML = (t.mural || []).map(n => `<div class="mural-note mural-${n.color} flex gap-4 text-left text-left"><input type="checkbox" ${n.done?'checked':''} onchange="window.toggleMuralCheck(${n.id})"><textarea class="flex-1 bg-transparent border-none text-[11px] font-bold outline-none" onblur="window.updateMuralText(${n.id}, this.value)">${n.text}</textarea><button onclick="window.deleteMuralNote(${n.id})">${iconDel}</button></div>`).join('');
             const bt = document.getElementById('btn-toggle-theory');
             bt.innerText = t.status[0] ? "Neutralizado ✅" : "Neutralizar Passo 1";
             bt.className = `w-full py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all ${t.status[0] ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-white border-2 border-indigo-100 text-indigo-600 hover:bg-indigo-50'}`;
@@ -428,7 +428,7 @@
                 br.className = `w-full mt-6 py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all ${t.status[2] ? 'bg-amber-600 text-white shadow-amber-200' : 'bg-white border-2 border-amber-100 text-amber-600 hover:bg-amber-50'}`;
                 document.getElementById('r7-date-label').innerText = t.r7DoneDate ? 'Feito em: ' + formatDate(t.r7DoneDate) : '';
             }
-            if(document.getElementById('btn-toggle-r28')) { document.getElementById('r28-date-label').innerText = t.r28DoneDate ? 'Feito em: ' + formatDate(t.r28DoneDate) : ''; }
+            if(document.getElementById('r28-date-label')) { document.getElementById('r28-date-label').innerText = t.r28DoneDate ? 'Feito em: ' + formatDate(t.r28DoneDate) : ''; }
             window.renderEvolutionChart();
         };
 
@@ -447,7 +447,7 @@
                 dataPoints.push(ret.toFixed(1)); if (current.toDateString() === today.toDateString()) document.getElementById('retention-pct-label').innerText = Math.round(ret) + "%";
             }
             if(retentionChart) retentionChart.destroy();
-            retentionChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Retenção (%)', data: dataPoints, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } } });
+            retentionChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Retenção (%)', data: dataPoints, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
         };
 
         window.renderPriorityList = () => {
@@ -463,7 +463,7 @@
             const container = document.getElementById('today-timeline-container'), todayStr = new Date().toISOString().split('T')[0];
             const tasks = (userData.scheduledTasks || []).filter(t => t.date === todayStr);
             if(tasks.length === 0) { container.innerHTML = `<div class="text-[11px] font-bold text-white/50 py-8 text-center text-left">Nenhuma missão hoje.</div>`; return; }
-            container.innerHTML = tasks.map(t => `<div class="flex items-center justify-between bg-white/10 p-4 rounded-xl group text-left"><div class="flex flex-col text-left"><span class="text-[9px] font-black uppercase text-indigo-200">Passo ${t.step+1}</span><span class="text-xs font-black uppercase text-white">${t.topic}</span></div><button onclick="window.deleteScheduledTask('${t.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-white">✕</button></div>`).join('');
+            container.innerHTML = tasks.map(t => `<div class="flex items-center justify-between bg-white/10 p-4 rounded-xl group text-left"><div class="flex flex-col text-left"><span class="text-[9px] font-black uppercase text-indigo-200 text-left">Passo ${t.step+1}</span><span class="text-xs font-black uppercase text-white text-left">${t.topic}</span></div><button onclick="window.deleteScheduledTask('${t.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-white text-center">✕</button></div>`).join('');
         };
 
         window.renderCalendar = () => {
@@ -496,15 +496,15 @@
                         const dVal = [top.theoryDate, top.questionsDate, top.r7DoneDate, top.r28DoneDate][cIdx];
                         return `<td class="p-4 text-center"><div class="flex flex-col items-center"><input type="checkbox" ${s?'checked':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})" class="w-5 h-5">${s && dVal ? `<span class="text-[9px] font-black text-indigo-500 mt-1">${formatDate(dVal)}</span>` : ''}</div></td>`;
                     }).join('');
-                    return `<tr class="border-b border-slate-50"><td class="p-6 text-left"><div class="flex items-center justify-between"><div class="flex items-center gap-4"><div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${top.reviewCount?1:0} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div><button onclick="window.openHub(${sIdx}, ${tIdx})" class="bg-indigo-600 text-white w-9 h-9 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</button><span class="font-black text-slate-700 ${pCls}">${top.text}</span> ${latest ? `<span class="score-badge ${bCls}">🎯 ${latest.grade}</span>` : ""}</div><div class="flex gap-1"><button onclick="window.resetReviewCount(${sIdx}, ${tIdx})" class="action-icon-btn text-amber-500">${iconReset}</button><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-400">${iconEdit}</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div></div></td>${checks}</tr>`;
+                    return `<tr class="border-b border-slate-50 text-left"><td class="p-6 text-left"><div class="flex items-center justify-between text-left"><div class="flex items-center gap-4 text-left"><div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${top.reviewCount?1:0} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div><button onclick="window.openHub(${sIdx}, ${tIdx})" class="bg-indigo-600 text-white w-9 h-9 flex items-center justify-center rounded-xl text-[10px] shadow-lg text-center">GO</button><span class="font-black text-slate-700 ${pCls}">${top.text}</span> ${latest ? `<span class="score-badge ${bCls}">🎯 ${latest.grade}</span>` : ""}</div><div class="flex gap-1"><button onclick="window.resetReviewCount(${sIdx}, ${tIdx})" class="action-icon-btn text-amber-500 text-center">${iconReset}</button><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-400 text-center">${iconEdit}</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-rose-400 text-center">${iconDel}</button></div></div></td>${checks}</tr>`;
                 }).join('');
-                list.innerHTML += `<div class="card overflow-hidden text-left"><div class="p-10 bg-white/50 border-b flex justify-between items-center text-left"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-2xl text-slate-900">${sub.name}</h4><button onclick="window.editSubject(${sIdx})" class="action-icon-btn">${iconEdit}</button><button onclick="window.removeSubject(${sIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[12px] uppercase font-black text-slate-400 text-left"><thead><tr class="bg-slate-50/30 border-b text-left"><th class="p-6 text-left">Alvos</th><th class="text-center w-24">T</th><th class="text-center w-24">Q</th><th class="text-center w-24">R7</th><th class="text-center w-24">R28</th></tr></thead><tbody>${rows}</tbody></table><div class="p-8 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[11px] font-black text-indigo-500 uppercase">+ Novo Tópico em ${sub.name}</button></div></div>`;
+                list.innerHTML += `<div class="card overflow-hidden text-left"><div class="p-10 bg-white/50 border-b flex justify-between items-center text-left"><div class="flex items-center gap-4 text-left"><h4 class="font-black uppercase text-2xl text-slate-900">${sub.name}</h4><button onclick="window.editSubject(${sIdx})" class="action-icon-btn">${iconEdit}</button><button onclick="window.removeSubject(${sIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[12px] uppercase font-black text-slate-400 text-left"><thead><tr class="bg-slate-50/30 border-b text-left text-left text-left"><th class="p-6 text-left">Alvos</th><th class="text-center w-24">T</th><th class="text-center w-24">Q</th><th class="text-center w-24">R7</th><th class="text-center w-24">R28</th></tr></thead><tbody>${rows}</tbody></table><div class="p-8 text-center text-center"><button onclick="window.addTopic(${sIdx})" class="text-[11px] font-black text-indigo-500 uppercase text-center">+ Novo Tópico em ${sub.name}</button></div></div>`;
             });
             document.getElementById('progress-pct').innerText = totC ? Math.round((donC/totC)*100)+'%' : '0%';
             document.getElementById('approval-score').innerText = lGrades.length ? (lGrades.reduce((a,b)=>a+b,0)/lGrades.length).toFixed(1) : "0.0";
         };
 
-        // --- ADMIN & PLAN FUNCTIONS ---
+        // --- ADMIN FUNCTIONS (FIXED PATHS) ---
         window.renderAdminTab = async () => {
             if (!user || user.email !== ADMIN_EMAIL) return;
             const container = document.getElementById('admin-user-list');
@@ -513,42 +513,46 @@
                 const snap = await getDocs(registryRef); container.innerHTML = '';
                 snap.forEach(docSnap => {
                     const u = docSnap.data(); const isBlocked = u.status === 'blocked';
-                    const isExpired = new Date() > new Date(u.accessUntil);
-                    container.innerHTML += `<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors text-left">
+                    const exp = u.accessUntil ? new Date(u.accessUntil) : new Date(0);
+                    const isExpired = new Date() > exp;
+                    container.innerHTML += `<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors text-left text-left">
                             <td class="p-5 text-left"><div class="flex flex-col text-left"><span class="font-black text-slate-800 text-left">${u.email}</span><span class="text-[9px] font-bold text-slate-400 uppercase text-left">UID: ${docSnap.id}</span></div></td>
-                            <td class="p-5 font-bold text-left ${isExpired ? 'text-rose-500' : 'text-slate-500'}">${formatLongDate(u.accessUntil)} ${isExpired ? '(EXPIRADO)' : ''}</td>
-                            <td class="p-5 text-center"><span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${isBlocked ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">${isBlocked ? 'BLOQUEADO' : 'ATIVO'}</span></td>
-                            <td class="p-5 text-right"><div class="flex justify-end gap-2">
-                                <button onclick="window.renewAccess('${docSnap.id}', '${u.accessUntil}')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-black text-[9px] uppercase shadow-lg">Renovar +30d</button>
-                                <button onclick="window.toggleUserStatus('${docSnap.id}', '${u.status}')" class="px-4 py-2 rounded-xl font-black text-[9px] uppercase border ${isBlocked ? 'bg-emerald-600 text-white' : 'bg-rose-100 text-rose-600'}">${isBlocked ? 'Liberar' : 'Bloquear'}</button>
-                                <button onclick="window.deleteUserAdmin('${docSnap.id}')" class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl font-black text-[9px] uppercase hover:bg-rose-600 hover:text-white">Apagar</button>
+                            <td class="p-5 font-bold text-left ${isExpired ? 'text-rose-500' : 'text-slate-500'}">${formatLongDate(u.accessUntil)} ${isExpired ? '(EXP)' : ''}</td>
+                            <td class="p-5 text-center text-center"><span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${isBlocked ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">${isBlocked ? 'BLOQUEADO' : 'ATIVO'}</span></td>
+                            <td class="p-5 text-right text-left text-left text-left"><div class="flex justify-end gap-2 text-left">
+                                <button onclick="window.renewAccess('${docSnap.id}', '${u.accessUntil}')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-black text-[9px] uppercase shadow-lg text-center">Renovar +30d</button>
+                                <button onclick="window.toggleUserStatus('${docSnap.id}', '${u.status}')" class="px-4 py-2 rounded-xl font-black text-[9px] uppercase border ${isBlocked ? 'bg-emerald-600 text-white shadow-emerald-200' : 'bg-rose-100 text-rose-600 shadow-rose-200'} text-center shadow-lg">${isBlocked ? 'Liberar' : 'Bloquear'}</button>
+                                <button onclick="window.deleteUserAdmin('${docSnap.id}')" class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl font-black text-[9px] uppercase hover:bg-rose-600 hover:text-white transition-all text-center">Apagar</button>
                             </div></td></tr>`;
                 });
-            } catch (err) { container.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-rose-500">Erro.</td></tr>'; }
+            } catch (err) { container.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-rose-500">Erro Admin.</td></tr>'; }
         };
 
         window.renewAccess = async (uid, currentExpiry) => {
             if(!confirm("Deseja conceder mais 30 dias de acesso a este agente?")) return;
-            const newExpiry = new Date(new Date(currentExpiry).getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+            const current = currentExpiry ? new Date(currentExpiry).getTime() : new Date().getTime();
+            const newExpiry = new Date(current + (30 * 24 * 60 * 60 * 1000)).toISOString();
             await updateDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid), { accessUntil: newExpiry });
             window.renderAdminTab();
         };
 
         window.toggleUserStatus = async (uid, currentStatus) => {
-            if(!confirm("Confirmar alteração?")) return;
+            if(!confirm("Confirmar alteração de estado?")) return;
             const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
             await updateDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid), { status: newStatus });
             window.renderAdminTab();
         };
 
         window.deleteUserAdmin = async (uid) => {
-            if(!confirm("⚠️ AVISO: Apagar dados permanentemente?")) return;
+            if(!confirm("⚠️ AVISO: Apagar dados permanentemente deste Agente?")) return;
+            // Deleta edital
             await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', uid, 'settings', 'edital'));
+            // Deleta registro
             await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid));
             window.renderAdminTab();
         };
 
-        // --- AUTH & ACTIONS ---
+        // --- ACTIONS ---
         window.toggleAuthMode = () => { isLoginMode = !isLoginMode; document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Novo Agente"; document.getElementById('auth-btn').innerText = isLoginMode ? "Iniciar Missão" : "Criar Cadastro"; };
         window.handleAuth = async () => { 
             const e = document.getElementById('auth-email').value.trim(), p = document.getElementById('auth-password').value, btn = document.getElementById('auth-btn'); 
@@ -557,11 +561,7 @@
         };
         window.handleLogout = () => signOut(auth).then(() => location.reload());
 
-        window.toggleTimer = () => { 
-            const btn = document.getElementById('timer-btn-start'); 
-            if(!isTimerRunning) { isTimerRunning = true; btn.innerHTML = 'P'; timerInterval = setInterval(() => { timerSeconds++; document.getElementById('stopwatch-display').innerText = formatLongTime(timerSeconds); }, 1000); } 
-            else { clearInterval(timerInterval); isTimerRunning = false; btn.innerHTML = '>'; } 
-        };
+        window.toggleTimer = () => { const btn = document.getElementById('timer-btn-start'); if(!isTimerRunning) { isTimerRunning = true; btn.innerHTML = 'P'; timerInterval = setInterval(() => { timerSeconds++; document.getElementById('stopwatch-display').innerText = formatLongTime(timerSeconds); }, 1000); } else { clearInterval(timerInterval); isTimerRunning = false; btn.innerHTML = '>'; } };
         window.resetTimer = () => { clearInterval(timerInterval); isTimerRunning = false; timerSeconds = 0; document.getElementById('stopwatch-display').innerText = "00:00:00"; };
         window.finishTimerSession = async () => { if(timerSeconds < 5) return; if(curT === null) return; const t = userData.subjects[curS].topics[curT]; if(!userData.timeHistory) userData.timeHistory = []; userData.timeHistory.push({ date: new Date().toISOString(), topic: t.text, durationSeconds: timerSeconds }); await sync(); window.resetTimer(); alert("Tempo salvo!"); };
 
@@ -592,7 +592,7 @@
         window.changeCalendarMonth = (o) => { calDate.setMonth(calDate.getMonth()+o); window.renderCalendar(); };
         window.updateManualTopicList = () => { if(!userData) return; const sIdx = document.getElementById('manual-subject-select').value, tSel = document.getElementById('manual-topic-select'); if(!tSel) return; tSel.innerHTML = userData.subjects[sIdx].topics.map(t => `<option value="${t.text}">${t.text}</option>`).join(''); };
         window.scheduleManualTask = async () => { const val = document.getElementById('manual-topic-select').value; if(!val) return; if(!userData.scheduledTasks) userData.scheduledTasks = []; userData.scheduledTasks.push({ id: Date.now(), topic: val, step: 0, date: new Date().toISOString().split('T')[0] }); await sync(); window.renderCalendar(); alert("Lançado!"); };
-        window.renderHistoryPage = () => { const el = document.getElementById('global-history-body'); if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-50"><td class="p-5 font-bold text-slate-400">${h.date}</td><td class="p-5 font-black uppercase text-slate-800 text-left">${h.topic}</td><td class="p-5 text-right font-black px-4 py-1 rounded-full ${parseFloat(h.grade) >= 7 ? 'text-emerald-600' : 'text-rose-600'}">${h.grade}</td></tr>`).join(''); };
+        window.renderHistoryPage = () => { const el = document.getElementById('global-history-body'); if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-50 text-left"><td class="p-5 font-bold text-slate-400 text-left">${h.date}</td><td class="p-5 font-black uppercase text-slate-800 text-left">${h.topic}</td><td class="p-5 text-right font-black px-4 py-1 rounded-full text-left ${parseFloat(h.grade) >= 7 ? 'text-emerald-600' : 'text-rose-600'}">${h.grade}</td></tr>`).join(''); };
         window.showTab = (id) => { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); document.getElementById(id).classList.add('active'); document.getElementById('btn-'+id).classList.add('active-tab'); if(id === 'calendar') window.renderCalendar(); if(id === 'priority') window.renderPriorityList(); if(id === 'curve') window.renderRetentionCurve(); if(id === 'history') window.renderHistoryPage(); if(id === 'admin') window.renderAdminTab(); if(id === 'tutor') window.renderTutorTab(); };
 
         window.renderEvolutionChart = () => {
@@ -609,7 +609,6 @@
                 let regSnap = await getDoc(regRef);
                 const now = new Date();
 
-                // Novo Usuário: Atribui 30 dias
                 if (!regSnap.exists()) {
                     const accessDate = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
                     await setDoc(regRef, { email: u.email, lastLogin: now.toISOString(), status: 'active', accessUntil: accessDate });
@@ -618,26 +617,34 @@
 
                 const regData = regSnap.data();
 
-                // Trava de Expiração (exceto admin)
-                if (u.email !== ADMIN_EMAIL && now > new Date(regData.accessUntil)) {
+                if (u.email !== ADMIN_EMAIL && now > new Date(regData.accessUntil || 0)) {
                     await signOut(auth);
                     document.getElementById('auth-subtitle').innerText = "⌛ SEU ACESSO EXPIROU. FALE COM O TUTOR.";
                     document.getElementById('auth-subtitle').className = "text-rose-500 font-black text-sm mb-10 text-center";
                     return;
                 }
 
-                // Trava de Bloqueio
-                if (regData.status === 'blocked') { await signOut(auth); document.getElementById('auth-subtitle').innerText = "🚫 ACESSO BLOQUEADO PELO ADMIN"; return; }
+                if (regData.status === 'blocked') { 
+                    await signOut(auth); 
+                    document.getElementById('auth-subtitle').innerText = "🚫 ACESSO BLOQUEADO PELO ADMIN"; 
+                    document.getElementById('auth-subtitle').className = "text-rose-500 font-black text-sm mb-10 text-center";
+                    return; 
+                }
 
                 user = u;
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 if(user.email === ADMIN_EMAIL) document.body.classList.add('is-admin');
 
-                // Atualiza contagem de dias no Header
-                const diffTime = new Date(regData.accessUntil) - now;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                document.getElementById('days-remaining').innerText = u.email === ADMIN_EMAIL ? "∞" : Math.max(0, diffDays);
+                // Header countdown
+                if (u.email === ADMIN_EMAIL) {
+                    document.getElementById('days-remaining').innerText = "∞";
+                } else {
+                    const expiry = regData.accessUntil ? new Date(regData.accessUntil) : new Date();
+                    const diffTime = expiry - now;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    document.getElementById('days-remaining').innerText = Math.max(0, diffDays);
+                }
 
                 await updateDoc(regRef, { lastLogin: now.toISOString() });
                 const userRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'settings', 'edital');
