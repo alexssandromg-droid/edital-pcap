@@ -169,7 +169,7 @@
 
         <div class="study-container py-12 mx-auto max-w-[1200px] px-8 text-left">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-left">
-                <div class="space-y-12">
+                <div class="space-y-12 text-left">
                     <div class="card p-8 border-l-8 border-l-indigo-600 text-left">
                         <span class="text-[10px] font-black uppercase text-indigo-600 tracking-widest mb-6 block">Passo 1: Teoria</span>
                         <div class="mb-8 text-left">
@@ -183,9 +183,9 @@
                     </div>
                     <div class="card p-8 border-l-8 border-l-emerald-500 text-left">
                         <span class="text-[10px] font-black uppercase text-emerald-600 tracking-widest mb-6 block">Passo 2: Questões</span>
-                        <div class="grid grid-cols-2 gap-6 mb-8 text-left">
+                        <div class="grid grid-cols-2 gap-6 mb-8">
                             <input type="date" id="p2-date" class="input-elite">
-                            <div class="grid grid-cols-2 gap-4 text-left">
+                            <div class="grid grid-cols-2 gap-4">
                                 <input type="number" id="p2-hits" class="input-elite border-emerald-100 bg-emerald-50/30" placeholder="Acertos">
                                 <input type="number" id="p2-miss" class="input-elite border-rose-100 bg-rose-50/30" placeholder="Erros">
                             </div>
@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="space-y-12">
+                <div class="space-y-12 text-left">
                     <div class="card p-8 border-l-8 border-l-amber-500 text-left">
                         <span class="text-[10px] font-black uppercase text-amber-600 tracking-widest mb-6 block">Passo 3: R7</span>
                         <div id="r7-files-list" class="space-y-3 mb-4"></div>
@@ -206,8 +206,8 @@
                     </div>
                     <div class="card p-8 border-l-8 border-l-rose-500 text-left">
                         <span class="text-[10px] font-black uppercase text-rose-600 tracking-widest mb-6 block">Passo 4: R28 / Mural</span>
-                        <div id="mural-container" class="space-y-4 max-h-60 overflow-y-auto mb-8 pr-2 no-scrollbar"></div>
-                        <div class="flex gap-2 mb-8">
+                        <div id="mural-container" class="space-y-4 max-h-60 overflow-y-auto mb-8 pr-2 no-scrollbar text-left"></div>
+                        <div class="flex gap-2 mb-8 text-left">
                             <select id="note-color-hub" class="text-[10px] font-black border border-slate-200 rounded-xl px-4 bg-white"><option value="yellow">Amarelo</option><option value="pink">Rosa</option><option value="blue">Azul</option></select>
                             <button onclick="window.addMuralNote()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-black text-[10px] uppercase hover:bg-indigo-600 transition-all">+ Novo Gatilho</button>
                         </div>
@@ -222,18 +222,22 @@
     <!-- MAIN APP -->
     <div id="main-app" class="hidden max-w-7xl mx-auto py-12 px-6 text-left">
         <header class="mb-16 flex flex-col xl:flex-row justify-between items-end gap-12 text-left">
-            <div class="flex-1">
+            <div class="flex-1 text-left">
                 <span class="px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-200 italic mb-4 inline-block">Missão PC-AP Elite</span>
                 <h1 class="text-7xl font-black text-slate-900 tracking-tighter uppercase leading-[0.9]">PLANO DE<br><span class="text-indigo-600">ATAQUE</span></h1>
             </div>
             
             <div class="flex gap-4 w-full xl:w-auto text-left">
-                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center">
-                    <div id="approval-score" class="text-5xl font-black text-slate-900 mb-2">0.0</div>
-                    <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Score Operacional</div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
+                    <div id="days-remaining" class="text-4xl font-black text-indigo-600 mb-2">30</div>
+                    <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Dias de Acesso</div>
                 </div>
-                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center">
-                    <div id="progress-pct" class="text-5xl font-black text-indigo-600 mb-2">0%</div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
+                    <div id="approval-score" class="text-4xl font-black text-slate-900 mb-2">0.0</div>
+                    <div class="text-[10px] uppercase font-black tracking-widest text-slate-400">Score Op.</div>
+                </div>
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-2xl flex-1 text-center min-w-[140px]">
+                    <div id="progress-pct" class="text-4xl font-black text-indigo-600 mb-2">0%</div>
                     <div class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Conclusão</div>
                 </div>
             </div>
@@ -252,7 +256,7 @@
 
         <!-- TUTOR TAB -->
         <div id="tutor" class="tab-content text-left">
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-4xl mx-auto text-left">
                 <div class="flex items-center gap-6 mb-12 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm text-left">
                     <div class="w-16 h-16 rounded-3xl bg-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-xl">🎓</div>
                     <div class="text-left">
@@ -260,9 +264,7 @@
                         <p class="text-slate-400 font-bold text-sm">Instruções operacionais baseadas no seu progresso real.</p>
                     </div>
                 </div>
-                <div id="tutor-mural-list" class="space-y-8">
-                    <!-- Cards de mentoria aparecem aqui -->
-                </div>
+                <div id="tutor-mural-list" class="space-y-8 text-left"></div>
             </div>
         </div>
 
@@ -310,23 +312,23 @@
             </div>
         </div>
 
-        <div id="curve" class="tab-content text-left">
+        <div id="curve" class="tab-content text-left text-left">
             <div class="card p-12 max-w-5xl mx-auto">
                 <h3 class="text-4xl font-black uppercase text-slate-900 mb-8">Curva do Esquecimento</h3>
                 <select id="curve-topic-select" onchange="window.renderRetentionCurve()" class="input-elite mb-10"></select>
-                <div class="flex justify-center mb-10"><div class="bg-indigo-50 px-10 py-6 rounded-[2.5rem] border border-indigo-100 text-center"><div id="retention-pct-label" class="text-5xl font-black text-indigo-600">--%</div><div class="text-[9px] font-black uppercase text-indigo-400 mt-2">Retenção Estimada</div></div></div>
-                <div class="h-[350px] w-full"><canvas id="retentionCurveChart"></canvas></div>
+                <div class="flex justify-center mb-10 text-left"><div class="bg-indigo-50 px-10 py-6 rounded-[2.5rem] border border-indigo-100 text-center"><div id="retention-pct-label" class="text-5xl font-black text-indigo-600 text-left">--%</div><div class="text-[9px] font-black uppercase text-indigo-400 mt-2">Retenção Estimada</div></div></div>
+                <div class="h-[350px] w-full text-left"><canvas id="retentionCurveChart"></canvas></div>
             </div>
         </div>
 
-        <div id="history" class="tab-content text-left">
-            <div class="card p-12">
+        <div id="history" class="tab-content text-left text-left">
+            <div class="card p-12 text-left">
                 <div class="flex justify-between items-center mb-12 text-left">
                     <h3 class="text-4xl font-black uppercase text-slate-900">Performance</h3>
                     <button onclick="window.clearPerformanceHistory()" class="bg-rose-100 text-rose-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase">Limpar Histórico</button>
                 </div>
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-slate-50"><tr><th class="p-5 font-black uppercase text-slate-400">Data</th><th class="p-5 font-black uppercase text-slate-400">Tópico</th><th class="p-5 text-right font-black uppercase text-slate-400">Nota</th></tr></thead>
+                <table class="w-full text-left text-sm text-left">
+                    <thead class="bg-slate-50 text-left"><tr><th class="p-5 font-black uppercase text-slate-400">Data</th><th class="p-5 font-black uppercase text-slate-400">Tópico</th><th class="p-5 text-right font-black uppercase text-slate-400">Nota</th></tr></thead>
                     <tbody id="global-history-body"></tbody>
                 </table>
             </div>
@@ -337,7 +339,7 @@
                 <div class="flex justify-between items-center mb-12 text-left">
                     <div>
                         <h3 class="text-4xl font-black uppercase text-slate-900 tracking-tighter mb-2">Painel de Comando Admin</h3>
-                        <p class="text-slate-400 font-bold text-sm text-left">Gestão de utilizadores e acessos</p>
+                        <p class="text-slate-400 font-bold text-sm text-left">Gestão de acessos e planos de agentes</p>
                     </div>
                     <div class="bg-rose-600 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">Acesso Master</div>
                 </div>
@@ -346,9 +348,9 @@
                         <thead class="bg-slate-50 text-left">
                             <tr>
                                 <th class="p-5 text-[10px] font-black uppercase text-slate-400">Agente (E-mail)</th>
-                                <th class="p-5 text-[10px] font-black uppercase text-slate-400">Último Acesso</th>
+                                <th class="p-5 text-[10px] font-black uppercase text-slate-400">Validade Acesso</th>
                                 <th class="p-5 text-center text-[10px] font-black uppercase text-slate-400">Estado</th>
-                                <th class="p-5 text-right text-[10px] font-black uppercase text-slate-400">Ações</th>
+                                <th class="p-5 text-right text-[10px] font-black uppercase text-slate-400">Gestão Planos</th>
                             </tr>
                         </thead>
                         <tbody id="admin-user-list" class="text-sm"></tbody>
@@ -380,117 +382,53 @@
         const cleanData = (obj) => { if (!obj) return obj; const newObj = Array.isArray(obj) ? [] : {}; for (const key in obj) { if (obj[key] === undefined) continue; if (obj[key] && typeof obj[key] === 'object') { newObj[key] = cleanData(obj[key]); } else { newObj[key] = obj[key]; } } return newObj; };
         const sync = async () => { if(!user) return; await updateDoc(doc(db, 'artifacts', APP_ID, 'users', user.uid, 'settings', 'edital'), cleanData(userData)); };
         const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'}) : '';
-        const formatLongDate = (iso) => iso ? new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit'}) : '';
+        const formatLongDate = (iso) => iso ? new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit', year:'2-digit'}) : '';
         const formatLongTime = (s) => { const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sc = s%60; return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`; };
 
         // --- TUTOR LOGIC ---
         window.renderTutorTab = () => {
-            const list = document.getElementById('tutor-mural-list');
-            if(!list || !userData) return;
-            list.innerHTML = '';
-            
+            const list = document.getElementById('tutor-mural-list'); if(!list || !userData) return; list.innerHTML = '';
             const activeMissions = [];
             userData.subjects.forEach(sub => sub.topics.forEach(top => {
                 const status = top.status || [false, false, false, false];
                 const lastStep = status.lastIndexOf(true);
                 const currentStep = lastStep + 1;
-                
-                if (currentStep < 4) {
-                    activeMissions.push({ subName: sub.name, topic: top, step: currentStep });
-                } else if (status[3]) {
-                    // Manutenção
-                    activeMissions.push({ subName: sub.name, topic: top, step: 4 });
-                }
+                if (currentStep < 4) activeMissions.push({ subName: sub.name, topic: top, step: currentStep });
+                else if (status[3]) activeMissions.push({ subName: sub.name, topic: top, step: 4 });
             }));
-
-            if(activeMissions.length === 0) {
-                list.innerHTML = `<div class="bg-indigo-50 p-10 rounded-[2rem] text-center font-bold text-indigo-400">Nenhum tópico em curso. Vá ao Planner e escolha um Alvo para começar!</div>`;
-                return;
-            }
-
+            if(activeMissions.length === 0) { list.innerHTML = `<div class="bg-indigo-50 p-10 rounded-[2rem] text-center font-bold text-indigo-400">Nenhum tópico em curso. Comece algo no Planner!</div>`; return; }
             activeMissions.forEach(m => {
-                let msg = "";
-                let tag = "";
-                const today = new Date().toLocaleDateString('pt-BR');
-                const d = formatDate(m.topic.theoryDate || new Date().toISOString());
-
+                let msg = "", tag = ""; const today = new Date().toLocaleDateString('pt-BR');
                 switch(m.step) {
-                    case 0:
-                        tag = "Passo 1: Aquisição";
-                        msg = `Você está no <b>PRIMEIRO PASSO (${today})</b>. Estude a teoria de: <b>${m.topic.text}</b>. Assim que finalizar, marque a conclusão e eu te direi os próximos passos.`;
-                        break;
-                    case 1:
-                        tag = "Passo 2: Performance";
-                        msg = `Você está no <b>SEGUNDO PASSO (${today})</b>. Faça exercícios do tópico: <b>${m.topic.text}</b> para testar seus conhecimentos e atingir a meta de 7.0.`;
-                        break;
-                    case 2:
-                        tag = "Passo 3: Revisão R7";
-                        msg = `Você está no <b>TERCEIRO PASSO (${today})</b> do tópico <b>${m.topic.text}</b>. Leia o resumo, seus grifos ou mapa mental para consolidar a memória de curto prazo.`;
-                        break;
-                    case 3:
-                        tag = "Passo 4: Manutenção R28";
-                        msg = `Você está no <b>QUARTO PASSO (${today})</b> de <b>${m.topic.text}</b>. Esse passo é fundamental para analisar seus erros. Use o Mural de Gatilhos e faça questões de simulado.`;
-                        break;
-                    case 4:
-                        tag = "Ciclo Vitalício";
-                        msg = `O tópico <b>${m.topic.text}</b> está em fase de manutenção. A cada 30 dias, realize uma bateria de questões para garantir que o conhecimento não escape.`;
-                        break;
+                    case 0: tag="Passo 1"; msg=`Você está no <b>PRIMEIRO PASSO (${today})</b>. Estude a teoria de: <b>${m.topic.text}</b>. Marque como concluído para avançar.`; break;
+                    case 1: tag="Passo 2"; msg=`Você está no <b>SEGUNDO PASSO (${today})</b>. Faça exercícios do tópico: <b>${m.topic.text}</b> para testar seus conhecimentos. Meta 7.0!`; break;
+                    case 2: tag="Passo 3"; msg=`Você está no <b>TERCEIRO PASSO (${today})</b> de <b>${m.topic.text}</b>. Leia o resumo ou seus grifos para consolidar a memória.`; break;
+                    case 3: tag="Passo 4"; msg=`Você está no <b>QUARTO PASSO (${today})</b> de <b>${m.topic.text}</b>. Analise seus erros e use o mural para anotar falhas táticas.`; break;
+                    case 4: tag="Manutenção"; msg=`Tópico <b>${m.topic.text}</b> em manutenção cíclica. Questões a cada 30 dias para não esquecer!`; break;
                 }
-
-                list.innerHTML += `
-                    <div class="tutor-card text-left">
-                        <div class="tutor-avatar">👮</div>
-                        <div class="tutor-bubble">
-                            <span class="tutor-step-tag">${tag} • ${m.subName}</span>
-                            <p class="text-slate-700 leading-relaxed text-sm">${msg}</p>
-                            <div class="mt-4 flex justify-end">
-                                <button onclick="window.openHubForTopic('${m.topic.text}')" class="text-[10px] font-black uppercase text-indigo-600 hover:underline">Abrir Cockpit do Alvo →</button>
-                            </div>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="tutor-card text-left"><div class="tutor-avatar">👮</div><div class="tutor-bubble text-left"><span class="tutor-step-tag">${tag} • ${m.subName}</span><p class="text-slate-700 leading-relaxed text-sm">${msg}</p><div class="mt-4 flex justify-end text-left"><button onclick="window.openHubForTopic('${m.topic.text}')" class="text-[10px] font-black uppercase text-indigo-600 hover:underline">Abrir Cockpit →</button></div></div></div>`;
             });
         };
 
-        window.openHubForTopic = (topicName) => {
-            userData.subjects.forEach((s, sIdx) => s.topics.forEach((t, tIdx) => {
-                if(t.text === topicName) window.openHub(sIdx, tIdx);
-            }));
-        };
+        window.openHubForTopic = (topicName) => { userData.subjects.forEach((s, sIdx) => s.topics.forEach((t, tIdx) => { if(t.text === topicName) window.openHub(sIdx, tIdx); })); };
 
         // --- DASHBOARD FUNCTIONS ---
-        window.renderEvolutionChart = () => {
-            const ctx = document.getElementById('evolutionChart'); if(!ctx || curT === null) return;
-            const t = userData.subjects[curS].topics[curT];
-            const hist = (userData.quizHistory || []).filter(h => h.topic.trim() === t.text.trim()).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
-            if(hist.length < 1) { ctx.classList.add('hidden'); return; }
-            ctx.classList.remove('hidden'); if(myChart) myChart.destroy();
-            myChart = new Chart(ctx, { type: 'line', data: { labels: hist.map(h => h.date), datasets: [{ label: 'Rendimento', data: hist.map(h => parseFloat(h.grade)), borderColor: '#10b981', tension: 0.4, borderWidth: 4, pointBackgroundColor: '#fff', pointRadius: 4 }, { label: 'Meta 7.0', data: Array(hist.length).fill(7.0), borderColor: '#fda4af', borderDash: [6,6], pointRadius: 0, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
-        };
-
         window.renderHubViews = () => {
             if(curT === null) return; const t = userData.subjects[curS].topics[curT];
-            const fRender = (f, i, type) => `<div class="bg-white border p-4 rounded-2xl flex justify-between shadow-sm"><div class="flex items-center gap-3 text-left"><input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, '${type}')"> ${iconFolder} <span class="text-[10px] font-black uppercase ${f.done?'text-slate-300 line-through':''}">${f.name}</span></div><div class="flex gap-2"><a href="${f.url}" target="_blank" class="bg-indigo-50 text-indigo-600 text-[9px] font-black px-4 py-1 rounded-lg">Ver</a><button onclick="window.removeFileLink(${i},'${type}')">${iconDel}</button></div></div>`;
+            const fRender = (f, i, type) => `<div class="bg-white border p-4 rounded-2xl flex justify-between shadow-sm text-left"><div class="flex items-center gap-3 text-left"><input type="checkbox" ${f.done?'checked':''} onchange="window.toggleFileCheck(${i}, '${type}')"> ${iconFolder} <span class="text-[10px] font-black uppercase ${f.done?'text-slate-300 line-through':''}">${f.name}</span></div><div class="flex gap-2"><a href="${f.url}" target="_blank" class="bg-indigo-50 text-indigo-600 text-[9px] font-black px-4 py-1 rounded-lg">Ver</a><button onclick="window.removeFileLink(${i},'${type}')">${iconDel}</button></div></div>`;
             document.getElementById('files-list').innerHTML = (t.files || []).map((f,i) => fRender(f,i,'theory')).join('');
             document.getElementById('r7-files-list').innerHTML = (t.r7Files || []).map((f,i) => fRender(f,i,'r7')).join('');
             document.getElementById('mural-container').innerHTML = (t.mural || []).map(n => `<div class="mural-note mural-${n.color} flex gap-4 text-left"><input type="checkbox" ${n.done?'checked':''} onchange="window.toggleMuralCheck(${n.id})"><textarea class="flex-1 bg-transparent border-none text-[11px] font-bold outline-none" onblur="window.updateMuralText(${n.id}, this.value)">${n.text}</textarea><button onclick="window.deleteMuralNote(${n.id})">${iconDel}</button></div>`).join('');
-            
             const bt = document.getElementById('btn-toggle-theory');
             bt.innerText = t.status[0] ? "Neutralizado ✅" : "Neutralizar Passo 1";
             bt.className = `w-full py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all ${t.status[0] ? 'bg-indigo-600 text-white shadow-indigo-200' : 'bg-white border-2 border-indigo-100 text-indigo-600 hover:bg-indigo-50'}`;
             document.getElementById('teoria-date-label').innerText = t.theoryDate ? 'Feito em: ' + formatDate(t.theoryDate) : '';
-
-            const br = document.getElementById('btn-toggle-r7');
-            if(br) {
-                br.innerText = t.status[2] ? "Neutralizado ✅" : "Neutralizar Passo 3";
+            if(document.getElementById('btn-toggle-r7')) {
+                const br = document.getElementById('btn-toggle-r7'); br.innerText = t.status[2] ? "Neutralizado ✅" : "Neutralizar Passo 3";
                 br.className = `w-full mt-6 py-5 rounded-2xl font-black uppercase text-xs shadow-lg transition-all ${t.status[2] ? 'bg-amber-600 text-white shadow-amber-200' : 'bg-white border-2 border-amber-100 text-amber-600 hover:bg-amber-50'}`;
                 document.getElementById('r7-date-label').innerText = t.r7DoneDate ? 'Feito em: ' + formatDate(t.r7DoneDate) : '';
             }
-
-            const b28 = document.getElementById('btn-toggle-r28');
-            if(b28) {
-                b28.innerText = t.status[3] ? "Neutralizado ✅" : "Neutralizar Passo 4";
-                document.getElementById('r28-date-label').innerText = t.r28DoneDate ? 'Feito em: ' + formatDate(t.r28DoneDate) : '';
-            }
+            if(document.getElementById('btn-toggle-r28')) { document.getElementById('r28-date-label').innerText = t.r28DoneDate ? 'Feito em: ' + formatDate(t.r28DoneDate) : ''; }
             window.renderEvolutionChart();
         };
 
@@ -504,140 +442,113 @@
             const daysRange = Math.max(30, Math.ceil((today - startDate)/86400000) + 7);
             for (let i = 0; i <= daysRange; i++) {
                 const current = new Date(startDate); current.setDate(startDate.getDate() + i);
-                labels.push(`D${i}`);
-                let ret = 0, s = 1.5;
+                labels.push(`D${i}`); let ret = 0, s = 1.5;
                 reinforces.forEach((r, idx) => { const days = (current - r)/86400000; if (days >= 0) { s = 1.5 * Math.pow(4, idx); ret = Math.max(ret, 100 * Math.exp(-days / s)); } });
-                dataPoints.push(ret.toFixed(1));
-                if (current.toDateString() === today.toDateString()) document.getElementById('retention-pct-label').innerText = Math.round(ret) + "%";
+                dataPoints.push(ret.toFixed(1)); if (current.toDateString() === today.toDateString()) document.getElementById('retention-pct-label').innerText = Math.round(ret) + "%";
             }
             if(retentionChart) retentionChart.destroy();
-            retentionChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Retenção (%)', data: dataPoints, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
+            retentionChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label: 'Retenção (%)', data: dataPoints, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } } });
         };
 
         window.renderPriorityList = () => {
             const list = []; if(!userData) return;
             userData.subjects.forEach((sub, sIdx) => sub.topics.forEach((top, tIdx) => {
                 const h = (userData.quizHistory || []).filter(qh => qh.topic.trim() === top.text.trim()).sort((a,b) => b.createdAt - a.createdAt);
-                const g = h.length ? parseFloat(h[0].grade) : 0;
-                list.push({ sIdx, tIdx, text: top.text, subName: sub.name, score: (10 - g) * 3, grade: g });
+                const g = h.length ? parseFloat(h[0].grade) : 0; list.push({ sIdx, tIdx, text: top.text, subName: sub.name, score: (10 - g) * 3, grade: g });
             }));
-            const el = document.getElementById('priority-list'); if(el) el.innerHTML = list.sort((a,b) => b.score - a.score).slice(0,10).map((p, i) => `<div onclick="window.openHub(${p.sIdx}, ${p.tIdx})" class="card p-6 flex items-center gap-6 cursor-pointer hover:border-indigo-200"><div class="text-3xl font-black text-slate-200">#${i+1}</div><div class="flex-1 text-left"><div class="text-[9px] font-black text-indigo-500 uppercase">${p.subName}</div><div class="text-sm font-black uppercase text-slate-800 text-left">${p.text}</div></div><div class="text-right text-lg font-black ${p.grade < 7 ? 'text-rose-500' : 'text-emerald-500'}">${p.grade.toFixed(1)}</div></div>`).join('');
+            const el = document.getElementById('priority-list'); if(el) el.innerHTML = list.sort((a,b) => b.score - a.score).slice(0,10).map((p, i) => `<div onclick="window.openHub(${p.sIdx}, ${p.tIdx})" class="card p-6 flex items-center gap-6 cursor-pointer hover:border-indigo-200 text-left"><div class="text-3xl font-black text-slate-200">#${i+1}</div><div class="flex-1 text-left"><div class="text-[9px] font-black text-indigo-500 uppercase">${p.subName}</div><div class="text-sm font-black uppercase text-slate-800">${p.text}</div></div><div class="text-right text-lg font-black ${p.grade < 7 ? 'text-rose-500' : 'text-emerald-500'}">${p.grade.toFixed(1)}</div></div>`).join('');
         };
 
         window.renderTimeline = () => {
             const container = document.getElementById('today-timeline-container'), todayStr = new Date().toISOString().split('T')[0];
             const tasks = (userData.scheduledTasks || []).filter(t => t.date === todayStr);
-            if(tasks.length === 0) { container.innerHTML = `<div class="text-[11px] font-bold text-white/50 py-8 text-center">Nenhuma missão hoje.</div>`; return; }
+            if(tasks.length === 0) { container.innerHTML = `<div class="text-[11px] font-bold text-white/50 py-8 text-center text-left">Nenhuma missão hoje.</div>`; return; }
             container.innerHTML = tasks.map(t => `<div class="flex items-center justify-between bg-white/10 p-4 rounded-xl group text-left"><div class="flex flex-col text-left"><span class="text-[9px] font-black uppercase text-indigo-200">Passo ${t.step+1}</span><span class="text-xs font-black uppercase text-white">${t.topic}</span></div><button onclick="window.deleteScheduledTask('${t.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-white">✕</button></div>`).join('');
         };
 
         window.renderCalendar = () => {
             const grid = document.getElementById('calendar-grid-body'), label = document.getElementById('calendar-month-label'), month = calDate.getMonth(), year = calDate.getFullYear();
-            if(!grid) return; grid.innerHTML = '';
-            label.innerText = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(calDate);
+            if(!grid) return; grid.innerHTML = ''; label.innerText = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(calDate);
             const firstDay = new Date(year, month, 1).getDay(), lastDate = new Date(year, month + 1, 0).getDate();
             for(let i = firstDay; i > 0; i--) grid.innerHTML += `<div class="calendar-day opacity-20 border border-slate-50"></div>`;
             for(let i = 1; i <= lastDate; i++) {
                 const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
                 const tasks = (userData.scheduledTasks || []).filter(t => t.date === dStr);
                 const taskHtml = tasks.map(t => `<div class="calendar-task-card task-p${t.step+1}">${t.topic}</div>`).join('');
-                grid.innerHTML += `<div class="calendar-day ${new Date().toISOString().split('T')[0] === dStr ? 'today' : ''}"><span class="calendar-day-num">${i}</span>${taskHtml}</div>`;
+                grid.innerHTML += `<div class="calendar-day ${new Date().toISOString().split('T')[0] === dStr ? 'today' : ''} text-left"><span class="calendar-day-num">${i}</span>${taskHtml}</div>`;
             }
             window.renderTimeline();
         };
 
         window.renderPlanner = () => {
-            const list = document.getElementById('edital-list'); if(!list || !userData) return;
-            list.innerHTML = ''; let totC = 0, donC = 0, lGrades = [];
-            const sSel = document.getElementById('manual-subject-select');
-            const cSel = document.getElementById('curve-topic-select');
-            if(sSel) {
-                const prevSubIdx = sSel.value;
-                sSel.innerHTML = userData.subjects.map((s,i) => `<option value="${i}">${s.name}</option>`).join('');
-                if(prevSubIdx !== "") sSel.value = prevSubIdx;
-                window.updateManualTopicList();
-            }
-            const allTops = [];
-            userData.subjects.forEach(s => s.topics.forEach(t => allTops.push(t.text)));
-            if(cSel) {
-                const prevCurveTop = cSel.value;
-                cSel.innerHTML = allTops.map(t => `<option value="${t}">${t}</option>`).join('');
-                if(prevCurveTop !== "") cSel.value = prevCurveTop;
-            }
+            const list = document.getElementById('edital-list'); if(!list || !userData) return; list.innerHTML = ''; let totC = 0, donC = 0, lGrades = [];
+            const sSel = document.getElementById('manual-subject-select'); const cSel = document.getElementById('curve-topic-select');
+            if(sSel) { const prev = sSel.value; sSel.innerHTML = userData.subjects.map((s,i) => `<option value="${i}">${s.name}</option>`).join(''); if(prev !== "") sSel.value = prev; window.updateManualTopicList(); }
+            const allTops = []; userData.subjects.forEach(s => s.topics.forEach(t => allTops.push(t.text)));
+            if(cSel) { const prev = cSel.value; cSel.innerHTML = allTops.map(t => `<option value="${t}">${t}</option>`).join(''); if(prev !== "") cSel.value = prev; }
             userData.subjects.forEach((sub, sIdx) => {
                 const rows = sub.topics.map((top, tIdx) => {
                     const h = (userData.quizHistory || []).filter(qh => qh.topic.trim() === top.text.trim()).sort((a,b) => b.createdAt - a.createdAt);
-                    if(h.length > 0) lGrades.push(parseFloat(h[0].grade));
-                    totC += 4; donC += top.status.filter(x=>x).length;
+                    if(h.length > 0) lGrades.push(parseFloat(h[0].grade)); totC += 4; donC += top.status.filter(x=>x).length;
                     const latest = h.length ? h[0] : null; let bCls = "badge-neutral", pCls = "";
                     if(latest) { const g = parseFloat(latest.grade); if(g >= 7.0) { pCls = "pulse-good"; bCls = "badge-good"; } else if(g >= 5.0) { pCls = "pulse-med"; bCls = "badge-med"; } else if(g > 0) { pCls = "pulse-bad"; bCls = "badge-bad"; } }
                     const checks = top.status.map((s, cIdx) => {
                         const dVal = [top.theoryDate, top.questionsDate, top.r7DoneDate, top.r28DoneDate][cIdx];
                         return `<td class="p-4 text-center"><div class="flex flex-col items-center"><input type="checkbox" ${s?'checked':''} onchange="window.toggleCheck(${sIdx}, ${tIdx}, ${cIdx})" class="w-5 h-5">${s && dVal ? `<span class="text-[9px] font-black text-indigo-500 mt-1">${formatDate(dVal)}</span>` : ''}</div></td>`;
                     }).join('');
-                    return `<tr class="border-b border-slate-50"><td class="p-6 text-left">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-4">
-                                    <div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${top.reviewCount?1:0} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div>
-                                    <button onclick="window.openHub(${sIdx}, ${tIdx})" class="bg-indigo-600 text-white w-9 h-9 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</button>
-                                    <span class="font-black text-slate-700 ${pCls}">${top.text}</span> ${latest ? `<span class="score-badge ${bCls}">🎯 ${latest.grade}</span>` : ""}
-                                </div>
-                                <div class="flex gap-1">
-                                    <button onclick="window.resetReviewCount(${sIdx}, ${tIdx})" class="action-icon-btn text-amber-500">${iconReset}</button>
-                                    <button onclick="window.editTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-400">${iconEdit}</button>
-                                    <button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-rose-400">${iconDel}</button>
-                                </div>
-                            </div>
-                        </td>${checks}</tr>`;
+                    return `<tr class="border-b border-slate-50"><td class="p-6 text-left"><div class="flex items-center justify-between"><div class="flex items-center gap-4"><div onclick="window.incrementReview(${sIdx}, ${tIdx})" class="cycle-badge cyc-${top.reviewCount?1:0} ${top.reviewCount>=2?'cyc-elite':''}">${top.reviewCount||0}</div><button onclick="window.openHub(${sIdx}, ${tIdx})" class="bg-indigo-600 text-white w-9 h-9 flex items-center justify-center rounded-xl text-[10px] shadow-lg">GO</button><span class="font-black text-slate-700 ${pCls}">${top.text}</span> ${latest ? `<span class="score-badge ${bCls}">🎯 ${latest.grade}</span>` : ""}</div><div class="flex gap-1"><button onclick="window.resetReviewCount(${sIdx}, ${tIdx})" class="action-icon-btn text-amber-500">${iconReset}</button><button onclick="window.editTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-slate-400">${iconEdit}</button><button onclick="window.removeTopic(${sIdx}, ${tIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div></div></td>${checks}</tr>`;
                 }).join('');
-                list.innerHTML += `<div class="card overflow-hidden">
-                    <div class="p-10 bg-white/50 border-b flex justify-between items-center text-left">
-                        <div class="flex items-center gap-4"><h4 class="font-black uppercase text-2xl text-slate-900">${sub.name}</h4><button onclick="window.editSubject(${sIdx})" class="action-icon-btn text-slate-400">${iconEdit}</button><button onclick="window.removeSubject(${sIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div>
-                        <span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span>
-                    </div>
-                    <table class="w-full text-[12px] uppercase font-black text-slate-400"><thead><tr class="bg-slate-50/30 border-b"><th class="p-6 text-left">Alvos</th><th class="text-center w-24">T</th><th class="text-center w-24">Q</th><th class="text-center w-24">R7</th><th class="text-center w-24">R28</th></tr></thead><tbody>${rows}</tbody></table>
-                    <div class="p-8 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[11px] font-black text-indigo-500 uppercase">+ Novo Tópico em ${sub.name}</button></div>
-                </div>`;
+                list.innerHTML += `<div class="card overflow-hidden text-left"><div class="p-10 bg-white/50 border-b flex justify-between items-center text-left"><div class="flex items-center gap-4"><h4 class="font-black uppercase text-2xl text-slate-900">${sub.name}</h4><button onclick="window.editSubject(${sIdx})" class="action-icon-btn">${iconEdit}</button><button onclick="window.removeSubject(${sIdx})" class="action-icon-btn text-rose-400">${iconDel}</button></div><span class="text-4xl font-black text-indigo-600">${sub.topics.length?Math.round((sub.topics.reduce((a,c)=>a+c.status.filter(x=>x).length,0)/(sub.topics.length*4))*100):0}%</span></div><table class="w-full text-[12px] uppercase font-black text-slate-400 text-left"><thead><tr class="bg-slate-50/30 border-b text-left"><th class="p-6 text-left">Alvos</th><th class="text-center w-24">T</th><th class="text-center w-24">Q</th><th class="text-center w-24">R7</th><th class="text-center w-24">R28</th></tr></thead><tbody>${rows}</tbody></table><div class="p-8 text-center"><button onclick="window.addTopic(${sIdx})" class="text-[11px] font-black text-indigo-500 uppercase">+ Novo Tópico em ${sub.name}</button></div></div>`;
             });
             document.getElementById('progress-pct').innerText = totC ? Math.round((donC/totC)*100)+'%' : '0%';
             document.getElementById('approval-score').innerText = lGrades.length ? (lGrades.reduce((a,b)=>a+b,0)/lGrades.length).toFixed(1) : "0.0";
         };
 
-        // --- ADMIN FUNCTIONS ---
+        // --- ADMIN & PLAN FUNCTIONS ---
         window.renderAdminTab = async () => {
             if (!user || user.email !== ADMIN_EMAIL) return;
             const container = document.getElementById('admin-user-list');
             try {
                 const registryRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry');
-                const snap = await getDocs(registryRef);
-                container.innerHTML = '';
+                const snap = await getDocs(registryRef); container.innerHTML = '';
                 snap.forEach(docSnap => {
-                    const u = docSnap.data();
-                    const isBlocked = u.status === 'blocked';
-                    container.innerHTML += `<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                            <td class="p-5 text-left"><div class="flex flex-col text-left"><span class="font-black text-slate-800">${u.email}</span><span class="text-[9px] font-bold text-slate-400 uppercase">UID: ${docSnap.id}</span></div></td>
-                            <td class="p-5 font-bold text-slate-500 text-left">${formatLongDate(u.lastLogin)}</td>
+                    const u = docSnap.data(); const isBlocked = u.status === 'blocked';
+                    const isExpired = new Date() > new Date(u.accessUntil);
+                    container.innerHTML += `<tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors text-left">
+                            <td class="p-5 text-left"><div class="flex flex-col text-left"><span class="font-black text-slate-800 text-left">${u.email}</span><span class="text-[9px] font-bold text-slate-400 uppercase text-left">UID: ${docSnap.id}</span></div></td>
+                            <td class="p-5 font-bold text-left ${isExpired ? 'text-rose-500' : 'text-slate-500'}">${formatLongDate(u.accessUntil)} ${isExpired ? '(EXPIRADO)' : ''}</td>
                             <td class="p-5 text-center"><span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${isBlocked ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">${isBlocked ? 'BLOQUEADO' : 'ATIVO'}</span></td>
-                            <td class="p-5 text-right"><div class="flex justify-end gap-3"><button onclick="window.toggleUserStatus('${docSnap.id}', '${u.status}')" class="px-4 py-2 rounded-xl font-black text-[9px] uppercase transition-all ${isBlocked ? 'bg-emerald-600 text-white' : 'bg-rose-100 text-rose-600'}">${isBlocked ? 'Desbloquear' : 'Bloquear'}</button><button onclick="window.deleteUserAdmin('${docSnap.id}')" class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl font-black text-[9px] uppercase hover:bg-rose-600 hover:text-white">Apagar</button></div></td></tr>`;
+                            <td class="p-5 text-right"><div class="flex justify-end gap-2">
+                                <button onclick="window.renewAccess('${docSnap.id}', '${u.accessUntil}')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl font-black text-[9px] uppercase shadow-lg">Renovar +30d</button>
+                                <button onclick="window.toggleUserStatus('${docSnap.id}', '${u.status}')" class="px-4 py-2 rounded-xl font-black text-[9px] uppercase border ${isBlocked ? 'bg-emerald-600 text-white' : 'bg-rose-100 text-rose-600'}">${isBlocked ? 'Liberar' : 'Bloquear'}</button>
+                                <button onclick="window.deleteUserAdmin('${docSnap.id}')" class="px-4 py-2 bg-slate-100 text-slate-400 rounded-xl font-black text-[9px] uppercase hover:bg-rose-600 hover:text-white">Apagar</button>
+                            </div></td></tr>`;
                 });
-            } catch (err) { container.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-rose-500">Erro ao carregar agentes.</td></tr>'; }
+            } catch (err) { container.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-rose-500">Erro.</td></tr>'; }
+        };
+
+        window.renewAccess = async (uid, currentExpiry) => {
+            if(!confirm("Deseja conceder mais 30 dias de acesso a este agente?")) return;
+            const newExpiry = new Date(new Date(currentExpiry).getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+            await updateDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid), { accessUntil: newExpiry });
+            window.renderAdminTab();
         };
 
         window.toggleUserStatus = async (uid, currentStatus) => {
-            if(!confirm("Confirmar alteração de estado?")) return;
+            if(!confirm("Confirmar alteração?")) return;
             const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
             await updateDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid), { status: newStatus });
             window.renderAdminTab();
         };
 
         window.deleteUserAdmin = async (uid) => {
-            if(!confirm("⚠️ AVISO: Isto apagará todos os dados do utilizador. Confirmar?")) return;
+            if(!confirm("⚠️ AVISO: Apagar dados permanentemente?")) return;
             await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', uid, 'settings', 'edital'));
             await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', uid));
             window.renderAdminTab();
         };
 
-        // --- ACTIONS ---
+        // --- AUTH & ACTIONS ---
         window.toggleAuthMode = () => { isLoginMode = !isLoginMode; document.getElementById('auth-title').innerText = isLoginMode ? "PC-AP Elite" : "Novo Agente"; document.getElementById('auth-btn').innerText = isLoginMode ? "Iniciar Missão" : "Criar Cadastro"; };
         window.handleAuth = async () => { 
             const e = document.getElementById('auth-email').value.trim(), p = document.getElementById('auth-password').value, btn = document.getElementById('auth-btn'); 
@@ -658,14 +569,8 @@
         window.closeHub = () => { document.getElementById('study-hub-overlay').style.display = 'none'; curS = null; curT = null; window.resetTimer(); };
         window.toggleCheck = async (s, t, c) => { const top = userData.subjects[s].topics[t]; top.status[c] = !top.status[c]; const dKeys = ['theoryDate', 'questionsDate', 'r7DoneDate', 'r28DoneDate']; top[dKeys[c]] = top.status[c] ? new Date().toISOString() : null; if(top.status[c]) window.scheduleNextStep(top.text, c); await sync(); window.renderPlanner(); window.renderCalendar(); };
         window.toggleStatusHub = async (idx) => { const t = userData.subjects[curS].topics[curT]; t.status[idx] = !t.status[idx]; const dKeys = ['theoryDate', 'questionsDate', 'r7DoneDate', 'r28DoneDate']; t[dKeys[idx]] = t.status[idx] ? new Date().toISOString() : null; if(t.status[idx]) window.scheduleNextStep(t.text, idx); await sync(); window.renderHubViews(); window.renderPlanner(); window.renderCalendar(); };
-        
         window.scheduleNextStep = (topicName, completedStep) => { if(!userData.scheduledTasks) userData.scheduledTasks = []; const next = completedStep + 1; if(next > 3) return; const gap = completedStep === 0 ? 1 : (completedStep === 1 ? 7 : 21); const date = new Date(); date.setDate(date.getDate() + gap); userData.scheduledTasks.push({ id: Date.now() + Math.random(), topic: topicName, step: next, date: date.toISOString().split('T')[0] }); };
-        window.savePerformanceHub = async () => {
-            const h = parseInt(document.getElementById(`p2-hits`).value) || 0, m = parseInt(document.getElementById(`p2-miss`).value) || 0, date = document.getElementById(`p2-date`).value || new Date().toISOString().split('T')[0], t = userData.subjects[curS].topics[curT]; 
-            if(!userData.quizHistory) userData.quizHistory = []; userData.quizHistory.push({ createdAt: Date.now(), date, topic: t.text, hits: h, total: h+m, grade: (h+m)>0?((h/(h+m))*10).toFixed(1):"0.0" });
-            t.status[1] = true; t.questionsDate = new Date().toISOString(); window.scheduleNextStep(t.text, 1); await sync(); window.renderHubViews(); window.renderPlanner(); alert("Salvo!");
-        };
-
+        window.savePerformanceHub = async () => { const h = parseInt(document.getElementById(`p2-hits`).value) || 0, m = parseInt(document.getElementById(`p2-miss`).value) || 0, date = document.getElementById(`p2-date`).value || new Date().toISOString().split('T')[0], t = userData.subjects[curS].topics[curT]; if(!userData.quizHistory) userData.quizHistory = []; userData.quizHistory.push({ createdAt: Date.now(), date, topic: t.text, hits: h, total: h+m, grade: (h+m)>0?((h/(h+m))*10).toFixed(1):"0.0" }); t.status[1] = true; t.questionsDate = new Date().toISOString(); window.scheduleNextStep(t.text, 1); await sync(); window.renderHubViews(); window.renderPlanner(); alert("Salvo!"); };
         window.addSubject = async () => { const n = prompt("Nova Matéria:"); if(n) { userData.subjects.push({name:n.toUpperCase(), topics:[]}); await sync(); } };
         window.addTopic = async (i) => { const t = prompt("Novo Tópico:"); if(t) { userData.subjects[i].topics.push({id:Date.now(), text:t, status:[false,false,false,false], files:[], r7Files:[], reviewCount:0, mural:[], theoryDate:null}); await sync(); } };
         window.editSubject = async (i) => { const n = prompt("Editar:", userData.subjects[i].name); if(n) { userData.subjects[i].name = n.toUpperCase(); await sync(); } };
@@ -674,7 +579,6 @@
         window.removeTopic = async (s, t) => { if(confirm("Apagar?")) { userData.subjects[s].topics.splice(t,1); await sync(); } };
         window.incrementReview = async (s, t) => { userData.subjects[s].topics[t].reviewCount++; await sync(); };
         window.resetReviewCount = async (s, t) => { if(confirm("Zerar?")) { userData.subjects[s].topics[t].reviewCount = 0; await sync(); } };
-        
         window.addFileLink = async (type) => { const n = prompt("Título:"), u = prompt("URL:"); if(!n || !u) return; const t = userData.subjects[curS].topics[curT]; if(type === 'theory') { if(!t.files) t.files = []; t.files.push({ name: n, url: u, done: false }); } else { if(!t.r7Files) t.r7Files = []; t.r7Files.push({ name: n, url: u, done: false }); } await sync(); window.renderHubViews(); };
         window.removeFileLink = async (i, type) => { if(confirm("Excluir?")) { const t = userData.subjects[curS].topics[curT]; if(type === 'theory') t.files.splice(i, 1); else t.r7Files.splice(i, 1); await sync(); window.renderHubViews(); } };
         window.toggleFileCheck = async (i, type) => { const t = userData.subjects[curS].topics[curT], list = type === 'theory' ? t.files : t.r7Files; list[i].done = !list[i].done; await sync(); window.renderHubViews(); };
@@ -682,38 +586,60 @@
         window.toggleMuralCheck = async (id) => { const t = userData.subjects[curS].topics[curT], note = t.mural.find(n => n.id === id); if(note) note.done = !note.done; window.renderHubViews(); await sync(); };
         window.updateMuralText = async (id, text) => { const t = userData.subjects[curS].topics[curT], note = t.mural.find(n => n.id === id); if(note) note.text = text; await sync(); };
         window.deleteMuralNote = async (id) => { if(confirm("Excluir nota?")) { const t = userData.subjects[curS].topics[curT]; t.mural = t.mural.filter(n => n.id !== id); await sync(); window.renderHubViews(); } };
-        window.deleteScheduledTask = async (id) => { userData.scheduledTasks = userData.scheduledTasks.filter(t => t.id.toString() !== id.toString()); await sync(); window.renderCalendar(); };
-        window.changeCalendarMonth = (o) => { calDate.setMonth(calDate.getMonth()+o); window.renderCalendar(); };
         window.clearAllTasks = async () => { if(confirm("Limpar Agenda?")) { userData.scheduledTasks = []; await sync(); window.renderCalendar(); } };
         window.clearPerformanceHistory = async () => { if(confirm("Limpar Performance?")) { userData.quizHistory = []; await sync(); window.renderHistoryPage(); window.renderPlanner(); } };
+        window.deleteScheduledTask = async (id) => { userData.scheduledTasks = userData.scheduledTasks.filter(t => t.id.toString() !== id.toString()); await sync(); window.renderCalendar(); };
+        window.changeCalendarMonth = (o) => { calDate.setMonth(calDate.getMonth()+o); window.renderCalendar(); };
         window.updateManualTopicList = () => { if(!userData) return; const sIdx = document.getElementById('manual-subject-select').value, tSel = document.getElementById('manual-topic-select'); if(!tSel) return; tSel.innerHTML = userData.subjects[sIdx].topics.map(t => `<option value="${t.text}">${t.text}</option>`).join(''); };
         window.scheduleManualTask = async () => { const val = document.getElementById('manual-topic-select').value; if(!val) return; if(!userData.scheduledTasks) userData.scheduledTasks = []; userData.scheduledTasks.push({ id: Date.now(), topic: val, step: 0, date: new Date().toISOString().split('T')[0] }); await sync(); window.renderCalendar(); alert("Lançado!"); };
-        
-        window.renderHistoryPage = () => {
-            const el = document.getElementById('global-history-body'); if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-50"><td class="p-5 font-bold text-slate-400">${h.date}</td><td class="p-5 font-black uppercase text-slate-800 text-left">${h.topic}</td><td class="p-5 text-right font-black px-4 py-1 rounded-full ${parseFloat(h.grade) >= 7 ? 'text-emerald-600' : 'text-rose-600'}">${h.grade}</td></tr>`).join('');
-        };
+        window.renderHistoryPage = () => { const el = document.getElementById('global-history-body'); if(el && userData) el.innerHTML = (userData.quizHistory || []).slice().reverse().map(h => `<tr class="border-b border-slate-50"><td class="p-5 font-bold text-slate-400">${h.date}</td><td class="p-5 font-black uppercase text-slate-800 text-left">${h.topic}</td><td class="p-5 text-right font-black px-4 py-1 rounded-full ${parseFloat(h.grade) >= 7 ? 'text-emerald-600' : 'text-rose-600'}">${h.grade}</td></tr>`).join(''); };
+        window.showTab = (id) => { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); document.getElementById(id).classList.add('active'); document.getElementById('btn-'+id).classList.add('active-tab'); if(id === 'calendar') window.renderCalendar(); if(id === 'priority') window.renderPriorityList(); if(id === 'curve') window.renderRetentionCurve(); if(id === 'history') window.renderHistoryPage(); if(id === 'admin') window.renderAdminTab(); if(id === 'tutor') window.renderTutorTab(); };
 
-        window.showTab = (id) => { 
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab')); 
-            document.getElementById(id).classList.add('active'); 
-            document.getElementById('btn-'+id).classList.add('active-tab'); 
-            if(id === 'calendar') window.renderCalendar(); 
-            if(id === 'priority') window.renderPriorityList(); 
-            if(id === 'curve') window.renderRetentionCurve(); 
-            if(id === 'history') window.renderHistoryPage(); 
-            if(id === 'admin') window.renderAdminTab();
-            if(id === 'tutor') window.renderTutorTab();
+        window.renderEvolutionChart = () => {
+            const ctx = document.getElementById('evolutionChart'); if(!ctx || curT === null) return;
+            const t = userData.subjects[curS].topics[curT]; const hist = (userData.quizHistory || []).filter(h => h.topic.trim() === t.text.trim()).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
+            if(hist.length < 1) { ctx.classList.add('hidden'); return; }
+            ctx.classList.remove('hidden'); if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, { type: 'line', data: { labels: hist.map(h => h.date), datasets: [{ label: 'Rendimento', data: hist.map(h => parseFloat(h.grade)), borderColor: '#10b981', tension: 0.4, borderWidth: 4, pointBackgroundColor: '#fff', pointRadius: 4 }, { label: 'Meta 7.0', data: Array(hist.length).fill(7.0), borderColor: '#fda4af', borderDash: [6,6], pointRadius: 0, borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 10 } }, plugins: { legend: { display: false } } } });
         };
 
         onAuthStateChanged(auth, async (u) => {
             if (u) {
                 const regRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'userRegistry', u.uid);
-                const regSnap = await getDoc(regRef);
-                if (regSnap.exists() && regSnap.data().status === 'blocked') { await signOut(auth); document.getElementById('auth-subtitle').innerText = "🚫 ACESSO BLOQUEADO PELO ADMIN"; return; }
-                user = u; document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden');
+                let regSnap = await getDoc(regRef);
+                const now = new Date();
+
+                // Novo Usuário: Atribui 30 dias
+                if (!regSnap.exists()) {
+                    const accessDate = new Date(now.getTime() + (30 * 24 * 60 * 60 * 1000)).toISOString();
+                    await setDoc(regRef, { email: u.email, lastLogin: now.toISOString(), status: 'active', accessUntil: accessDate });
+                    regSnap = await getDoc(regRef);
+                }
+
+                const regData = regSnap.data();
+
+                // Trava de Expiração (exceto admin)
+                if (u.email !== ADMIN_EMAIL && now > new Date(regData.accessUntil)) {
+                    await signOut(auth);
+                    document.getElementById('auth-subtitle').innerText = "⌛ SEU ACESSO EXPIROU. FALE COM O TUTOR.";
+                    document.getElementById('auth-subtitle').className = "text-rose-500 font-black text-sm mb-10 text-center";
+                    return;
+                }
+
+                // Trava de Bloqueio
+                if (regData.status === 'blocked') { await signOut(auth); document.getElementById('auth-subtitle').innerText = "🚫 ACESSO BLOQUEADO PELO ADMIN"; return; }
+
+                user = u;
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
                 if(user.email === ADMIN_EMAIL) document.body.classList.add('is-admin');
-                await setDoc(regRef, { email: u.email, lastLogin: new Date().toISOString(), status: regSnap.exists() ? regSnap.data().status : 'active' }, { merge: true });
+
+                // Atualiza contagem de dias no Header
+                const diffTime = new Date(regData.accessUntil) - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                document.getElementById('days-remaining').innerText = u.email === ADMIN_EMAIL ? "∞" : Math.max(0, diffDays);
+
+                await updateDoc(regRef, { lastLogin: now.toISOString() });
                 const userRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'settings', 'edital');
                 const snap = await getDoc(userRef);
                 if (!snap.exists()) await setDoc(userRef, { subjects: [{ name: "DIREITO PENAL", topics: [{id: 1, text: "Fato Típico", status:[false,false,false,false], files:[], r7Files: [], reviewCount: 0, mural:[], theoryDate: null}] }], quizHistory: [], timeHistory: [], scheduledTasks: [] });
